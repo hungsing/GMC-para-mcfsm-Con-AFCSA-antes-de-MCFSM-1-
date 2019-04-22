@@ -1,0 +1,158 @@
+\newcommand{\osred}{\rightarrow}                % one-step reduction relation
+\newcommand{\TRANS}[1]{\xrightarrow{#1}}
+\newcommand{\R}{\osred}
+\newcommand{\msred}{\osred^\ast}     % multi-step reduction
+\newcommand{\RR}{\msred}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\SGV}{N}
+\newcommand{\RSN}[2]{\RS_#1(#2)}
+\newcommand{\RSB}[1]{\RSN{1}{#1}}
+\newcommand{\TSdelta}{\hat{\delta}}
+
+\newcommand{\sgs}{n}
+\newcommand{\evset}{\mathcal{E}}
+\newcommand{\evtequiT}[1]{\evtequi}
+\newcommand{\evtequi}{\bowtie}
+\newcommand{\trsysL}[1]{\xrightarrow{#1}}
+\newcommand{\qst}{\;\colon\;} %such that
+\newcommand{\STSE}{\mathit{TS}} % Synchronous TS abbrev
+\newcommand{\SG}[1]{\STSE(#1)} % Synchronous TS (retro compa)
+\newcommand{\trstabL}[1]{\stackrel{#1}{\Rightarrow}}
+\newcommand{\trstab}{\trstabL{}}
+\newcommand{\tra}{\pi}
+
+
+
+
+\newcommand{\Q}{\mathbf{\mathsf{Q}}}
+\newcommand{\C}{\mathbf{\mathsf{C}}}
+\newcommand{\msgs}{\mbox{\textcolor{blue}{$\mathsf{Msg}$}}}
+\newcommand{\amsg}[1][m]{\textcolor{blue}{\mathsf{#1}}}
+\newcommand{\aport}[1][{}]{\textcolor{blue}{\pi^{#1}}}
+
+\newcommand{\grmeq}{\; ::= \;}
+\newcommand{\grmor}{\; \big| \;}
+\newcommand{\const}[1]{\textcolor{orange}{\mathsf{#1}}}
+\newcommand{\mykeyword}[1]{\textsf{\textcolor{orange}{\upshape \textbf{#1}}}}
+\newcommand{\fvar}[1]{\mathrm{fv}\big(#1\big)}
+\newcommand{\truek}{\mykeyword{true}}
+\newcommand{\falsek}{\mykeyword{false}}
+\newcommand{\ENTAILS}{\supset}
+\newcommand{\iv}[1][x]{\textcolor{orange}{#1}}
+\newcommand{\bool}{\textsf{Bool}}
+\newcommand{\intTp}{\mathsf{Int}}
+
+
+
+% ------------
+% theorems
+
+%\newtheorem{example}{Example}
+%\newtheorem{definition}{Definition}
+\newtheorem{observation}{Note}
+% end theorems
+% ------------
+
+\newcommand{\actset}{A}
+
+\newcommand{\arn}{\ensuremath{\sf ARN}\xspace}
+\newcommand{\arnint}[1]{\ensuremath{\mathcal{I}_{#1}}}
+
+\newcommand{\anarn}{\ensuremath{\alpha =  \left(X, P, C, \gamma, M_X, M_C, \mu, \Lambda\right)}\xspace}
+\newcommand{\Sit}{\textcolor{blue}{\ensuremath{\mathit{S}}}}
+\newcommand{\vectorize}[1]{\ensuremath{\overset{\rightarrow}{\mathbf{#1}}}}
+\newcommand{\sysconf}[2]{\ensuremath{(\vectorize{#1}, \vectorize{#2})}}
+
+%\newcommand{\cfsmalphabet}{\ensuremath{\mathcal{A}}}
+\newcommand{\cfsmalphabet}{\msgs}
+\newcommand{\cfsmfinitewords}{\ensuremath{\cfsmalphabet^\star}}
+
+\newcommand{\machine}[1]{\ensuremath{\mathsf{#1}}\xspace}
+\newcommand{\machp}{\machine{p}}
+\newcommand{\machq}{\machine{q}}
+\newcommand{\machs}{\machine{s}}
+\newcommand{\machr}{\machine{r}}
+\newcommand{\machx}{\machine{x}}
+\newcommand{\machc}{\machine{c}}
+\newcommand{\macha}{\machine{a}}
+
+\newcommand{\FS}{\ensuremath{\mathcal{F}}\xspace}
+\newcommand{\aut}[1]{\ensuremath{\textgoth{#1}}\xspace}
+
+\newcommand{\reduct}[2]{\ensuremath{#1\hspace{-0.4em}\downharpoonccw_{#2}}\xspace}
+
+\newcommand{\Participants}{\mathcal{P}}
+
+\newcommand{\PSet}{\textcolor{orange}{\mathsf{P}}}
+\newcommand{\chanset}{C}
+\newcommand{\ptp}[1]{\mathsf{#1}}
+\newcommand{\p}{\ptp p}
+\newcommand{\q}{\ptp q}
+\newcommand{\s}{\ptp s}
+\newcommand{\rr}{\ptp r}
+\newcommand{\ASigma}{\Sigma}
+\newcommand{\action}{\ell}
+\newcommand{\silent}{\tau}
+\newcommand{\chan}[1]{\ptp{#1}}
+\newcommand{\PSEND}[2]{\chan{#1} \oact \msgsort{#2}}
+\newcommand{\PRECEIVE}[2]{\chan{#1} \iact \msgsort{#2}}
+\newcommand{\oact}{\ptp !}
+\newcommand{\iact}{\ptp ?}
+\newcommand{\msgsort}[1]{\mathsf{#1}}
+\newcommand{\Act}{\mathit{Act}}
+\newcommand{\Inter}{\mathit{Int}}
+
+\newcommand{\Async}[1]{\mathcal{A}(#1)}
+\newcommand{\Sync}[1]{\mathcal{S}(#1)}
+
+\newcommand{\tset}{\to}
+\newcommand{\tguard}{\mathcal{G}}
+\newcommand{\GSet}{\mathbb{G}}
+\newcommand{\Nats}{\mathbb{N}}
+\newcommand{\VSet}{\mathcal{V}}
+\newcommand{\incfunc}{\mathcal{I}}
+\newcommand{\Kfunc}{\mathcal{K}}
+
+\newcommand{\trans}[2][{}]{\,\xrightarrow{#2}_{#1}\,}
+\newcommand{\csconf}[2]{\conf{\vec{#1} \ ; \ \vec{#2}}}
+
+\newcommand{\gcsconf}[4]{\conf{\vec{#1} \ ;\  \vec{#2} \ ; \ \vec{#3} \ ; \ \mathcal{#4}}}
+
+\newcommand{\cscfg}[2]{\conf{{#1} \ ; \ {#2}}}
+\newcommand{\gcscfg}[3]{\conf{{#1} \ ; \ {#2}\ ; \ {#3}}}
+
+\newcommand{\ith}[2]{\vec{#1}[\ptp{#2}]}
+\newcommand{\conf}[1]{\langle #1 \rangle}
+\newcommand{\TRANSS}[1]{{\xRightarrow{\raisebox{-.3ex}[0pt][0pt]{\scriptsize $#1$} }}}
+\newcommand{\Smv}{\vec{S}}
+\newcommand{\Conf}[1]{\mathsf{C}_{#1}}
+
+\newcommand{\instantiate}{\mathit{inst}}
+
+\newcommand{\NUL}{\varepsilon}
+\newcommand{\RS}{\mathbf{RS}}
+\newcommand{\st}{\ \big| \ }
+\newcommand{\defref}[2][{}]{Definition{#1}~\ref{#2}}
+\newcommand{\secref}[2][{}]{Section{#1}~\ref{#2}}
+\newcommand{\gnodes}{V}
+\newcommand{\gedges}{A}
+\newcommand{\glabel}{\Lambda}
+\newcommand{\LSet}{\mathsf{L}}
+\newcommand{\mmdef}{:=}
+\newcommand{\asend}[3]{\ptp{#1} \rightarrowtriangle\ptp{#2} : \ptp{#3}}
+\newcommand{\spipe}{\; | \;}
+
+\newcommand{\ccsprc}[1]{\mathsf{#1}}
+\newcommand{\Cell}{\ccsprc{Cell}}
+\newcommand{\Buffer}{\ccsprc{Buffer}}
+\newcommand{\Ping}{\ccsprc{Ping}}
+\newcommand{\Pong}{\ccsprc{Pong}}
+\newcommand{\ccsin}[2]{\mathsf{#1}?{\mathsf{#2}}}
+\newcommand{\ccsout}[2]{{\mathsf{#1}!{\mathsf{#2}}}}
+
+\newcommand{\efb}[2]{\mathcal{E}(#1,#2)}
+
+\newcommand{\chosyn}{\fxfatal{chosyn command is not defined }}
+
+\newcommand{\context}{\textit{context}\xspace}
+\newcommand{\powerset}[1]{\ensuremath{2^{#1}}\xspace}

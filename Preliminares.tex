@@ -76,7 +76,7 @@ En adelante presentaremos definiciones y resultados que permiten expresar propie
 Para poder expresar esta condición de seguridad es necesario identificar conjuntos de acciones que pueden ser llevadas a cabo concurrentemente. Para esto definimos las siguientes relaciones sobre el conjunto de transiciones de una CFSM. Dados $q, q' \in Q$, se define $\mathit{act}(q,q') = \left\{\ell \ \left|\right. \ (q,\ell,q') \in \delta \right\}$ y $\Diamond, \blacklozenge \subseteq \delta \times \delta$ como las relaciones de equivalencia más pequeñas que contienen $\romboeqb$ y $\underline{\blacklozenge}$ donde:
 \begin{itemize}
 \item $(q_1, \ell, q_2) \underline{\Diamond} (q'_1, \ell, q'_2)$ sii $ l \notin \mathit{act}(q_1, q'_1) \land \mathit{act}(q_1, q'_1) = \mathit{act}(q_2, q'_2) \land \mathit{act}(q_2, q'_2) \neq \emptyset $
-\item  $(q_1, \ell, q_2) \underline{\blacklozenge} (q'_1, \ell, q'_2)$ sii $ (q_1, \ell, q_2) \romboeqb (q'_1, \ell, q'_2) $ y para todo $(q,\ell,q') \in [(q_1, \ell, q_2) ]^{\Diamond}, \ \mathit{act}(q_1,q) = \mathit{act}(q_2,q') \land \mathit{act}(q'_1,q) = \mathit{act}(q'_2,q')$  
+\item  $(q_1, \ell, q_2) \underline{\blacklozenge} (q'_1, \ell, q'_2)$ sii $ (q_1, \ell, q_2) \romboeqb (q'_1, \ell, q'_2) $ y $\forall(q,\ell,q') \in [(q_1, \ell, q_2) ]^{\Diamond}, \ \mathit{act}(q_1,q) = \mathit{act}(q_2,q') \land \mathit{act}(q'_1,q) = \mathit{act}(q'_2,q')$  
 \end{itemize}
 donde $[(q_1, \ell, q_2) ]^{\Diamond}$ es la clase de equivalencia de $(q, \ell, q')$ respecto de la relación $\Diamond$ (resp. $\blacklozenge$). Intuitivamente dos transiciones están $\blacklozenge$-relacionadas si se refieren a la misma acción aún teniendo en cuenta el interleaving.
 \end{definition}
@@ -169,15 +169,15 @@ Considere el siguiente Communicating System
         ;
 \end{tikzpicture} 
 
-En el sistema de arriba podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. \\ 
+En el sistema de arriba podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. 
 
 Para el primero queremos ver que $(q_{0p}, pr!a, q_{1p}) \romboeqn (q_{2p}, pr!a, q_{3p})$
 Para esto necesitamos que valga $(q_{0p}, pr!a, q_{1p}) \romboeqb (q_{2p}, pr!a, q_{3p})$. Esto se cumple dado que $pr!a \notin act(q_{0p},q_{2p})$ y $act(q_{0p},q_{2p}) = act(q_{1p},q_{3p}) \neq \emptyset$. Ahora tenemos que ver la clase de equivalencia $[(q_{0p}, pr!a, q_{1p})]^{\Diamond}$. La misma es el conjunto unitario $ \{(q_{2p}, pr!a, q_{3p})\}$. Por último queremos ver que  $act(q_{0p}, q_{2p}) = 
-act(q_{1p}, q_{3p}) \land act(q_{2p}, q_{2p}) = act(q_{3p}, q_{3p})$. La segunda es trivial, la primera se cumple siendo el conjunto unitario $\{sp?b\}$. Con esto demostramos que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_p (q_{2p}, q_{0r}, p \rightarrow r:a)$ \\
+act(q_{1p}, q_{3p}) \land act(q_{2p}, q_{2p}) = act(q_{3p}, q_{3p})$. La segunda es trivial, la primera se cumple siendo el conjunto unitario $\{sp?b\}$. Con esto demostramos que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_p (q_{2p}, q_{0r}, p \rightarrow r:a)$ 
 
 Nos queda probar que vale $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_r (q_{2p}, q_{0r}, p \rightarrow r:a)$. Esta equivalencia es más sencilla de probar, dado que tenemos una única transición. Entonces vemos que es trivial que $(q_{0r}, pr?a, q_{1r}) \underline{\blacklozenge} (q_{0r}, pr?a, q_{1r})$. Con esto vemos que $(q_{0p}, q_{0r}, p \rightarrow r:a)$ y $(q_{2p}, q_{0r}, p \rightarrow r:a)$ son equivalentes en $\bowtie_p$ y $\bowtie_r$, por lo tanto están en $\bowtie = \bowtie_p \cap \bowtie_r$.
-
 \end{example} 
+
 A continuación definimos la noción de Sistema de Transición Sincrónico, para reflejar el comportamiento de un sistema cuando envíos y recepciones son emparejados para mostrar que ocurren al mismo tiempo.
 \newpage
 

@@ -52,20 +52,20 @@ Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de 
 \item $F_{ER} = F_E x F_R$
 
 \end{itemize}
-\end{definition}
 
+Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si dos autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transsiciones se ejecutarían a la par. Como estos autómatas son de comunicación asincrónica, queremos evitar que dos transiciones se sicronizen de ese modo. Para asegurarnos esto pedimos que todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. Formalmente que dados E y R, $\Sigma_E \cap \Sigma_R = \emptyset$. 
 
-Explicación de la intuición de definición \\
+Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers, uno para cada sentido de la comunicación, de E a R y viceversa.
 
-Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si dos autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transsiciones se ejecutarían a la par. Como estos autómatas son de comunicación asincrónica, queremos evitar que dos transiciones se sicronizen de ese modo. Para asegurarnos esto pedimos que todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. Formalmente que dados E y R, $\Sigma_E \cap \Sigma_R = \emptyset$. \\
-
-Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers, uno para cada sentido de la comunicación, de E a R y viceversa.\\
-
-Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autóamta, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era In((E,R,c),m) y Out((E,R,c),m) ahora es $b_{ER}  \ll m$ y $b_{ER}  \gg  m$, donde $ b_{ER} \in \{ \mathcal{C}_E \cap \mathcal{C}_R \} $ son los buffers exclusivos del autómata compuesto. \\
+Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autóamta, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era In((E,R,c),m) y Out((E,R,c),m) ahora es $b_{ER}  \ll m$ y $b_{ER}  \gg  m$, donde $ b_{ER} \in \{ \mathcal{C}_E \cap \mathcal{C}_R \} $ son los buffers exclusivos del autómata compuesto. 
 
 Al componer dos autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{ERBuff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
 
 La composición es conmutativa y se puede generalizar a una cantidad arbitraria (finita) de autómatas.
+
+\end{definition}
+
+
 
 
 

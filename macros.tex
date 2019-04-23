@@ -156,3 +156,26 @@
 
 \newcommand{\context}{\textit{context}\xspace}
 \newcommand{\powerset}[1]{\ensuremath{2^{#1}}\xspace}
+
+\renewcommand*\rmdefault{cmr}
+
+\usepackage{xspace}
+\usepackage{xcolor}
+\usepackage{framed,color}
+\usepackage{todonotes}
+\definecolor{LavanderPosta}{HTML}{ebd9fc}
+\newcommand{\anote}[1]{\todo[fancyline,color=LavanderPosta]{#1 \\{\footnotesize(Agus)}}\xspace{}}
+\newcommand{\cnote}[1]{\todo[fancyline,color=LavanderPosta]{#1 \\{\footnotesize(Charlie)}}\xspace{}}
+
+\def \({\left (}
+\def \){\right )}
+\def \[{\left [}
+\def \]{\right ]}
+\def \[[{\left \llbracket}
+\def \]]{\right \rrbracket}
+\def \<{\left\langle}
+\def \>{\right\rangle}
+
+\newcommand\HeteroGenius{{{\ffmfamily Hetero}{\LobsterTwo Genius}}}
+\newcommand\SEArch{{\ECFAugie SEArch}}
+\newcommand\SEArchComp{{\ECFAugie SEArch -- Service Execution Architecture}}

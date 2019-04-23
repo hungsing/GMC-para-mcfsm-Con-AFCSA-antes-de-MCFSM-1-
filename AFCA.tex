@@ -1,0 +1,297 @@
+%!TEX root = ./main.tex
+
+
+\section{Compponentes Asincrónicas}
+
+\subsection{Autómatas finitos de comunicación asincrónica}
+
+\begin{definition}[Cola]
+\label{def:cola}
+Una cola es un tipo de estructura de datos caracterizada por ser una secuencia de elementos first in-first out (FIFO) debido a que el primer elemento en entrar es el primer elemento en salir. Para manejarla se definen dos operaciones, una para agregar y otra para sacar elementos de la una cola. Para los usos de este trabajo vamos a definir colas en las cuales se depositan y de las cuales se retiran mensajes, con las operaciones:
+
+\begin{itemize}
+\item Cola vacía: denotado $[\ ]$
+\item Encolar mensaje: denotado como $b \ll m$, si $b$ es una cola y $m$ es un mensaje.
+\item Desencolar mensaje: denotado como $b \gg m$, si $b$ es una cola y $m$ es un mensaje.
+\item Sea una cola vacía $b= [\ ]$ al aplicarle la operación $b \ll m$ queda $b= [m]$
+\item Sea una cola no vacía $b= [m_1,..,m_n]$ al aplicarle la operación $b \ll m$ queda $b= [m,m_1,..,m_n]$ del mismo modo al aplicarle $b \gg m_n$ queda $b= [m,m_1,..]$
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Autómata finitos de comunicación asincrónica]
+\label{def:aa}
+Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Un \emph{autómata finitos de comunicación asíncrona} es una estructura $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$ tal que:
+
+\begin{itemize}
+\item $Q$ es un conjunto finito de estados,
+\item $B \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \} $ es un conjunto finito de buffers (i.e. colas, ver Def.~\ref{def:cola}),
+\item $\mathcal{C} \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto de canales tales que $B \cap \mathcal{C} = \emptyset$ 
+\item $\Sigma = \{ \Sigma_\mathit{Int} \cup \Sigma_\mathit{Ex} \cup \Sigma_\mathit{Buff}\} $, $\Sigma \cap \mathcal{M} = \emptyset$ es el conjunto de etiquetas del autómata, siendo
+\begin{inparaenum}[1)]
+
+\item $\Sigma_\mathit{Int}$ las acciones internas del autómata 
+
+\item $\Sigma_\mathit{Ex}$ un conjunto de etiquetas de la forma $\langle p_1,p_2,c\rangle$ dónde $p_1,p_2 \in \mathcal{P}$ son, respectivamente, el emisor y el receptor de la comunicación y $c \in \mathcal{C}$ es el canal a través del cual se resuelve la misma.
+%\item $\forall (p_1,P_2,c), (p'_1,P'_2,c') \in \Sigma_{Ex} c = c' \iff p_1= P'_1 \land p_2= P'_2 $
+
+\item $\Sigma_\mathit{Buff}$ es el conjunto de etiquetas de las acciones sobre los buffers de la forma $b \ll m$ o $b \gg m$, dónde $b \in B$ y $m \in \mathcal{M}$.
+\end{inparaenum}
+\item $\delta = (\delta_\mathit{Int} \cup \delta_\mathit{Ex} \cup \delta_\mathit{Buff})$ siendo:
+
+\begin{inparaenum}[1)]
+\item $\delta_\mathit{Int} \subseteq Q \times \Sigma_\mathit{Int} \times Q$ es la relación de transicion por acciones internas de $A_\mathcal{P}$, %transiciones internas
+
+\item $\delta_\mathit{Ex} \subseteq Q \times \{\mathit{In}(c,m), \mathit{Out}(c,m) | c \in \Sigma_{Ex} \land m \in \mathcal{M} \} \times Q$ es la relación de transición de comunicación externa de $A_\mathcal{P}$, %comunicación externa
+
+\item $\delta_\mathit{Buff} \subseteq Q \times \Sigma_\mathit{Buff} \times Q$ %comunicación interna
+\end{inparaenum}
+\item $q_0 \in Q$ es el estado inicial, y
+\item $F \subseteq Q$ es el conjunto de estados finales. 
+\end{itemize}
+
+Se denota $P(A)$, al conjunto de participantes que integran el autómata A, y se define como $P(A) = \left(p \in \mathcal{P} \ | \left(\exists\ \langle p1,p2,c\rangle \in \Sigma_\mathit{Ex}\right)\left(p1=p \lor p2=p\right) \right) $ 
+\end{definition}
+
+
+Explicación de la intuición de la definición.
+
+$\Sigma$ es el conjunto de todas las etiquetas del autómata y lo dividimos en tres subconjuntos disjuntos que la forman $\Sigma_{\mathit{Int}}$, $\Sigma_{\mathit{Ex}}$ y $\Sigma_{\mathit{Buff}}$ que corresponden a las acciones de procesamiento interno, las de comunicación externa con otros participantes y las de comunicación interna vía buffers.
+
+$\Sigma_{Ex}$ es el conjunto de etiquetas correspondientes a la comunicación externa del autómata. Como la comunicación es dirigida punto a punto, cada etiqueta incluye a dos participantes $p_1, P_2 \in \mathcal{P}$ (emisor y receptor) y un canal $c \in \mathcal{C}$. Necesariamente en todas las etiquetas vale que $p_1$ y $p_2$ son distintos y .
+
+$\Sigma_{Buff}$ es el conjunto de etiquetas de acciones de comunicación interna vía buffers. Se especifican las acciones de encolar y desencolar como $b \ll m$, $b \gg m$, respectivamente, donde $b \in B$ y $m$ es el mensaje que se inserta/extrae del mismo.
+
+$\delta$ es el conjunto de transciciones que se compone de $\delta_{Int}$, las acciones internas, $\delta_{Ex}$ las transiciones de comunicación con otros agentes y $\delta_{Buf}$ las acciones de buffer.
+
+$\delta_{Ex}$ se compone de dos tipos de acciones denotadas \textit{In(c,m)} y \textit{Out(c,m)}, con $c \in \Sigma_{Ex}$ y $m \in \mathcal{M}$ . Las acciones de entrada o input que representan la recepción de un mensaje de algún proceso externo al correspondiente al autómata,  y las acciones de output o salida que representan el envío de un mensaje y se denotan. Estas acciones son la parte externa de la comunicaión asincrónica. Como los canales son unidireccionales decimos que para todo par de participantes existen dos canales, uno por cada sentido.
+
+$\delta_{Buff}$ es la relación de transición de comunicación interna mediante buffers.\\
+
+Formalmente, F $\subseteq$ Q. Es el conjunto de estados finales, los posibles estados a los que una ejecución llega y es aceptada como válida. Para los autómatas asincrónicos pedimos también que al llegar a este estado final los buffers se encuentren vacíos. Para esto definimos lo siguiente:
+
+\begin{definition}[Configuración instantánea]
+Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. A un autómata con comunicación asincrónica $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, definimos:
+
+Una configuración instantánea del autómata como $\langle q, \Omega \rangle \in Q \times \{ [m_b]_{b \in B} | m_b \in \mathcal{M}^* \}$ donde $\mathcal{M}^* = \{ [s_o, \ldots, s_n] \  | \ \forall i \in [0, \ldots, n], s_i \in \mathcal{M} \}$ y $[m_b]_{b \in B} $
+
+\begin{itemize}
+\item  q es es el estado actual
+\item $\Omega$ es la secuencia de buffers (con sus respectivos contenidos hasta el momento). Decimos que $\Omega$ es de la forma $[ \omega_{b_1}, \omega_{b_2},..., \omega_{b_n} ]$ con $b_i \in B$. 
+\item Decimos que una configuración es inicial si $q = q_0$ y $ \Omega = [ [], \ldots, [] ]$
+\item Decimos que una configuración es final si $q \in F$ y $ \Omega = [ [], \ldots, [] ]$
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Relación de transición entre configuraciones] Sean $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, $q_1, q_2 \in Q$, $ m \in \mathcal{M}$ definimos $\vdash$, relación de transición entre configuraciones, como:  
+\begin{enumerate}
+\item $(q_1, \Omega) \vdash (q_2, \Omega) \iff \langle q_1,r, q_2 \rangle \in \delta \land r \in \Sigma \setminus \Sigma_\mathit{Buff}$
+
+\item $(q_1 ,[\omega_{b_1},\ldots,\omega_{b_i},\ldots,\omega_{b_n}]) \vdash (q_2,[\omega_{b_1},\ldots,m : \omega_{b_i},\ldots,b_n]) \iff \langle q_1, b_i \ll m, q_2 \rangle  \in \delta $ 
+
+\item $(q_1, [\omega_{b_1},\ldots,\omega_{b_i} : m,\ldots,\omega_{b_n}]) \vdash (q_2,[\omega_{b_1},\ldots,\omega_{b_i},\ldots,\omega_{b_n}]) \iff \langle q_1, b_i \gg m, q_2 \rangle \in \delta$
+\end{enumerate}
+
+\end{definition}
+
+% \begin{definition}[Estados y configuraciones alcanzables]
+% \label{def:estadosyconAFCA}
+%   Una configuración $c' = \langle q', \Omega' \rangle$ es \emph{alcanzable} desde otra  configuración $c = \langle q, \Omega \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $c \overset{l}{\rightarrow} c'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
+% 	\begin{enumerate}
+% 		\item $l = b_i \ll m$, $\langle q, l,  q'\rangle \in \delta$, $\Omega = [\omega_{b_1},\ldots, \omega_{b_i},\ldots,b_n]$ y $\Omega' = [\omega_{b_1},\ldots,m : \omega_{b_i},\ldots,b_n]$
+% 		\item $l = b_i \gg m$, $\langle q, l,  q'\rangle \in \delta$, $\Omega = [\omega_{b_1},\ldots,m : \omega_{b_i},\ldots,b_n]$ y $\Omega' = [\omega_{b_1},\ldots, \omega_{b_i},\ldots,b_n]$
+% 	\end{enumerate}
+% La clausura reflexoEscribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
+% \end{definition}
+
+\begin{definition}[Traza de un AFCA] Llamamos traza a una secuencia posible de acciones de un autómata. Se define como una secuencia finita de etiquetas de estado y transición altenradas, que comienza y termina con un estado. Dado un autómata $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, una traza tiene las siguientes caracterísitcas
+
+\begin{itemize}
+\item Tiene la forma $[q_0, \sigma_1, q_1,...,q_{n-1}, \sigma_n, q_n] $ donde 
+\item $q_0$ es el estado inicial del autómata
+\item $q_i \in Q$,
+\item $ \sigma_i \in \Sigma$ y
+\item $\langle q_{i-1}, \sigma_i, q_i \rangle \in \delta $ 
+\end{itemize}
+
+El comportamiento de un AFCA es el conjunto de todas las trazas posibles.
+\end{definition}
+
+
+
+
+% \begin{definition}[Condición de aceptación] Sea $\sigma$ una secuencia de transiciones sobre $A_{\mathcal{P}}$, decimos que es una ejecución válida si se cumple lo siguiente:
+
+% \centering
+% $\sigma \in E(A_{\mathcal{P}}) \iff \exists q_f \in F \ | \  (q_0, \sigma, [[],..,[]]) \vdash^*(q_f, \emptyset, [ [],..,[] ])$ 
+% \end{definition}
+
+
+% Entonces decimos que una ejecución aceptable es aquella que cumple que en una cantidad finita de pasos llegó a un estado final con los buffers vacíos, asegurándonos la ausencia de mensajes huérfanos y deadlocks.
+
+\begin{definition}[Deadlock]Sean $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$, $q_{i} \in Q$, $\sigma \in \Sigma^*$,  $\Omega = [ \omega_{b_1},..,\omega_{b_i},..,\omega_{b_n} ]$, decimos que una configuración está en deadlock cuando ocurre:
+\begin{itemize}
+\item En la configuración $\langle q_i, \Omega \rangle$,
+
+\item $ \forall \langle q_i, s, q_j \rangle \in \delta$, $s \in \Sigma_\mathit{Buff} \land (s= b \gg m \Rightarrow \omega_b = [\ ])$
+\end{itemize}
+\end{definition}
+
+Decimos que ocurre deadlock cuando partiendo de un estado la única transición posible hacia un estado siguiente es consumiendo un mensaje de algún buffer y esos buffers se encuentran vacíos.  \\
+
+\begin{definition}[Mensajes huérfanos]Sean $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$, $q_{i} \in Q$, $\sigma \in \Sigma^*$,  $\Omega = [ \omega_{b_1},..,\omega_{b_i},..,\omega_{b_n} ]$, decimos que una configuración tiene mensajes huérfanos cuando ocurre:
+\begin{itemize}
+\item En la configuración $\langle q_i, \Omega \rangle$ ,
+
+\item $ \exists \omega_{b} \in \Omega \ | \ \omega_b \neq [\ ] $
+
+\item $ \delta(q_i) = \emptyset  $
+\end{itemize}
+\end{definition}
+
+Decimos que la configuración tiene mensajes huérfanos si, en un estado $q_i$  quedan mensajes sin consumir en algún buffer y no hay ninguna transición saliente. 
+
+
+\begin{definition}[Receptor no especificado]Sean $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$, $q_{i} \in Q$, $\sigma \in \Sigma^*$,  $\Omega = [ \omega_{b_1},..,\omega_{b_i},..,\omega_{b_n} ]$ decimos que una configuración es de receptor no especificado cuando ocurre:
+\begin{itemize}\item En la configuración $\langle q_i, \Omega \rangle$ ,
+
+\item $ \exists \omega_{b} \in \Omega \ | \ \omega_b \neq [\ ] $
+
+\item  $ \left(\forall \langle q_i, b \gg m, q_j \rangle \in \delta \right) \left(\omega_b = [ \ldots, m' ] \right)$, con $m' \neq m$
+\end{itemize}
+\end{definition}
+Decimos que una configuración está en modo Receptor no Especificado si la única transición saliente de un estado $q_i$ consume un mensaje $m$ y el primer mensaje de la cola es un mensaje $m'$ distinto de $m$.
+
+\begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
+\end{definition}
+
+
+La Figura.~\ref{ex:afca} muestra un ejemplo de estos autómatas.
+
+\begin{figure}[ht]
+\label{ex:AFCA}
+\begin{center}
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
+ \node[state] (q_5) [right= 1.8cm of q_1 ] {$q_5$};
+ \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= 1.5cm of q_2 ] {$q_3$};
+ \node[state,accepting] (q_4) [right= 1.8cm of q_3 ] {$q_4$};
+ \draw[]        
+        (q_0) edge[above] node{$b_0 \ll m_1$} (q_1)
+        (q_0) edge[left] node{$Out(sr_1,a)$} (q_2)
+        (q_1) edge[above] node{$Out(sr_2,c)$} (q_5)
+        (q_2) edge[above] node{$In(rs_1,b)$} (q_3)
+        (q_2) edge[bend right, below] node{$wait$} (q_4)
+        (q_3) edge[above] node{$In(rs_2,d)$} (q_4)
+        (q_5) edge[right] node{$b_0 \gg m_1$} (q_4)
+        ;
+\end{tikzpicture}
+\end{center}
+La figura corresponde al AFCA $S= \langle \{q_0,..,q_5\},[b_0],\{sr_1,sr_2,rs_1\}, \Sigma_A, \delta_A, q_0, \{q_4\} \rangle$. Donde $\Sigma =\{wait, b_0 \ll m_1,b_0 \gg m_1, Out(sr_1,a),Out(sr_2,c), In(rs_1,b),In(rs_2,d) \}$ En el ejemplo podemos ver los tres tipos de transiciones que los AFCA pueden realizar. Transiciones internas de buffer interno como son $b_0 \ll m_1$ y $b_0 \gg m_1$, 
+\caption{Ejemplo de autómata asíncrono de comunicación}
+\end{figure}
+
+
+
+
+
+\subsection{Aspectos comunicacionales de los AFCA}
+
+Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de contratos en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocol,o para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.
+
+
+
+%  Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección atendemos dicha problemática introduciendo las Multichannel Communicating Finite State Machines. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
+
+\begin{definition}[mCFSM] Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
+\begin{itemize}
+  \item $Q$ es un conjunto finito de estados
+  \item $\mathcal{C} = \{ pq_n \mid pq \in \mathcal{P}^2, n \in \mathbb{N}, p \not= q\}$ es un conjunto de canales
+  \item $q_0 \in Q$ es el estado inicial;
+  \item $\delta \subseteq Q \times (\mathcal{C} \times \{!,?\} \times \mathcal{M}) \times
+    Q$ es un conjunto finito de \emph{transiciones}.
+  \end{itemize}
+
+Un communicating system es un mapa S que asigna un mCFSM S(p) a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando q es un estado de la máquina S(p) y $\tau$ es una transición de S(p).
+  
+Al igual que antes la semántica de un communicating system se obtiene considerando configuraciones. Estas configuraciones son iguales a las de las CFSM puras con la salvedad que ahora los canales no están restringidos a un único par entre cada par de participantes.
+
+ \end{definition}
+ 
+% * <ivissani@gmail.com> 2018-01-28T13:14:43.225Z:
+
+% De esta manera lo que tenés es una enumeración de canales entre cada par de participantes. Lo único que hay que hacer es ajustar la semántica (las reglas) a esta nueva notación para que sea coherente.
+% 
+% Notar que la cantidad de canales existentes entre cada par de participantes ahora es infinita (los naturales) PERO la cantidad de ellos que vas a usar siempre va a ser finita porque de acuerdo a la notación que tenemos hay que fijar qué canal se usa en cada envío/recepción de mensaje y, por lo tanto, el hecho de que EXISTAN infinitos canales no afecta a la semántica ni al poder expresivo de las CFSMs
+% 
+
+
+\begin{definition}[Semántica de una mCSFSM]La configuración de un multichannel communicating system se define en términos de transiciones entre configuraciones como se ve a continuación:
+
+  La configuración de un communicating system S es un par
+  $s = \sysconf{q}{w}$ donde
+  $\vectorize{q} = \left(q_\p\right)_{\p \in \mathcal{P}}$ donde
+  $q_\p \in S(p)$ para cada $p \in \mathcal{P}$ y
+  $\vectorize{w} = \left(w_{pq}\right)_{pq \in \C}$ con
+  $w_{pq} \in \mathcal{M} $.
+  
+  Una configuración $s' = \sysconf{q'}{w'}$ es \emph{alcanzable} desde otra
+  configuración $s = \sysconf{q}{w}$ a través de la \emph{ejecución de la
+    transición}  $\tau $ (escrito $s \overset{t}{\rightarrow} s'$) si existe un
+   $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
+	\begin{enumerate}
+		\item $t = (q_p, pq_n!m,  q'_p) \in \delta_p$ y 
+			\begin{enumerate}
+				\item $q'_{p'} = q_{p'}$ for all $p' \neq p$; y
+				\item $w'_{pq_n} = w_{pq_n} \cdot m$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$; \\
+			\end{enumerate}
+                O bien
+		\item $t = (q_q, pq?m,  q'_q) \in \delta_q$ y 
+			\begin{enumerate}
+				\item $q'_{p'} = q_{p'}$ for all $p' \not= q$; y
+				\item $m \cdot w'_{pq_n} = w_{pq_n}$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$
+			\end{enumerate}
+	\end{enumerate}
+\end{definition}
+
+Multichannel CFSMs  con un único canal para cada par ordenado de participantes son equivalentes a CFSMs puras.
+
+\begin{definition}[Interfaz de comunicación de un AFCA] Es la mCFSM que resulta de aplicarle el siguiente procedimiento a un AFCA.
+\begin{enumerate}
+    \item Transformamos toda acción interna y de buffer en una transición $\epsilon$. Esto resulta en una autómata no determinístico con transiciones $\epsilon$
+    \item Transformamos el autómata no determinístico rsultante del paso anterior en uno determinístico.
+\end{enumerate}
+\end{definition}
+
+En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre dos otros participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. Una applicación de este procedimiento se ve en la Figura X. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
+
+\begin{definition}[Sistema emulado] Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
+\begin{itemize}
+\item $Q_{p^{sr_n}} = \{q_0\} \cup \bigcup_{m \in \mathcal{M}} \{q_m\}$
+\item $\mathcal{C}_{p^{sr_n}} = \{sp_n^{sr_n}, p^{sr_n}r_n,  p^{sr_n}s_n, rp_n^{sr_n} \}$
+\item $q_{0_{p^{sr_n}}} = q_0 $
+\item $ \delta_{p^{sr_n}} = \bigcup_{m \in \mathcal{M}} \{ (q_0,sp_n^{sr_n}?m,q_m),(q_m,p^{sr_n}r_n!m,q_0)  \} $
+\end{itemize}
+Cada viejo participante $q \in \mathcal{P}$ se reemplaza por un nuevo participante $q'$ donde:
+\begin{itemize}
+\item $\mathcal{C}_{q'} = \{qp_n^{qr_n} \ | \ qr_n \in \mathcal{C}_{q} \} \cup \{p^{sq_n}q_n \ | \ sq_n \in \mathcal{C}_{q} \}$ 
+\item $ \delta_{q'} = \bigcup_{m \in \mathcal{M}} \{ (q, qp_n^{qr_n}!m, q') \ | \ (q, qr_n!m, q') \in \delta_q \} \cup \{q, p^{sq_n}q_n?m,q' \ | \ (q, sq_n?m, q') \in \delta_q \}$
+
+\end{itemize}
+
+Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos, el orden de los mensajes está garantizado como resultado del modo en que $\delta$ está definido para los repetidores. Nótese que los repetidores respetan ese orden porque al consumir un mensaje desde el canal de "entrada" (el canal que sirve para recibir mensajes del emisor original) la única acción posible del repetidor es mandar el mensaje a través del canal de salida (el canal que sirve para enviar mensajes al receptor original). Como todo canal es FIFO y los repetidores se comportan del mismo modo, el orden entre dentro de cada canal queda garantiado. Por oro lado, no hay garantía respecto al orden de la comunicación entre canales del modelo original. Por lo tanto podemos decir que los repetidores no introducen más concurrencia que la que estaba en el modelo original y debido a eso los dos sistemas, a pesar de no ser bisimilares y no tener las mismas trazas, son equivalentes respecto a la ausencia de deadlock, recepciones no especificadas y mensajes huérfanos. Esta observación es importante porque provee una forma de chequear multichannesl communication systems recurriendo nuevamente al chequeo de GMC del sistema emulado.
+
+\end{definition} 
+
+\begin{prop} El sistema emulado preserva los errores comunicacionales
+
+\begin{proof} Primero notemos que los repetidores no pueden generar errores de comunicación dado que en el estado inicial pueden recibir el rango completo de mensajes y luego de ocnsumir un mensaje su única acción posible es reenviarlo. Recordemos también que el orden de los mensajes se preserva. Esto significa que si en el sistema original los mensajes $ m $ y $m'$ fueron enviados en ese orden sobre el canal $sr$ en el sistema emulado se envían en el mismo orden sobre el canal $sp^{sr}$ y por lo tanto son enviados en ese mismo orden a través del canal $p^{sr}r$. Entonces se puede mostrar que para cada error de configuración alcanzable en el sistema original, hay una configuración que presenta el mismo error que es alcanzable en el sistema emulado y viceversa.
+\begin{itemize}
+\item[$\Rightarrow$] Consideremos cualquier configuración de error $e$ alcanzable en el sistema original y consideremos cualquier camino que alcance $e$. Luego reemplacemos toda acción $sr!m$ con la secuencia de acciones $sp^{sr}!m, sp^{sr}?m, p^{sr}r!m$ y cada acción $sr?m$ con $p^{sr}?m$, este nuevo camino está presente en el sistema emulado y alcanza el estado donde las configuraciones de buffer y transiciones permitidas son las mismas para el conjunto de máquinas compartidas (es decir, todas las máquinas de sistema emulado menos los repetidores) y los repetidores están en su estado inicial con buffers vacíos.
+\item$\Leftarrow$ Consideremos cualquier error de configuración $e$ alcanzable en el sistema emulado y ocnsideremos cualquier camino que alcance $e$. Ya establecimos que el error no puede ser culpa de los repetidores dado que siempre pueden progresar. Por lo tanto sin importar el estado de los buffers en $e$ hay una configuración $e'$ que presenta el mismo error de comunicación y donde el estado de los buffers de los repetidores está vacío y están en su estado inicial. Luego consideremos que cualquier camino que alcance $e'$ está formado por secuencias de la forma $sp^{sr}!m,\ldots, sp^{sr}?m, \ldots, p^{sr}r!m$ y $p^{sr}r?m$ (donde los puntos suspensivos denota la posibilidad de interleaving de otras acciones). Entonces alcanza con reemplazar cada secuencia $sp^{sr}!m,\ldots_0, sp^{sr}?m, \ldots_1, p^{sr}r!m$ con la secuencia $\ldots_0,\ldots_1, sr!m$ y cada $p^{sr}r?m$ con $sr?m$ para obtener un camino que existe en el sistma original y aclanza una configuración que tiene sus buffers en el mismo estado con las mismas transiciones permitidas.
+\end{itemize}
+
+\end{proof}
+
+\end{prop}

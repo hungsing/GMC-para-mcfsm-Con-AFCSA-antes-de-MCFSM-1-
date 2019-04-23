@@ -1,0 +1,285 @@
+%!TEX root = ./main.tex
+\section{Definiciones preliminares}
+\label{preliminares}
+A continuación presentaremos algunas definiciones y resultados preliminares que serán de utilidad en las restantes secciones de esta tesis.
+
+\begin{definition}[Clausura reflexo-transitiva] Sea $\rightarrow$ una relación sobre un conjunto S. La clausura reflexo-transitiva de $\rightarrow$, denotada  $\rightarrow^*$, se define como la relación reflexiva y transitiva más pequeña sobre S que contiene a $\rightarrow$. 
+\end{definition} 
+\begin{definition}[Relación de equivalencia] Es una relación binaria reflexiva, simétrica y transitiva. La relación ``es igual a''  es el ejemplo canónico donde para todo trío de objetos a, b y c, vale: 
+
+\begin{enumerate}
+    \item a= a (propiedad reflexiva)
+    \item Si a = b entonces b = a (propiedad de simetría)
+    \item Si a = b y b = c entonces a = c (propiedad transitiva)
+\end{enumerate}
+\end{definition}
+
+\begin{prop}
+ La clausura reflexo-transitiva de una relación binaria es una relación de equivalencia
+\end{prop}
+
+\subsection{Comunicación Asincrónica}
+Introducción a la comunicación asincrónica. CFSM
+
+
+
+El concepto de \emph{Communicating Finite State Machines} (llamado a partir de ahora CFSM) fue introducido en \cite{CFSM} con el objetivo modelar y estudiar el comportamiento de sistemas distribuidos constituídos por un conjunto de procesos secuenciales que ejecutan concurrentemente y se comunican a partir de intercambiar mensajes a través de canales de comunicación previamente declarados.
+
+\begin{definition}[Communicating Finite State Machines] Sea $\mathcal{M}$ un conjunto finito de mensajes y un conjunto finito de mensajes  y un conjunto finito de participantes $\mathcal{P}$ un conjunto finito de participantes, definimos una CFSM sobre $\mathcal{M}$ como un sistema de transición finito $\langle Q, C, q_0, \mathcal{M}, \delta \rangle$ donde
+\begin{itemize}
+  \item $Q$ es un conjunto finito de estados;
+  \item $C = \left\{ pq \in \mathcal{P}^2 \left|\right. p \not= q\right\}$ es un conjunto de canales
+  \item $q_0 \in Q$ es el estado inicial;
+  \item $\delta \subseteq Q \times (C \times \{!,?\} \times \mathcal{M}) \times Q$ es un conjunto finito de \emph{transiciones}.
+  \end{itemize}
+  
+\end{definition} 
+
+A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} \cite[Def.2.2]{Communicating System} como un conjunto de CFSMs que cumplen determinadas propiedades.
+
+\begin{definition}[Communicating System] Dada una CFSM $\textit{M}_p = \langle Q_p, q_{0_p}, \mathcal{M}, \delta_p \rangle $ para cada participante $p \in \mathcal{P}$, la tupla $S= \langle M_p \rangle_{p \in \mathcal{P}} $ es un communicating system CS.
+Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{w} = (w_{pq})_{pq \in C}$ con $ w_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es $s_0 = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$
+% Un \emph{communicating system} es un mapa \textit{S} que asigna una CFSM $S(p)$ a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando $q$ es un estado de la máquina $S(p)$ y $t \in S(p)$ cuando $t$ es una transición de $S(p)$.\\
+
+\end{definition}
+
+La semántica de los CSs está dada por un sistema de transición etiquetado cuyos estados y transiciones determinan las posibles ejecuciones del conjunto de procesos sobre el que está definido el sistema.
+
+
+\begin{definition}[Estados y configuraciones alcanzables]
+\label{def:estadosyconf}
+  Una configuración $c' = \langle \overrightarrow{q'} ; \overrightarrow{w'} \rangle$ es \emph{alcanzable} desde otra
+  configuración $c = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
+	\begin{enumerate}
+		\item $l = sr!m$, $\langle q_s, l,  q'_s\rangle \in \delta_s$ y 
+			\begin{enumerate}
+				\item $q'_p = q_p$ para todo $\p \neq s$; y
+				\item $w'_{sr} = w_{sr} \cdot m$ y  $w'_{pq} = w_{pq}$ para todo $pq \neq sr$; o bien
+			\end{enumerate}
+		\item $l = sr?m$, $\langle q_r, l,  q'_r\rangle \in \delta_r$ y 
+			\begin{enumerate}
+			\item $q'_{p} = q_{p}$ para todo $p \neq r$; y
+				\item $w_{sr} = m \cdot w'_{pq}$ y $w'_{pq} = w_{pq}$ para todo $pq' \neq sr$
+			\end{enumerate}
+	\end{enumerate}
+Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
+\end{definition}
+
+En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
+
+\begin{definition}[Communicating System seguro] Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
+\begin{enumerate}
+\item $s$ no es una configuración de deadlock (cuando la única transición de salida necesita consumir un mensaje que no está en el buffer)
+\item $s$ no posee mensajes huérfanos (cuando no hay transiciones salientes y quedaron mensajes en el buffer) , y
+\item $s$ no posee recepciones no especificadas (cuanndo la única transición saliente consume un mensaje disinto al primero de la cola).
+\end{enumerate}
+Para poder expresar esta condición de seguridad es necesario identificar conjuntos de acciones que pueden ser llevadas a cabo concurrentemente. Para esto definimos las siguientes relaciones sobre el conjunto de transiciones de una CFSM. Dados $q, q' \in Q$, se define $\mathit{act}(q,q') = \left\{\ell \ \left|\right. \ (q,\ell,q') \in \delta \right\}$ y $\Diamond, \blacklozenge \subseteq \delta \times \delta$ como las relaciones de equivalencia más pequeñas que contienen $\romboeqb$ y $\underline{\blacklozenge}$ donde:
+\begin{itemize}
+\item $(q_1, \ell, q_2) \underline{\Diamond} (q'_1, \ell, q'_2)$ sii $ l \notin \mathit{act}(q_1, q'_1) \land \mathit{act}(q_1, q'_1) = \mathit{act}(q_2, q'_2) \land \mathit{act}(q_2, q'_2) \neq \emptyset $
+\item  $(q_1, \ell, q_2) \underline{\blacklozenge} (q'_1, \ell, q'_2)$ sii $ (q_1, \ell, q_2) \romboeqb (q'_1, \ell, q'_2) $ y $\forall(q,\ell,q') \in [(q_1, \ell, q_2) ]^{\Diamond}, \ \mathit{act}(q_1,q) = \mathit{act}(q_2,q') \land \mathit{act}(q'_1,q) = \mathit{act}(q'_2,q')$  
+\end{itemize}
+donde $[(q_1, \ell, q_2) ]^{\Diamond}$ es la clase de equivalencia de $(q, \ell, q')$ respecto de la relación $\Diamond$ (resp. $\blacklozenge$). Intuitivamente dos transiciones están $\blacklozenge$-relacionadas si se refieren a la misma acción aún teniendo en cuenta el interleaving.
+\end{definition}
+
+\begin{example}[Relaciones $\underline{\Diamond}$ y $\underline{\blacklozenge}$]
+\label{ex:relaciones}
+Consideremos la siguiente CFSM:
+\begin{center}
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= of q_0 ] {$q_1$};
+ \node[state] (q_5) [right= of q_1 ] {$q_5$};
+ \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= of q_2 ] {$q_3$};
+ \node[state,accepting] (q_6) [right= of q_3 ] {$q_6$};
+ \draw[]        
+        (q_0) edge[above] node{sr!a} (q_1)
+        (q_0) edge[right] node{sr'!b} (q_2)
+        (q_1) edge[right] node{sr'!b} (q_3)
+        (q_1) edge[above] node{sr!a} (q_5)
+        (q_2) edge[above] node{sr!a} (q_3)
+        (q_2) edge[bend right, below] node{sr!c} (q_6)
+        (q_3) edge[above] node{sr!a} (q_6)
+        (q_5) edge[right] node{sr'!b} (q_6)
+        ;
+\end{tikzpicture} 
+\end{center}
+
+\begin{enumerate}
+    \item \label{ex:cond1} $(q_0, sr!a,q1) \underline{\Diamond} (q_2,sr!a,q3)  $ %dado que está entrelazada con $sr'!b$
+    \item \label{ex:cond2} $(q_0, sr!a,q1) \underline{\blacklozenge} (q_2,sr!a,q3) $ %por la misma razón que 1
+    \item \label{ex:cond3} No vale $ ((q_0, sr!a,q1) \underline{\Diamond} (q_1,sr'!b,q5))$ %porque la transición entre $q_0$ y $q_1$ pasa a través de $sr!a$. Es decir que las dos transiciones son secuenciales no concurrentes. 
+    \item \label{ex:cond4} $ (q_0, sr'!b,q2) \underline{\Diamond} (q_1, sr'!b,q3)$ %la relación e 
+    \item \label{ex:cond5} No vale $((q_0, sr'!b,q2) \underline{\blacklozenge} (q_1,sr'!b,q_3)) $
+\end{enumerate}
+
+Las relaciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond1}--~\ref{ex:relaciones}.\ref{ex:cond2} se sostienen dado que ambas transiciones están entrelazadas con $sr'!b$. La relacion en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} no se sostiene debido a que la transición entre el origen de una $(q_0)$ y el del otro $(q_1)$ pasa por $sr!a$. Ambas transiciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} son secuenciales, no concurrentes. La relación en Ej.~\ref{ex:relaciones}.\ref{ex:cond4} se sostiene, pero en Ej.~\ref{ex:relaciones}.\ref{ex:cond5} no porque $(q_5,sr'!b,q_6)$ está en la clase de $\Diamond$-equivalencia de $(q_0,sr'!b,q_2)$ para la cual la condición no se sostiene (debido a la transición con la etiqueta $sr!c$).
+\end{example}
+
+\begin{definition}[Eventos] Dados un conjunto de participantes $\mathcal{P}$ y un conjunto de mensajes $\mathcal{M}$ definimos un evento $e$ como es una tupla $\langle q_s, q_r, s, r, a \rangle)$ (también escrita como $\langle q_s, q_r, s \rightarrow r:a \rangle$), tal que $s,r \in \mathcal{P}$, indicando que $s$ y $r$ pueden intercambiar el mensaje a, cuando están en el estado $q_s$ y $q_r$, respectivamente.
+\end{definition}
+
+\marginpar{REvisar} Tomando en consideración la definición anterior, para distinguir el paralelsimo a nivel máquina introducimos una relación de equivalencia sobre eventos que identifica eventos cuyas transiciones son $\blacklozenge$-equivalentes.
+
+\begin{definition}[Equivalencia entre eventos] Definimos la equivalencia entre eventos como $\bowtie = \bowtie_s \cap \bowtie_r \subseteq \mathcal{E} \times \mathcal{E}$ donde $\mathcal{E}$ es el conjunto de eventos del sistema y se cumplen las siguientes condiciones:
+
+\begin{itemize}
+\item $(q_1, q_2, s \rightarrow r:a) \bowtie_s (q'_1, q'_2, s \rightarrow r:a) \iff$ \\ 
+ $\forall (q_1, sr!a,q_3),(q'_1, sr!a,q'_3) \in \delta_s:(q_1, sr!a,q_3) \underline{\blacklozenge} (q'_1, SR!a,q'_3) $
+\item $(q_1, q_2, s \rightarrow r:a) \bowtie_r (q'_1, q'_2, s \rightarrow r:a) \iff \\ 
+\forall (q_2, sr?a,q_3),(q'_2, sr?a,q'_4) \in \delta_ r:(q_2, sr?a,q_4) \romboeqn (q'_2, sr?a,q'_4)$ \end{itemize}
+\end{definition}
+\begin{example}[Equivalencia entre eventos]
+\label{ex:equiveventos}
+Considere el siguiente Communicating System
+
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= of q_0 ] {$q_1$};
+  \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= of q_2 ] {$q_3$};
+
+ \draw[]        
+        (q_0) edge[above] node{pr!a} (q_1)
+        (q_0) edge[right] node{sp?b} (q_2)
+        (q_1) edge[right] node{sp?b} (q_3)
+        (q_2) edge[above] node{pr!a} (q_3)
+        ; 
+\end{tikzpicture} 
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{pr?a} (q_1)
+        
+        ;
+\end{tikzpicture} 
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{sp?b} (q_1)
+        
+        ;
+\end{tikzpicture} 
+
+En el sistema de arriba podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. 
+
+Para el primero queremos ver que $(q_{0p}, pr!a, q_{1p}) \romboeqn (q_{2p}, pr!a, q_{3p})$
+Para esto necesitamos que valga $(q_{0p}, pr!a, q_{1p}) \romboeqb (q_{2p}, pr!a, q_{3p})$. Esto se cumple dado que $pr!a \notin act(q_{0p},q_{2p})$ y $act(q_{0p},q_{2p}) = act(q_{1p},q_{3p}) \neq \emptyset$. Ahora tenemos que ver la clase de equivalencia $[(q_{0p}, pr!a, q_{1p})]^{\Diamond}$. La misma es el conjunto unitario $ \{(q_{2p}, pr!a, q_{3p})\}$. Por último queremos ver que  $act(q_{0p}, q_{2p}) = 
+act(q_{1p}, q_{3p}) \land act(q_{2p}, q_{2p}) = act(q_{3p}, q_{3p})$. La segunda es trivial, la primera se cumple siendo el conjunto unitario $\{sp?b\}$. Con esto demostramos que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_p (q_{2p}, q_{0r}, p \rightarrow r:a)$ 
+
+Nos queda probar que vale $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_r (q_{2p}, q_{0r}, p \rightarrow r:a)$. Esta equivalencia es más sencilla de probar, dado que tenemos una única transición. Entonces vemos que es trivial que $(q_{0r}, pr?a, q_{1r}) \underline{\blacklozenge} (q_{0r}, pr?a, q_{1r})$. Con esto vemos que $(q_{0p}, q_{0r}, p \rightarrow r:a)$ y $(q_{2p}, q_{0r}, p \rightarrow r:a)$ son equivalentes en $\bowtie_p$ y $\bowtie_r$, por lo tanto están en $\bowtie = \bowtie_p \cap \bowtie_r$.
+\end{example} 
+
+A continuación definimos la noción de Sistema de Transición Sincrónico, para reflejar el comportamiento de un sistema cuando envíos y recepciones son emparejados para mostrar que ocurren al mismo tiempo.
+\newpage
+
+\begin{definition}[Sistema de transición sincrónico] Dados un $S = (M_P)_{p \in \mathcal{P}}$ un CS, sea $\langle N,\hat{\delta}, E \rangle$, donde: 
+\begin{itemize}
+    \item[] $N = \{\overrightarrow{q} \ | \ (\overrightarrow{q}; \overrightarrow{\epsilon}) \in RS_1(S) \}$,
+    \item[] $\hat{\delta}= \{(n, e, n') \ | \ (n;\overrightarrow{\epsilon}) s_1 \overset{sr!a}{\longrightarrow}\overset{sr?a}{\longrightarrow} (n';\overrightarrow{\epsilon})	\land e= n[s], n[r], s \rightarrow r:a \}$, y
+    \item[] $ E = \{ \exists n, n' \in N : (n,e,n') \in \hat{\delta}\} \subseteq \mathcal{E}$,
+\end{itemize}
+   el \emph{Sistema de Transición Sincrónico} de S es $TS(S)= \langle N, n_0, E/ \bowtie,\rightrightharpoons \rangle$ donde $n_0= \overrightarrow{q_0} $ es el estado inicial, $n \overset{[e]}{\rightrightharpoons} n' \iff (n,e,n') \in \hat{\delta}$. Fijamos un conjunto $\hat{E}$ de elementos representativos de cada clase de equivalencia $\bowtie$ (ej: $\hat{E} \subseteq E$ y $\left(\forall e \in E\right)\left(\exists!e' \in \hat{E}\right)\left(e' \in [e] \right)$) y escribimos $n \overset{e'}{\rightrightharpoons} n'$ para $ n \overset{[e]}{\rightrightharpoons} n'$ cuando $ e' \in [e] \cap \hat{E} $. Las secuencias de eventos se notan con un símbolo $\pi$ y extendemos la notación de $ \rightarrow$ en la Def.~\ref{def:estadosyconf} a $\rightrightharpoons$ (ej: $si \pi = e_1 ...e_k, n_1 \overset{\pi}{\rightrightharpoons}n_{k+1} sii n_1 \overset{e_1}{\rightrightharpoons} n_2 \overset{e_2}{\rightrightharpoons}...\overset{e_k}{\rightrightharpoons} n_{k+1}$).
+
+$TS(S)$ representa todas las posibles ejecuciones sincrónicas del sistema $S$; y cada transición es etiquetada con un evento $e$.
+\end{definition}
+
+\begin{example}[Sistema de Transición Sincrónico] 
+\label{ex:STS}
+Consideremos el Ej.~\ref{ex:equiveventos}, su Sistema de Transición Sincrónico es el siguiente
+
+\begin{tikzpicture}[->, very thick]
+\node[state] (q_0) {};
+\node[state] (q_1) [right= 3.5cm of q_0 ] {};
+\node[state] (q_2) [below= of q_0 ] {};
+\node[state] (q_3) [right= 3.5cm of q_2 ] {};
+%$(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$
+\draw[]        
+        (q_0) edge[above] node{$(q_{0p}, q_{0r}, p \rightarrow r:a)$} (q_1)++
+        (q_0) edge[left] node{$(q_{0s}, q_{0p}, s \rightarrow p:b)$} (q_2)
+        (q_1) edge[right] node{$(q_{0s}, q_{3p}, s \rightarrow p:b)$} (q_3)
+        (q_2) edge[below] node{$(q_{2p}, q_{0r}, p \rightarrow r:a)$} (q_3)
+        ; 
+\end{tikzpicture}
+
+Tenemos $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$ y $(q_{0s}, q_{0p}, s \rightarrow p:) \bowtie (q_{0s}, q_{3p}, s \rightarrow p:b)$. Podemos considerar equivalentes los eventos de las transiciones verticales por un lado y las de las transiciones horizontales por el otro. Esto nos permite identificar un par de interacciones concurrentes, pero seguir diferenciándolas de otras instancias de comunicación $p \rightarrow r:a$ y $s \rightarrow p:b$
+\end{example}
+
+\begin{definition}[Proyecciones] La proyección de un evento e sobre un participante p, denotado por $e \downharpoonright_p$ se define de la siguiente manera:
+
+\begin{equation}
+(q_s,q_r,s \rightarrow r:a) \downharpoonright_p = \begin{cases} 
+pr!a & \mathit{if} s=p \\
+sp?a & \mathit{if} r=p \\
+\epsilon & \mathit{en \ otro \ caso} \\
+\end{cases} 
+\end{equation}
+
+La proyección se define sobre secuencias de eventos en el modo evidente. La proyección $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$ sobre el participante p, notada $ TS(S) \downharpoonright_p $, es el autómata $(Q, q_0, \Sigma, \delta)$ donde $Q=N, \ q_0 = n_0$, $\Sigma$ es el conjunto de etiquetas y $\delta \subseteq Q \times \Sigma \cup \{ \epsilon \} \times Q $ es el conjunto de transiciones, tal que $(n_1, e \downharpoonright_p, n_2) \in \delta \iff n_1 \overset{e}{\rightrightharpoons} n_2 $
+
+\end{definition}
+
+\begin{example}{Proyecciones}
+
+
+\end{example}
+
+Introducimos el concepto de generalized multiparty compatibility (GMC) como una condición completa y sólida para construir CFSMs. 
+% Usé sólida como traducción de sound. En el paper habla de construir global graphs, término que acá no usamos, no se si puse bien
+A partir de este punto, fijamos un sistema $S =(M_p)_{p \in \mathcal{P}} $ con $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$. GMC depende de dos condiciones, representabilidad y propiedad de ramificación.\\
+
+La propiedad de representabilidad determina que cada máquina, traza y elección estén representadas en el sistema de transición.
+
+\begin{definition}Para un lenguaje $\mathcal{L}$, $hd(\mathcal{L})$ devuelve las primeras acciones de $\mathcal{L}$ si las tiene: 
+\begin{center}
+$hd(\mathcal{L})= \{\ell \ | \ \exists q \in Act*: \ell \cdot q \in \mathcal{L} \}$	\ \	 $hd(\{ \epsilon \}) = \{ \epsilon \}$
+\end{center}
+Dado $n \in N$, sea $ TS(S)\langle n \rangle$ el sistema de transición TS(S) donde se reemplaza al estado inicial $n_0$ por $n$. Escribimos LT(S,n,p) para $\mathcal{L}(TS(S)\langle n \rangle)\downharpoonright_p $, es decir LT(S,n,p) es el lenguaje que se obtiene estableciendo a n como nodo inicial de TS(S) y proyectando el nuevo sistema de transición sobre p.
+\end{definition}
+
+\begin{definition}[Representabilidad]Un sistema S es representable si
+\begin{enumerate}
+\item $\mathcal{L}(M_p) = LT(S,n_0,p) $ y
+\item $\forall q \in Q_p \ \exists n \in N: n[p] = q \land  \cup_{(q,\ell, q') \in \delta_p} \{ \ell \} \subseteq hd (LT(S,n,p))$
+\end{enumerate}
+para todo $p \in \mathcal{P} $ \\
+
+La primera condición asegura que cada traza de cada máquina esté en $TS(S)$, a su vez, la segunda condición es necesaria para asegurar que cada elección en cada máquina esté representada en $TS(S)$.
+\end{definition}
+
+La propiedad de ramificación estimula que cada vez que hay una decisión en un sistema $TS(S)$, una única máquina toma esa decisión y cada uno de los otros participantes es notificado de la rama que se tomó o no participa en esa elección. 
+ 
+\begin{definition}[Propiedad de ramificación] Un sistema S posee la propiedad de ramificación si para todo $n \in N$ y para todo $e_1 \neq e_2 \in \hat{E} \ \mathit{tq} \ n \overset{e_1}{\rightrightharpoons} n_1 \ \mathit{y} \  \ n_1 \overset{e_2}{\rightrightharpoons} n_2$ luego tenemos
+\begin{enumerate}
+\item o bien existe $n'\in N$ tal que $n_1 \overset{e_2}{\rightrightharpoons} n' \ \mathit{y} \ n_2 \overset{e_1}{\rightrightharpoons} n'$, o 
+\item para cada $(n'_1, n'_2) \in ln(n, e_1, e_2)$ quedando 
+
+$L_p^i = hd (\{e_i \downharpoonright_p \cdot \phi \  | \ \phi \in LT(S,n'_i,p) \} ) $ con $i \in \{1,2\}$ y $p \in P$, y se cumplen las condiciones 2a, 2b y 2c definidas abajo 	
+
+\begin{enumerate}[(a)]
+\item Choice awareness: $\forall p \in \mathcal{P}$ valen \begin{enumerate}[i.]
+\item $L_p^1 \cap	L_p^2 \subseteq \{ \epsilon \} \ \mathit{y} \  \epsilon \in L_p^1 \iff \epsilon \in L_p^2$, o 
+\item $\exists n' \in N, \pi_1, \pi_2$: $n'_1 \overset{\pi_1}{\rightrightharpoons} n' \land  n'_2 \overset{\pi_2}{\rightrightharpoons} n' \land (e_1 \cdot \pi_1) \downharpoonright_p= (e_2 \cdot \pi_2)\downharpoonright_p = \epsilon$
+\end{enumerate}
+\item selector único: $\exists!s \in \mathcal{P}: L_s^1 \cap L_s^2 = \emptyset \land \exists sr!a \in L_s^1 \cup L_s^2 $
+\item no race: $\forall r \in \mathcal{P}: L_r^1\cap L_r^2 = \emptyset \Rightarrow \forall s_1r?a_1 \in L_r^1, \forall s_2r?a_1 \in L_r^2:\forall i \neq j \in \{1,2\}: n'_i \overset{\pi_i}\rightrightharpoons  $ \\
+$\Rightarrow dep (s_i \rightarrow r: a_i, e_i \cdot \pi_i, s_j \rightarrow r: a_j) $
+\end{enumerate}
+\end{enumerate} 	
+\end{definition}
+
+Representabilidad garantiza que TS(S) contiene suficiente información para decdir propiedades seguras de cualquier ejecución asincrónica de S. La propiedad de ramificación asegura que si una rama en TS(S) representa una elección esta está "bien formada".\\
+ 
+Con esto definimos que toda ramificación es o bien (1) la ejecución concurrente de dos eventos; o, para cada participante p (2(a)I) si p no termina antes de n entonces las primeras dos acciones de p en dos ramas distintas son disjuntas; o (2(a)II) p no está involucrado en la elección, o sea la ramas se juntan antes de que p realice ninguna acción; (2(b)) hay un único participante s tomando la decisión; y (2(c)) para cada participante r involucrado en la elección, no puede haber race condition entre los mensajes que puede recibir r. La no race condition asegura que en ninguna ejecución (asincrónica) de S, si una máquina tiene más de un buffer no vacío, entonces puede leerlos en cualquier orden (interleaving es posible). Notar que si una máquina r recibe todos sus mensajes de un mismo emisor, entonces hay una $\triangleleft$-relación entre todas sus acciones.
+
+\begin{definition}[General Multiparty Compatibilty] Un sistmea S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
+\end{definition}
+

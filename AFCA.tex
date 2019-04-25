@@ -1,7 +1,8 @@
 %!TEX root = ./main.tex
 
 
-\section{Compponentes Asincrónicas}
+\section{Componentes Asincrónicas}
+
 
 \subsection{Autómatas finitos de comunicación asincrónica}
 
@@ -164,8 +165,6 @@ Decimos que una configuración está en modo Receptor no Especificado si la úni
 \begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
 \end{definition}
 
-
-La Figura.~\ref{ex:afca} muestra un ejemplo de estos autómatas.
 
 \begin{figure}[ht]
 \label{ex:AFCA}

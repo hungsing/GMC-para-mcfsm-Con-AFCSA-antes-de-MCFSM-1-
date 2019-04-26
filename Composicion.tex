@@ -19,7 +19,13 @@ Como la idea es que los autómatas con comunicación asincrónica reperesenten p
 \item $\Sigma_E \cap \Sigma_R = \emptyset$ el conjunto de etiquetas debe ser disjunto, tanto internas, como de entrada/salida y de bufffer
 \item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
 \end{enumerate}
+\begin{definition}[Composición total]
+Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $\{E_{\mathcal{P}_i} \ | \mathcal{P}_i \in \mathcal{P}\}$, dónde $E_{\mathcal{P}_i}= \langle Q_{\mathcal{P}_i}, B_{\mathcal{P}_i}, \mathcal{C}_{\mathcal{P}_i}. \Sigma_{\mathcal{P}_i}, \delta_{\mathcal{P}_i}, q_{0{\mathcal{P}_i}}, F_{\mathcal{P}_i}\rangle$. Dado un conjunto que cumpla $\bigcap \Sigma_{\mathcal{P}_i} = \emptyset$ y $\bigcap B_{\mathcal{P}_i} = \emptyset$, definimos la composición $E_\mathcal{P}= ||_{1..n} E_{\mathcal{P}_i}$ componente a componente.
+\begin{itemize}
+    \item $Q_\mathcal{P}= \Pi_{\mathcal{P}} $
+\end{itemize}
 
+\end{definition}
 \begin{definition}[Composición]
 Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Dos autómatas  $E_\mathcal{P} = \langle Q_E, B_E, \mathcal{C}_E. \Sigma_E, \delta_E, q_{0E}, F_E\rangle$ y $R_\mathcal{P} = \langle Q_R, B_R, \mathcal{C}_R, \Sigma_R, \delta_R,  q_{0R}, F_R\rangle$, que cumplan $\Sigma_E \cap \Sigma_R = \emptyset$ y $ B_E \cap B_R = \emptyset$, definimos la composición $E||R_\mathcal{P}$ componente a componente.
 

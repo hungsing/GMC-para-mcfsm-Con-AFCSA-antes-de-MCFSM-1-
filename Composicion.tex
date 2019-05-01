@@ -20,56 +20,87 @@ Como la idea es que los autómatas con comunicación asincrónica reperesenten p
 \item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
 \end{enumerate}
 \begin{definition}[Composición total]
-Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $\{E_{\mathcal{P}_i} \ | \mathcal{P}_i \in \mathcal{P}\}$, dónde $E_{\mathcal{P}_i}= \langle Q_{\mathcal{P}_i}, B_{\mathcal{P}_i}, \mathcal{C}_{\mathcal{P}_i}. \Sigma_{\mathcal{P}_i}, \delta_{\mathcal{P}_i}, q_{0{\mathcal{P}_i}}, F_{\mathcal{P}_i}\rangle$. Dado un conjunto que cumpla $\bigcap \Sigma_{\mathcal{P}_i} = \emptyset$ y $\bigcap B_{\mathcal{P}_i} = \emptyset$, definimos la composición $E_\mathcal{P}= ||_{1..n} E_{\mathcal{P}_i}$ componente a componente.
+Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas requerimos que todo par de integrantes sean compatibles para la composición. Para esto necesitamos que se cumplan dos condiciones.
+\begin{enumerate}
+    \item $\forall E_{p_i} E_{p_j} \ \mathit{con} \ p_i,p_j \in \mathcal{P}$ vale $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$. 
+    \item $(\forall E_{p_i} E_{p_j} \ \mathit{con} \ p_i,p_j \in \mathcal{P} $ vale $ B_{p_i} \cap B_{p_j}= \emptyset)$
+\end{enumerate}
+Primero , definimos la composición $E_\mathcal{P}= ||_{1..n} E_{p_i}$ componente a componente
 \begin{itemize}
-    \item $Q_\mathcal{P}= \Pi_{\mathcal{P}} $
-\end{itemize}
+    \item $Q_\mathcal{P}= \Pi Q_{p_i}$ El conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes. 
+    
+    \item $B_\mathcal{P} = \bigcup B_{p_i} \cup \{ c \ | \ \forall \mathcal{C}_{p_i} \mathcal{C}_{p_j}$ con $p_i p_j \in \mathcal{P}$, $c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$  es el conjunto de nombres de buffers del autómata resultante.Se compone de los buffers internos de cada autómata junto con uno nuevo por cada canal compartido entre cada par de autómatas. Los canales compartidos son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí.
+    
+    \item $\mathcal{C}_\mathcal{P}= \bigcup \mathcal{C}_{p_i} \setminus \{ c_k \ | \ \forall \mathcal{C}_{p_i} \mathcal{C}_{p_j} \mathit{con} p_i p_j \in \mathcal{P}$, $c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$
+    
+    \item $\Sigma_\mathcal{P} = \{\Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}\}$ tal que: 
+    
+    \begin{inparaenum}[1)]
+        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup \Sigma_{p_i\mathit{Int}} $,
 
-\end{definition}
-\begin{definition}[Composición]
-Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Dos autómatas  $E_\mathcal{P} = \langle Q_E, B_E, \mathcal{C}_E. \Sigma_E, \delta_E, q_{0E}, F_E\rangle$ y $R_\mathcal{P} = \langle Q_R, B_R, \mathcal{C}_R, \Sigma_R, \delta_R,  q_{0R}, F_R\rangle$, que cumplan $\Sigma_E \cap \Sigma_R = \emptyset$ y $ B_E \cap B_R = \emptyset$, definimos la composición $E||R_\mathcal{P}$ componente a componente.
+        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_\mathit{p_ifromtop_j}$ y 
 
-\begin{itemize}
-\item $Q_{ER} = Q_E \times Q_R$ El conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes. 
+        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup \Sigma_{p_i\mathit{Buff}} \cup \Sigma_\mathit{p_ifromtop_j}$ donde
 
-\item $B_{ER} = B_E \cup B_R \cup \{\mathcal{C}_{E} \cap \mathcal{C}_{R}\}$ es el conjunto de nombres de buffers del autómata resultante.Se compone de los buffers internos de ambos autómatas junto con uno nuevo por cada canal compartido entre ambos autómatas. Los canales compartidos son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí.
+        \item $\Sigma_\mathit{\mathcal{P}_ifromto\mathcal{P}_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i,p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\} $
+    \end{inparaenum}
 
-\item $\mathcal{C}_{ER}= \{ \mathcal{C}_{E} \cup \mathcal{C}_{R} \} \setminus \{ \mathcal{C}_{E} \cap \mathcal{C}_{R} \}$
+\item $\delta_{\mathcal{P}} = \{\delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}\}$
 
-\item $\Sigma_{ER} = (\Sigma_{\mathit{ERInt
-}} \cup \Sigma_{\mathit{EREx}} \cup \Sigma_{\mathit{ERBuff}})$ tal que: \begin{inparaenum}[1)]
+\item $\delta_{\mathcal{P}\mathit{Int}} = Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Int}} \times Q_{\mathcal{P}} $
 
-
-\item $\Sigma_{\mathit{ERInt}} = \Sigma_{\mathit{EInt}} \cup \Sigma_{\mathit{RInt}} $,
-
-\item $\Sigma_{\mathit{EREx}} = \Sigma_{\mathit{EEx}} \cup \Sigma_{\mathit{REx}} \setminus \Sigma_\mathit{EfromtoR} $ y 
-
-\item $\Sigma_{\mathit{ERBuff}} = \Sigma_{\mathit{EBuff}} \cup \Sigma_{\mathit{RBuff}} \cup \Sigma_\mathit{EfromtoR}$ donde
-
-\item $\Sigma_\mathit{EfromtoR} =\{ \langle p_1,p_2,c \rangle \ | \ p_1,p_2 \in \mathcal{P}, \  c \in \mathcal{C} \ y \ ((p_1 = E \land p_2 = R) \lor (p_1 = R \land p_2 = E))   \} $
-\end{inparaenum}
-\item $\delta_{ER} = \{ \delta_{ER \mathit{Int}} \cup \delta_{ER\mathit{Ex}} \cup \delta_{ER\mathit{Buf}}\}$
-\item $\delta_{ER\mathit{Int}} = Q_{ER} \times \Sigma_{ER\mathit{Int}} \times Q_{ER} $
-\item $\delta_{ER\mathit{Ex}}: Q_{ER} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{ER\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{ER}$ es la relación de transición de comunicación externa de $E||R_\mathcal{P}$,
-\item $\delta_{ER\mathit{Buf}}: Q_{ER} \times \Sigma_{ER\mathit{Buf}} \times Q$ y decimos que $\forall q \in Q_\mathit{ER}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{ERBuff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{ER1},...,\omega_\mathit{ERi}:m, ..., \omega_\mathit{ERn}] \rangle$ 
-
-% \sigma_i \in s \land \sigma_i = \omega_\mathit{ERi} \ll m$  donde s es una %secuencia de la forma $[q_1, \sigma_1, q_2,...,\sigma_n, q_n]$ con $q_n = q$% comunicación interna
-\item $q_0 = \langle q0_E,q0_R \rangle$
-\item $F_{ER} = F_E x F_R$
+\item $\delta_{\mathcal{P}\mathit{Ex}}: Q_{\mathcal{P}} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{\mathcal{P}}$ es la relación de transición de comunicación externa de $E_\mathcal{P}$,
+\item $\delta_{\mathcal{P}\mathit{Buff}}: Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Buff}} \times Q_{\mathcal{P}}$ y decimos que $\forall q \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{\mathcal{P}1},...,\omega_\mathit{\mathcal{P}i}:m, ..., \omega_\mathit{\mathcal{P}n}] \rangle$ 
+\item $q_0 = \langle q0_{p_1},\ldots,q0_{p_n} \rangle$
+\item $F_{\mathcal{P}} = \Pi_{1..n}F_{p_i}$
 
 \end{itemize}
 
-Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si dos autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transsiciones se ejecutarían a la par. Como estos autómatas son de comunicación asincrónica, queremos evitar que dos transiciones se sicronizen de ese modo. Para asegurarnos esto pedimos que todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. Formalmente que dados E y R, $\Sigma_E \cap \Sigma_R = \emptyset$. 
 
-Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers, uno para cada sentido de la comunicación, de E a R y viceversa.
+Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si un conjunto de autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transsiciones se ejecutarían a la vez. Como estos autómatas son de comunicación asincrónica, queremos evitar que las transiciones se sicronizen de ese modo. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
 
-Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autóamta, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era In((E,R,c),m) y Out((E,R,c),m) ahora es $b_{ER}  \ll m$ y $b_{ER}  \gg  m$, donde $ b_{ER} \in \{ \mathcal{C}_E \cap \mathcal{C}_R \} $ son los buffers exclusivos del autómata compuesto. 
+Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
 
-Al componer dos autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{ERBuff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
+Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autóamta, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $In((E_{p_i},(E_{p_j},c),m)$ y $Out(((E_{p_i},(E_{p_j},c),m)$ ahora es $b_{\mathcal{P}}  \ll m$ y $b_{\mathcal{P}}  \gg  m$, donde $ b_{\mathcal{P}} \in \{ \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \} $ son los buffers exclusivos del autómata compuesto. 
 
-La composición es conmutativa y se puede generalizar a una cantidad arbitraria (finita) de autómatas.
+Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
 
 \end{definition}
+
+% \begin{definition}[Composición]
+% Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Dos autómatas  $E_\mathcal{P} = \langle Q_E, B_E, \mathcal{C}_E. \Sigma_E, \delta_E, q_{0E}, F_E\rangle$ y $R_\mathcal{P} = \langle Q_R, B_R, \mathcal{C}_R, \Sigma_R, \delta_R,  q_{0R}, F_R\rangle$, que cumplan $\Sigma_E \cap \Sigma_R = \emptyset$ y $ B_E \cap B_R = \emptyset$, definimos la composición $E||R_\mathcal{P}$ componente a componente.
+
+% \begin{itemize}
+% \item $Q_{ER} = Q_E \times Q_R$ El conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes. 
+
+% \item $B_{ER} = B_E \cup B_R \cup \{\mathcal{C}_{E} \cap \mathcal{C}_{R}\}$ es el conjunto de nombres de buffers del autómata resultante.Se compone de los buffers internos de ambos autómatas junto con uno nuevo por cada canal compartido entre ambos autómatas. Los canales compartidos son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí.
+
+% \item $\mathcal{C}_{ER}= \{ \mathcal{C}_{E} \cup \mathcal{C}_{R} \} \setminus \{ \mathcal{C}_{E} \cap \mathcal{C}_{R} \}$
+
+% \item $\Sigma_{ER} = (\Sigma_{\mathit{ERInt
+% }} \cup \Sigma_{\mathit{EREx}} \cup \Sigma_{\mathit{ERBuff}})$ tal que: \begin{inparaenum}[1)]
+
+
+% \item $\Sigma_{\mathit{ERInt}} = \Sigma_{\mathit{EInt}} \cup \Sigma_{\mathit{RInt}} $,
+
+% \item $\Sigma_{\mathit{EREx}} = \Sigma_{\mathit{EEx}} \cup \Sigma_{\mathit{REx}} \setminus \Sigma_\mathit{EfromtoR} $ y 
+
+% \item $\Sigma_{\mathit{ERBuff}} = \Sigma_{\mathit{EBuff}} \cup \Sigma_{\mathit{RBuff}} \cup \Sigma_\mathit{EfromtoR}$ donde
+
+% \item $\Sigma_\mathit{EfromtoR} =\{ \langle p_1,p_2,c \rangle \ | \ p_1,p_2 \in \mathcal{P}, \  c \in \mathcal{C} \ y \ ((p_1 = E \land p_2 = R) \lor (p_1 = R \land p_2 = E))   \} $
+% \end{inparaenum}
+% \item $\delta_{ER} = \{ \delta_{ER \mathit{Int}} \cup \delta_{ER\mathit{Ex}} \cup \delta_{ER\mathit{Buf}}\}$
+% \item $\delta_{ER\mathit{Int}} = Q_{ER} \times \Sigma_{ER\mathit{Int}} \times Q_{ER} $
+% \item $\delta_{ER\mathit{Ex}}: Q_{ER} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{ER\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{ER}$ es la relación de transición de comunicación externa de $E||R_\mathcal{P}$,
+% \item $\delta_{ER\mathit{Buf}}: Q_{ER} \times \Sigma_{ER\mathit{Buf}} \times Q$ y decimos que $\forall q \in Q_\mathit{ER}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{ERBuff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{ER1},...,\omega_\mathit{ERi}:m, ..., \omega_\mathit{ERn}] \rangle$ 
+
+% % \sigma_i \in s \land \sigma_i = \omega_\mathit{ERi} \ll m$  donde s es una %secuencia de la forma $[q_1, \sigma_1, q_2,...,\sigma_n, q_n]$ con $q_n = q$% comunicación interna
+% \item $q_0 = \langle q0_E,q0_R \rangle$
+% \item $F_{ER} = F_E x F_R$
+
+% \end{itemize}
+
+% \end{definition}
 
 
 

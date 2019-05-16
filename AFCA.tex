@@ -5,6 +5,7 @@
 
 
 \subsection{Autómatas finitos de comunicación asincrónica}
+Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otro además comportamientos internos. Para esto primero recurrimos a los Input Output Atomata (IO). Estos son autómatas que modelan los distintos comportamientos que buscamos en forma distinguida. El problema es que los IO no representan bien la comunicación asincrónica. Las operaciones de comunicación externa sincronizan a todos los participantes del sistema. Es decir que si dos autómatas componentes tienen una misma transición, se ejecutan en simultáneo. Esto va en contra de la idea de SOC.
 
 \begin{definition}[Cola]
 \label{def:cola}

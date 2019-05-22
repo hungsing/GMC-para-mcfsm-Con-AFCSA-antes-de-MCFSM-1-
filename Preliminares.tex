@@ -279,6 +279,6 @@ Representabilidad garantiza que TS(S) contiene suficiente información para decd
  
 Con esto definimos que toda ramificación es o bien (1) la ejecución concurrente de dos eventos; o, para cada participante p (2(a)I) si p no termina antes de n entonces las primeras dos acciones de p en dos ramas distintas son disjuntas; o (2(a)II) p no está involucrado en la elección, o sea la ramas se juntan antes de que p realice ninguna acción; (2(b)) hay un único participante s tomando la decisión; y (2(c)) para cada participante r involucrado en la elección, no puede haber race condition entre los mensajes que puede recibir r. La no race condition asegura que en ninguna ejecución (asincrónica) de S, si una máquina tiene más de un buffer no vacío, entonces puede leerlos en cualquier orden (interleaving es posible). Notar que si una máquina r recibe todos sus mensajes de un mismo emisor, entonces hay una $\triangleleft$-relación entre todas sus acciones.
 
-\begin{definition}[General Multiparty Compatibilty] Un sistmea S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
+\begin{definition}[Generalised Multiparty Compatibilty] Un sistmea S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
 \end{definition}
 

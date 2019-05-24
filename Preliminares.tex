@@ -34,7 +34,7 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
   
 \end{definition} 
 
-A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} \cite[Def.2.2]{Communicating System} como un conjunto de CFSMs que cumplen determinadas propiedades.
+A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} \cite[Def.2.2]{GMC} como un conjunto de CFSMs que cumplen determinadas propiedades.
 
 \begin{definition}[Communicating System] Dada una CFSM $\textit{M}_p = \langle Q_p, q_{0_p}, \mathcal{M}, \delta_p \rangle $ para cada participante $p \in \mathcal{P}$, la tupla $S= \langle M_p \rangle_{p \in \mathcal{P}} $ es un communicating system CS.
 Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{w} = (w_{pq})_{pq \in C}$ con $ w_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es $s_0 = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$

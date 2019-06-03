@@ -34,13 +34,13 @@ Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de 
         \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
         \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
     \end{inparaenum}
-donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$,
+donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$
 \item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
-\begin{inparaenum}[1)]
-\item $\delta_{\mathcal{P}\mathit{Int}} = Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Int}} \times Q_{\mathcal{P}}$,
-\item $\delta_{\mathcal{P}\mathit{Ex}} = Q_{\mathcal{P}} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{\mathcal{P}}$ es la relación de transición de comunicación externa de $E_\mathcal{P}$, y
-\item $\delta_{\mathcal{P}\mathit{Buff}}: Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Buff}} \times Q_{\mathcal{P}}$ y decimos que $\forall q \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{\mathcal{P}1},...,\omega_\mathit{\mathcal{P}i}:m, ..., \omega_\mathit{\mathcal{P}n}] \rangle$,
-\end{inparaenum}
+\begin{enumerate}
+\item $\delta_{\mathcal{P}\mathit{Int}} = \{ \langle q, \sigma, q' \rangle \ | \ q,q' \in Q_{\mathcal{P}}, \sigma \in \Sigma_{\mathcal{P}\mathit{Int}} \land \exists E_{p_i} \land \langle q_{p_i},\sigma_{p_i},q'_{p_i} \rangle \in \delta_{p_i Int} \}$ es la relación de transición interna
+\item $\delta_{\mathcal{P}\mathit{Ex}} = \{ \langle q, \sigma, q' \rangle \ | \ q,q' \in Q_{\mathcal{P}}, \sigma \in \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \land \exists E_{p_i} \land \langle q_{p_i}, \sigma_{p_i}, q'_{p_i} \rangle \in \delta_{p_i{\mathit{Ex}}} \}$, es la relación de transición de comunicación externa de $E_\mathcal{P}\} $, y 
+\item $\delta_{\mathcal{P}\mathit{Buff}} = \{ \langle q, \sigma, q' \rangle \ | \ q,q' \in Q_{\mathcal{P}}, \sigma \in \Sigma_{\mathcal{P}\mathit{Buff}} \land \exists E_{p_i} \land \langle q_{p_i},\sigma_{p_i},q'_{p_i} \rangle \in \delta_{p_i Buff} \}$  y decimos que $\forall q \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q' \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{b},...,\omega_\mathit{b}:m, ..., \omega_\mathit{b}] \rangle$
+\end{enumerate}
 \item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, and
 \item $F_{\mathcal{P}} = \Pi_{1..n} F_{p_i}$.
 \end{itemize}
@@ -54,44 +54,6 @@ Como los conjuntos de acciones son disjuntos podemos decir que las acciones inte
 Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
 
 \end{definition}
-
-% \begin{definition}[Composición]
-% Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Dos autómatas  $E_\mathcal{P} = \langle Q_E, B_E, \mathcal{C}_E. \Sigma_E, \delta_E, q_{0E}, F_E\rangle$ y $R_\mathcal{P} = \langle Q_R, B_R, \mathcal{C}_R, \Sigma_R, \delta_R,  q_{0R}, F_R\rangle$, que cumplan $\Sigma_E \cap \Sigma_R = \emptyset$ y $ B_E \cap B_R = \emptyset$, definimos la composición $E||R_\mathcal{P}$ componente a componente.
-
-% \begin{itemize}
-% \item $Q_{ER} = Q_E \times Q_R$ El conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes. 
-
-% \item $B_{ER} = B_E \cup B_R \cup \{\mathcal{C}_{E} \cap \mathcal{C}_{R}\}$ es el conjunto de nombres de buffers del autómata resultante.Se compone de los buffers internos de ambos autómatas junto con uno nuevo por cada canal compartido entre ambos autómatas. Los canales compartidos son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí.
-
-% \item $\mathcal{C}_{ER}= \{ \mathcal{C}_{E} \cup \mathcal{C}_{R} \} \setminus \{ \mathcal{C}_{E} \cap \mathcal{C}_{R} \}$
-
-% \item $\Sigma_{ER} = (\Sigma_{\mathit{ERInt
-% }} \cup \Sigma_{\mathit{EREx}} \cup \Sigma_{\mathit{ERBuff}})$ tal que: \begin{inparaenum}[1)]
-
-
-% \item $\Sigma_{\mathit{ERInt}} = \Sigma_{\mathit{EInt}} \cup \Sigma_{\mathit{RInt}} $,
-
-% \item $\Sigma_{\mathit{EREx}} = \Sigma_{\mathit{EEx}} \cup \Sigma_{\mathit{REx}} \setminus \Sigma_\mathit{EfromtoR} $ y 
-
-% \item $\Sigma_{\mathit{ERBuff}} = \Sigma_{\mathit{EBuff}} \cup \Sigma_{\mathit{RBuff}} \cup \Sigma_\mathit{EfromtoR}$ donde
-
-% \item $\Sigma_\mathit{EfromtoR} =\{ \langle p_1,p_2,c \rangle \ | \ p_1,p_2 \in \mathcal{P}, \  c \in \mathcal{C} \ y \ ((p_1 = E \land p_2 = R) \lor (p_1 = R \land p_2 = E))   \} $
-% \end{inparaenum}
-% \item $\delta_{ER} = \{ \delta_{ER \mathit{Int}} \cup \delta_{ER\mathit{Ex}} \cup \delta_{ER\mathit{Buf}}\}$
-% \item $\delta_{ER\mathit{Int}} = Q_{ER} \times \Sigma_{ER\mathit{Int}} \times Q_{ER} $
-% \item $\delta_{ER\mathit{Ex}}: Q_{ER} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{ER\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{ER}$ es la relación de transición de comunicación externa de $E||R_\mathcal{P}$,
-% \item $\delta_{ER\mathit{Buf}}: Q_{ER} \times \Sigma_{ER\mathit{Buf}} \times Q$ y decimos que $\forall q \in Q_\mathit{ER}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{ERBuff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{ER1},...,\omega_\mathit{ERi}:m, ..., \omega_\mathit{ERn}] \rangle$ 
-
-% % \sigma_i \in s \land \sigma_i = \omega_\mathit{ERi} \ll m$  donde s es una %secuencia de la forma $[q_1, \sigma_1, q_2,...,\sigma_n, q_n]$ con $q_n = q$% comunicación interna
-% \item $q_0 = \langle q0_E,q0_R \rangle$
-% \item $F_{ER} = F_E x F_R$
-
-% \end{itemize}
-
-% \end{definition}
-
-
-
 
 
 La Figura~\ref{fig:ejemplo-aa} muxestra un ejemplo de una composición de dos autómatas. 

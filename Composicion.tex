@@ -1,63 +1,51 @@
 %!TEX root = ./main.tex
 
 \section{Composición de Componentes Asincrónicas}
-\subsection{Motivación}
-
- Como ya hemos mencionado, en SOC (Service-Oriented Computing) los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
+\label{composicion}
+Como ya hemos mencionado, en SOC (Service-Oriented Computing) los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
  
- Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, aunsencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no espera un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.
+Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado a priori de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, ausencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no se encuentra a la espera de un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.
 
 Ahora bien, que la aplicación arribe a un estado en el que un servicio se hace necesario sobre un canal particular, no implica que todos los participantes también lo sean en ese mismo instante y por ello, con el objeto de profundizar esta concepción incremental, a demanda, que se tiene sobre los sistemas de software surge, más o menos naturalmente, la idea de poder dotar al \emph{middleware} de la capacidad de realizar un \emph{binding} parcial sobre los canales. A esta práctica la llamaremos \emph{binding incremental}.
  
 Esta percepción parcial del \emph{binding} sobre un canal requiere la utilización de un un lenguaje de descripción que soporten dichos mecanismos de composición. Por ejemplo, al componer dos CFSMs puede ocurrir que cada máquina se comunique a través de un canal con un tercer participante, estos dos canales son independientes y, además, una vez que se ha realizado la composición, deben ser percibidos por este tercer participante como canales de comunicación separados. Por lo tanto, para preservar la semántica de la comunicación, es necesario que el CFSM resultante de la composición tenga dos canales con este tercer participante. Este fenómeno será el eje rector de las modificaciones que introduciremos en esta sección. Esta característica no solo será necesario a nivel de CFSM (interfaz de comunicación de un servicio) sino también de los autómatas que caracterizan el cómputo, cuya interfaz de comunicación es expresada a través de una CFSM.
 
-Para modelar este comportamiento introducimos los Autómatas Finitos de Comunicación Asincrónica (AFCA). Estos autómatas tienen tres tipos de transiciones: internas que representan procesamiento propio; de buffer que representan comunicación asincrónica interna y permiten representar la comunicación entre dos participantes luego de una composición; y por último transiciones que modelan acciones de comunicación externa como en CFSMs.
+Para modelar este comportamiento introducimos los Autómatas Finitos de Comunicación Asincrónica (AFCA). Estos autómatas tienen tres tipos de transiciones: 
+\begin{inparaenum}[1)]
+\item internas, que sirven el propósito de representar cómputo realizado por la componente; 
+\item de buffer, que representan comunicación asincrónica interna entre elementos de la componente, y que permiten representar la comunicación entre dos participantes luego de una composición; y por último 
+\item de antrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
+\end{inparaenum}
 
-Como la idea es que los autómatas con comunicación asincrónica reperesenten procesos o servicios que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas E y R sean compatibles para la composición debemos pedirlas siguientes condiciones
-
+Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
  \begin{enumerate}
 \item $\Sigma_E \cap \Sigma_R = \emptyset$ el conjunto de etiquetas debe ser disjunto, tanto internas, como de entrada/salida y de bufffer
 \item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
 \end{enumerate}
 \begin{definition}[Composición total]
-Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas requerimos que todo par de integrantes sean compatibles para la composición. Para esto necesitamos que se cumplan dos condiciones.
-\begin{enumerate}
-    \item $\forall E_{p_i} E_{p_j} \ \mathit{con} \ p_i,p_j \in \mathcal{P}$ vale $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$. 
-    \item $(\forall E_{p_i} E_{p_j} \ \mathit{con} \ p_i,p_j \in \mathcal{P} $ vale $ B_{p_i} \cap B_{p_j}= \emptyset)$
-\end{enumerate}
-Primero , definimos la composición $E_\mathcal{P}= ||_{1..n} E_{p_i}$ componente a componente
+Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas requerimos que todo par de integrantes sean compatibles para la composición tal que se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
 \begin{itemize}
-    \item $Q_\mathcal{P}= \Pi Q_{p_i}$ El conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes. 
-    
-    \item $B_\mathcal{P} = \bigcup B_{p_i} \cup \{ c \ | \ \forall \mathcal{C}_{p_i} \mathcal{C}_{p_j}$ con $p_i p_j \in \mathcal{P}$, $c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$  es el conjunto de nombres de buffers del autómata resultante.Se compone de los buffers internos de cada autómata junto con uno nuevo por cada canal compartido entre cada par de autómatas. Los canales compartidos son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí.
-    
-    \item $\mathcal{C}_\mathcal{P}= \bigcup \mathcal{C}_{p_i} \setminus \{ c_k \ | \ \forall \mathcal{C}_{p_i} \mathcal{C}_{p_j} \mathit{con} p_i p_j \in \mathcal{P}$, $c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$
-    
-    \item $\Sigma_\mathcal{P} = \{\Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}\}$ tal que: 
-    
+    \item $Q_\mathcal{P}= \Pi Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
+    \item $B_\mathcal{P} = \bigcup B_{p_i} \cup \{ c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí),    
+    \item $\mathcal{C}_\mathcal{P} = \bigcup \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
+    \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
     \begin{inparaenum}[1)]
-        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup \Sigma_{p_i\mathit{Int}} $,
-
-        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_\mathit{p_ifromtop_j}$ y 
-
-        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup \Sigma_{p_i\mathit{Buff}} \cup \Sigma_\mathit{p_ifromtop_j}$ donde
-
-        \item $\Sigma_\mathit{\mathcal{P}_ifromto\mathcal{P}_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i,p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\} $
+        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup \Sigma_{p_i\mathit{Int}}$,
+        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
+        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
     \end{inparaenum}
-
-\item $\delta_{\mathcal{P}} = \{\delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}\}$
-
-\item $\delta_{\mathcal{P}\mathit{Int}} = Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Int}} \times Q_{\mathcal{P}} $
-
-\item $\delta_{\mathcal{P}\mathit{Ex}}: Q_{\mathcal{P}} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{\mathcal{P}}$ es la relación de transición de comunicación externa de $E_\mathcal{P}$,
-\item $\delta_{\mathcal{P}\mathit{Buff}}: Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Buff}} \times Q_{\mathcal{P}}$ y decimos que $\forall q \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{\mathcal{P}1},...,\omega_\mathit{\mathcal{P}i}:m, ..., \omega_\mathit{\mathcal{P}n}] \rangle$ 
-\item $q_0 = \langle q0_{p_1},\ldots,q0_{p_n} \rangle$
-\item $F_{\mathcal{P}} = \Pi_{1..n}F_{p_i}$
-
+donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$,
+\item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
+\begin{inparaenum}[1)]
+\item $\delta_{\mathcal{P}\mathit{Int}} = Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Int}} \times Q_{\mathcal{P}}$,
+\item $\delta_{\mathcal{P}\mathit{Ex}} = Q_{\mathcal{P}} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{\mathcal{P}}$ es la relación de transición de comunicación externa de $E_\mathcal{P}$, y
+\item $\delta_{\mathcal{P}\mathit{Buff}}: Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Buff}} \times Q_{\mathcal{P}}$ y decimos que $\forall q \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q, \omega_\mathit{ERi} \gg m, q' \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists$ una configuración $ \langle q, [\omega_\mathit{\mathcal{P}1},...,\omega_\mathit{\mathcal{P}i}:m, ..., \omega_\mathit{\mathcal{P}n}] \rangle$,
+\end{inparaenum}
+\item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, and
+\item $F_{\mathcal{P}} = \Pi_{1..n} F_{p_i}$.
 \end{itemize}
 
-
-Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si un conjunto de autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transsiciones se ejecutarían a la vez. Como estos autómatas son de comunicación asincrónica, queremos evitar que las transiciones se sicronizen de ese modo. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
+Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si un conjunto de autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transiciones se ejecutarían a la vez. Como estos autómatas son de comunicación asincrónica, queremos evitar que las transiciones se sincronicen de ese modo. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
 
 Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
 

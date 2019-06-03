@@ -1,7 +1,6 @@
 %!TEX root = ./main.tex
 
 \section{Composición de Componentes Asincrónicas}
-\subsection{Motivación}
 
  Como ya hemos mencionado, en SOC (Service-Oriented Computing) los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
  
@@ -19,7 +18,7 @@ Como la idea es que los autómatas con comunicación asincrónica reperesenten p
 \item $\Sigma_E \cap \Sigma_R = \emptyset$ el conjunto de etiquetas debe ser disjunto, tanto internas, como de entrada/salida y de bufffer
 \item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
 \end{enumerate}
-\begin{definition}[Composición total]
+\begin{definition}[Composición]
 Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas requerimos que todo par de integrantes sean compatibles para la composición. Para esto necesitamos que se cumplan dos condiciones.
 \begin{enumerate}
     \item $\forall E_{p_i} E_{p_j} \ \mathit{con} \ p_i,p_j \in \mathcal{P}$ vale $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$. 

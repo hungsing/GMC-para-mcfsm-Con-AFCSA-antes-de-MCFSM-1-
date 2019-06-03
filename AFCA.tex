@@ -203,9 +203,6 @@ En el ejemplo podemos ver los tres tipos de transiciones que los AFCA pueden rea
 \end{example}
 
 
-
-
-
 \subsection{Aspectos comunicacionales de los AFCA}
 
 Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de contratos en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocol,o para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.

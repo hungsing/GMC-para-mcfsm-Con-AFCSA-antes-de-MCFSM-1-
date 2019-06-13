@@ -22,11 +22,11 @@ Como la idea es que los autómatas con comunicación asincrónica representen pr
 \item $\Sigma_E \cap \Sigma_R = \emptyset$ el conjunto de etiquetas debe ser disjunto, tanto internas, como de entrada/salida y de bufffer
 \item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
 \end{enumerate}
-\begin{definition}[Composición total]
-Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas requerimos que todo par de integrantes sean compatibles para la composición tal que se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
+\begin{definition}[Composición]
+Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas se exige que todo par de integrantes sean compatibles (i.e. se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$). Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
 \begin{itemize}
     \item $Q_\mathcal{P}= \Pi Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
-    \item $B_\mathcal{P} = \bigcup B_{p_i} \cup \{ c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí),    
+    \item $B_\mathcal{P} = \bigcup B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
     \item $\mathcal{C}_\mathcal{P} = \bigcup \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
     \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
     \begin{inparaenum}[1)]
@@ -37,11 +37,25 @@ Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de 
 donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$
 \item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
 \begin{enumerate}
-\item $\delta_{\mathcal{P}\mathit{Int}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Int} \times Q_{\mathcal{P}}$ donde $\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}} \exists q_{p_i},q'_{p_i} \in Q_{p_i} \sigma \in \Sigma_{p_i}$ tal que $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Int}$ es la relación de transición interna
+\item $\delta_{\mathcal{P}\mathit{Int}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Int} \times Q_{\mathcal{P}}$  es la relación de transición interna, tal que que se satisface la siguiente fórmula:
+$$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}})(\exists p_i \in \mathcal{P})(\exists q_{p_i}, q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i})(\langle q_{p_i}, \sigma, q'_{p_i} \rangle \in \delta_{p_i Int})$$
+
 \item $\delta_{\mathcal{P}\mathit{Ex}} \subseteq Q_{\mathcal{P}} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{\mathcal{P}}$ donde $\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Ex}} \exists q_{p_i},q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i}$ tal que $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Ex}$, es la relación de transición externa y 
 
-\item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Buff} \times Q_{\mathcal{P}}$ donde $\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}} \exists q_{p_i},q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i}$ tal que $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i}$. Esto puede ocurrir de dos formas:\begin{inparaenum}\item $\sigma \in \Sigma_{p_i Buff}$ y $\sigma = \omega_b \gg/\ll m $ con $\omega_b \in B_{p_i}$ o \item $\exists \sigma' \in \Sigma_{p_i Ex}$ de modo que $\sigma' = In(e,m)/Out(e,m)$.
-\end{inparaenum} \enote{Quiero decir que la transición de buffer puede haber sido una transición de comunicación externa entre dos autómatas componentes} Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$ y $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Buff}$ $ \delta_\mathit{\mathcal{P}Buff} \iff \exists$ las configuracioes $c_i = \langle q_i, [\omega_\mathit{b},...,\omega_\mathit{b}:m, ..., \omega_\mathit{b}] \rangle, c_j =\langle q_j, [\omega_\mathit{b},...,\omega_\mathit{b}, ..., \omega_\mathit{b}] \rangle$ y $c_i \vdash c_j$ \enote{Está bien expresado esto? Me hace un poco de ruido esto de hablar de configuraciones en la definición}
+\item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} \mathit{Buff}} \times Q_{\mathcal{P}}$ es la relación de transición por comunicación asincrónica interna tal que se satisface la siguiente fórmula:
+$$
+\begin{array}{l}
+(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}})(\\
+\qquad
+\begin{array}{l}
+(\exists p_i \in \mathcal{P})(\exists \widehat{q}, \widehat{q'} \in Q_{p_i}, \sigma \in \Sigma_{{p_i} \mathit{Buff}})(\sigma = \omega_b \{\gg, \ll\} m \land \omega_b \in B_{p_i}) \lor\\
+(\exists p_i, p_j \in \mathcal{P})(p_i \not= p_j \land (\\
+\qquad (\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_i, p_j}_n}} \ll m) \lor\\
+\qquad (\exists \mathit{In}(c_{{p_j, p_i}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_j, p_i}_n}} \gg m))))
+\end{array}
+\end{array}
+ $$
+%Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$ y $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Buff}$ $ \delta_\mathit{\mathcal{P}Buff} \iff \exists$ las configuracioes $c_i = \langle q_i, [\omega_\mathit{b},...,\omega_\mathit{b}:m, ..., \omega_\mathit{b}] \rangle, c_j =\langle q_j, [\omega_\mathit{b},...,\omega_\mathit{b}, ..., \omega_\mathit{b}] \rangle$ y $c_i \vdash c_j$
 \end{enumerate}
 \item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, y
 \item $F_{\mathcal{P}} = \bigcup_{1..n} F_{p_i}$.

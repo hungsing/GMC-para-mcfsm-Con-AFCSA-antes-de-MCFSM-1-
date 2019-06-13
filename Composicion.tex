@@ -30,9 +30,9 @@ Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de 
     \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
     \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
     \begin{inparaenum}[1)]
-        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup \Sigma_{p_i\mathit{Int}}$,
-        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
-        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
+        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Int}}$,
+        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
+        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
     \end{inparaenum}
 donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$
 \item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
@@ -40,7 +40,7 @@ donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, 
 \item $\delta_{\mathcal{P}\mathit{Int}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Int} \times Q_{\mathcal{P}}$  es la relación de transición interna, tal que que se satisface la siguiente fórmula:
 $$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}})(\exists p_i \in \mathcal{P})(\exists q_{p_i}, q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i})(\langle q_{p_i}, \sigma, q'_{p_i} \rangle \in \delta_{p_i Int})$$
 
-\item $\delta_{\mathcal{P}\mathit{Ex}} \subseteq Q_{\mathcal{P}} \times \{\mathit{In}(e,m), \mathit{Out}(e,m) | e \in \Sigma_{\mathcal{P}\mathit{Ex}} \land m \in \mathcal{M}\} \times Q_{\mathcal{P}}$ donde $\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Ex}} \exists q_{p_i},q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i}$ tal que $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Ex}$, es la relación de transición externa y 
+\item $\delta_{\mathcal{P}\mathit{Ex}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Ex}} \times Q_{\mathcal{P}}$ es la relación de transición externa, tal que que se satisface la siguiente fórmula: $$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Ex}}) (\exists p_i \in \mathcal{P})(\exists q_{p_i},q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i}) (\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Ex})$$
 
 \item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} \mathit{Buff}} \times Q_{\mathcal{P}}$ es la relación de transición por comunicación asincrónica interna tal que se satisface la siguiente fórmula:
 $$
@@ -50,8 +50,7 @@ $$
 \begin{array}{l}
 (\exists p_i \in \mathcal{P})(\exists \widehat{q}, \widehat{q'} \in Q_{p_i}, \sigma \in \Sigma_{{p_i} \mathit{Buff}})((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \\
 \qquad  q_i = \widehat{q} \land q'_i = \widehat{q'} \land \sigma = \omega_b \{\gg, \ll\} m \land \omega_b \in B_{p_i}) \lor\\
-(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j \land (\\
-\qquad (\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_i, p_j}_n}} \ll m) \lor\\
+(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j) \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ (\exists \widehat{q}, \widehat{q'} \in Q_{p_i} \lor Q_{p_j}) \land (q_i = \widehat{q} \land q'_i = \widehat{q'}) \land (\\ \qquad (\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_i, p_j}_n}} \ll m) \lor\\
 \qquad (\exists \mathit{In}(c_{{p_j, p_i}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_j, p_i}_n}} \gg m))))
 \end{array}
 \end{array}

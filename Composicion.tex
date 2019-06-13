@@ -25,9 +25,9 @@ Como la idea es que los autómatas con comunicación asincrónica representen pr
 \begin{definition}[Composición]
 Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas se exige que todo par de integrantes sean compatibles (i.e. se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$). Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
 \begin{itemize}
-    \item $Q_\mathcal{P}= \Pi Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
-    \item $B_\mathcal{P} = \bigcup B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
-    \item $\mathcal{C}_\mathcal{P} = \bigcup \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
+    \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
+    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
+    \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
     \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
     \begin{inparaenum}[1)]
         \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup \Sigma_{p_i\mathit{Int}}$,
@@ -45,11 +45,12 @@ $$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}})(\
 \item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} \mathit{Buff}} \times Q_{\mathcal{P}}$ es la relación de transición por comunicación asincrónica interna tal que se satisface la siguiente fórmula:
 $$
 \begin{array}{l}
-(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}})(\\
+(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}})(q = \langle q_k \rangle_{p_k \in \mathcal{P}} \land q' = \langle q'_{k'} \rangle_{p_{k'} \in \mathcal{P}} \land\\
 \qquad
 \begin{array}{l}
-(\exists p_i \in \mathcal{P})(\exists \widehat{q}, \widehat{q'} \in Q_{p_i}, \sigma \in \Sigma_{{p_i} \mathit{Buff}})(\sigma = \omega_b \{\gg, \ll\} m \land \omega_b \in B_{p_i}) \lor\\
-(\exists p_i, p_j \in \mathcal{P})(p_i \not= p_j \land (\\
+(\exists p_i \in \mathcal{P})(\exists \widehat{q}, \widehat{q'} \in Q_{p_i}, \sigma \in \Sigma_{{p_i} \mathit{Buff}})((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \\
+\qquad  q_i = \widehat{q} \land q'_i = \widehat{q'} \land \sigma = \omega_b \{\gg, \ll\} m \land \omega_b \in B_{p_i}) \lor\\
+(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j \land (\\
 \qquad (\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_i, p_j}_n}} \ll m) \lor\\
 \qquad (\exists \mathit{In}(c_{{p_j, p_i}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_j, p_i}_n}} \gg m))))
 \end{array}

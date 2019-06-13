@@ -48,10 +48,12 @@ $$
 (\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}})(q = \langle q_k \rangle_{p_k \in \mathcal{P}} \land q' = \langle q'_{k'} \rangle_{p_{k'} \in \mathcal{P}} \land\\
 \qquad
 \begin{array}{l}
-(\exists p_i \in \mathcal{P})(\exists \widehat{q}, \widehat{q'} \in Q_{p_i}, \sigma \in \Sigma_{{p_i} \mathit{Buff}})((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \\
-\qquad  q_i = \widehat{q} \land q'_i = \widehat{q'} \land \sigma = \omega_b \{\gg, \ll\} m \land \omega_b \in B_{p_i}) \lor\\
-(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j) \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ (\exists \widehat{q}, \widehat{q'} \in Q_{p_i} \lor Q_{p_j}) \land (q_i = \widehat{q} \land q'_i = \widehat{q'}) \land (\\ \qquad (\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_i, p_j}_n}} \ll m) \lor\\
-\qquad (\exists \mathit{In}(c_{{p_j, p_i}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_j, p_i}_n}} \gg m))))
+((\exists p_i \in \mathcal{P})(\exists \omega_b \in B_{p_i}, \omega_b \{\gg, \ll\} m \in \Sigma_{{p_i} \mathit{Buff}})\\
+\qquad ((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \langle q_i, \omega_b \{\gg, \ll\} m, q'_i \rangle \in \delta_{p_i \mathit{Buff}}) \lor\\
+(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ 
+\qquad (\exists \widehat{q}, \widehat{q'} \in Q_{p_i}) \land (q_i = \widehat{q} \land q'_i = \widehat{q'}) \land (\\ 
+\qquad\qquad (\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_i, p_j}_n}} \ll m) \lor\\
+\qquad\qquad (\exists \mathit{In}(c_{{p_j, p_i}_n}, m) \in \Sigma_{p_i \mathit{Ex}})(\sigma = \omega_{c_{{p_j, p_i}_n}} \gg m)))))
 \end{array}
 \end{array}
  $$

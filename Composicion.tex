@@ -45,12 +45,17 @@ $$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}})(\
 \item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} \mathit{Buff}} \times Q_{\mathcal{P}}$ es la relación de transición por comunicación asincrónica interna tal que se satisface la siguiente fórmula:
 $$
 \begin{array}{l}
-(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}})(q = \langle q_k \rangle_{p_k \in \mathcal{P}} \land q' = \langle q'_{k'} \rangle_{p_{k'} \in \mathcal{P}} \land\\
+\langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}} \mbox{ sii } (q = \langle q_k \rangle_{p_k \in \mathcal{P}} \land q' = \langle q'_{k'} \rangle_{p_{k'} \in \mathcal{P}} \land\\
 \qquad
 \begin{array}{l}
-((\exists p_i \in \mathcal{P})(\exists \omega_b \in B_{p_i}, \omega_b \{\gg, \ll\} m \in \Sigma_{{p_i} \mathit{Buff}})\\
-\qquad ((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land (\langle q_i, \omega_b \{\gg, \ll\} m, q'_i \rangle \in \delta_{p_i \mathit{Buff}}))\lor\\
-((\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j) \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ \qquad (((\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}}) (\langle q_i, \omega_{c_{{p_i p_j}_n}} \ll m, q'_i \rangle \in \delta_{p_i  \mathit{Ex}})) \lor \\ \qquad ((\exists \mathit{In}(c_{p_j,{p_i}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i,\omega_{c_{p_j,{p_i}_n}} \gg m, q'_i \rangle \in \delta_{p_i \mathit{Ex}})))  
+((\exists p_i \in \mathcal{P})((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \\
+\qquad(\exists \omega_b \in B_{p_i}, \omega_b \{\gg, \ll\} m \in \Sigma_{{p_i} \mathit{Buff}})(\langle q_i, \omega_b \{\gg, \ll\} m, q'_i \rangle \in \delta_{p_i \mathit{Buff}}) \land\\
+\qquad\qquad \sigma = \omega_b \{\gg, \ll\} m)\lor\\
+(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ 
+\qquad ((\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i, \mathit{Out}(c_{{p_i, p_j}_n}, m), q'_i \rangle \in \delta_{p_i  \mathit{Ex}} \land\\
+\qquad\qquad \sigma = \omega_{c_{{p_i p_j}_n}} \ll m) \lor \\ 
+\qquad (\exists \mathit{In}(c_{p_j,{p_i}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i, \mathit{In}(c_{p_j,{p_i}_n}, m), q'_i \rangle \in \delta_{p_i \mathit{Ex}} \land\\
+\qquad\qquad \sigma = \omega_{c_{p_j,{p_i}_n}} \gg m))))
 \end{array}
 \end{array}
  $$
@@ -66,14 +71,14 @@ Cada autómata es un sistema independiente que cumple una función (o una serie 
 
 Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
 
-Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $In(c_{p_i P_j_n},m)$ y $Out(c_{p_j P_i_n},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i p_{j_n}}}, \omega_{c_{p_j p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
+Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $\mathit{In} (c_{p_i, p_{j_n}},m)$ y $\mathit{Out}(c_{p_j, p_{i_n}},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j, p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i, p_{j_n}}}, \omega_{c_{p_j, p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
 
 Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
 
 \end{definition}
 
 
-La Figura~\ref{fig:ejemplo-aa} muxestra un ejemplo de una composición de dos autómatas. 
+La Figura~\ref{fig:ejemplo-aa} muestra un ejemplo de una composición de dos autómatas. 
 
 \begin{figure}[ht]
 \begin{center}

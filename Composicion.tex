@@ -78,12 +78,40 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 \end{definition}
 
 
-La Figura~\ref{fig:ejemplo-aa} muestra un ejemplo de una composición de dos autómatas. 
-
 \begin{figure}[ht]
-\begin{center}
-Dibujo
-\end{center}
+\begin{example}[Composición de Autómatas Finitos de Comunicación Asincrónica]
+\label{ex:Composición}
+Considere los siguientes AFCA:
+\begin{itemize}
+    \item $S= \langle \{q_0,..,q_4\},[b_0],\{sr_1,rs_1\}, \Sigma_A, \delta_A, q_0, \{q_4\} \rangle$. Donde $\Sigma =\{wait, b_0 \ll m_1,b_0 \gg m_1,Out(sr_1,c), In(rs_1,b) \}$
+    \item $R=\langle \{q_0,q_1,q_2\},[],\{sr_1,rs_1\}, \Sigma_A, \delta_A, q_0, \{q_4\} \rangle $
+\end{itemize} 
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
+ \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= 1.5cm of q_2 ] {$q_3$};
+ \node[state,accepting] (q_4) [right= 1.8cm of q_3 ] {$q_4$};
+ \draw[]        
+        (q_0) edge[above] node{$In(rs_1,b)$} (q_1)
+        (q_0) edge[left] node{$b_0 \ll m_1$} (q_2)
+        (q_1) edge[right] node{$wait$} (q_3)
+        (q_2) edge[above] node{$b_0 \gg m_1$} (q_3)
+        (q_3) edge[above] node{$Out(sr_1,c)$} (q_4)
+        ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= 1.8cm of q_0 ] {$q_1$};
+  \node[state,accepting] (q_2) [right= 1.8cm of q_1] {$q_2$};
+ \draw[]        
+        (q_0) edge[above] node{$Out(sr_1,b)$} (q_1)
+        (q_1) edge[above] node{$In(sr_1,c)$} (q_2)
+        ;
+\end{tikzpicture}
+
+\end{example}
 \caption{Ejemplo de composición autómata asíncrono de comunicación}
 \label{fig:ejemplo-aa}
 \end{figure} 
@@ -99,37 +127,20 @@ Decimos que la composición de estos autómatas preserva el determinismo. Esto e
 
 \end{definition}
 
+\begin{definition}[Transformación loca de AFCA]
+En la definición 26 definimos que un de AFCA puedo proyectar una mCFSM, eliminando las transiciones internas y de buffer. De este modo nos queda un autómata de comunicación solo con transiciones de comunicación externa. A esta proyección la denominaremos $\Pi$. Supongamos que tenemos un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA que sabemos no tienen transiciones de buffer. Sea el conjunto $\{C_i\}_{i \in I}$ de mCFSM donde cada una es el resultado de aplicar $\Pi$ a un elemento del conjunto de autómatas, llamamos $\mathcal{L}$ al sistema de transición etiquetado que representa las ejecuciones posibles del conjunto de mCFSM. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa las ejecuciones posibles de conjunto. Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
+\begin{enumerate}
+    \item $\Pi:AFCA \rightarrow mCFSM = $
+    \itm Dado un AFCA $A = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ tal que $A \in \{ \mathcal{A}_i\}_{i \in I}$ 
+    \item La composición total $||{A_i}_{i \in I}$ tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ donde $\mathcal{C} = \emptyset$ y no hay transiciones externas 
+    \item Sea $C_i$ mCFSM =  $\langle Q, t, q_0, \mathcal{M}, \delta, F \rangle$
+    
+\end{enumerate}
 
-% \begin{definition}[Autómata proyectado] Dados, un conjunto de participantes $\mathcal{P}$, un conjunto de mensajes $\mathcal{M}$, un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F\rangle$, y una configuración instantánea del mismo $\langle q_{i}, \Omega_i \rangle$, $q_i \in Q, \Omega_i \in B^*$ llamamos autómata proyectado $A_{\pi}= \langle Q_{\pi}, \beta, \mathcal{C}_{\pi}, \Sigma_{\pi}, \delta_{\pi}, q_i, F\rangle$ al autómata resultante de recortar A a partir de $q_i$. Donde:
-% \begin{itemize}
-%     \item $Q_{\pi} = \{q \in Q \ | \  \exists \omega \in B^*,$ tq $\langle q_{i}, \omega_i \rangle \vdash^* \langle q, \omega \rangle  \}$ son aquellos estados alcanzables desde $q_i$
-%     \item $ \beta \subseteq B $ son los buffers del autómata. Los buffers retienen aquellos mensajes que fueron almacenados pero aún no han sido retirados en $q_i$
-%     \item $\mathcal{C}_{\pi}$ es el conjunto de canales de comunicación externa
-%     \item $\Sigma_{\pi}=  \{ \gamma \in \Sigma \ | \ \exists q_k, q_l \in Q' \land \langle q_k ,\gamma, q_l \rangle \in \delta \}$ es el conjunto de etiquetas del autómata proyectado y se compone de aquellas etiquetas 
-% %     $\{ \Sigma_\mathit{Int} \cup \Sigma_\mathit{Ex} \cup \Sigma_\mathit{Buff}\} $, $\Sigma \cap \mathcal{M} = \emptyset$ es el conjunto de etiquetas del autómata, siendo
-% %     \begin{inparaenum}[1)]
 
-% %         \item $\Sigma_\mathit{Int}$ las acciones internas del autómata 
+Sean $\Pi:AFCA \rightarrow mCFSM$ 
 
-% %         \item $\Sigma_\mathit{Ex}$ un conjunto de etiquetas de la forma $\langle p_1,p_2,c\rangle$ dónde $p_1,p_2 \in \mathcal{P}$ son, respectivamente, el emisor y el receptor de la comunicación y $c \in \mathcal{C}$ es el canal a través del cual se resuelve la misma.
-
-% %         \item $\Sigma_\mathit{Buff}$ es el conjunto de etiquetas de las acciones sobre los buffers de la forma $b \ll m$ o $b \gg m$, dónde $b \in B$ y $m \in \mathcal{M}$.
-% % \end{inparaenum}
-% \item $\delta_{\pi} = \{  \}$
-% % \item $\delta = (\delta_\mathit{Int} \cup \delta_\mathit{Ex} \cup \delta_\mathit{Buff})$ siendo:
-
-% % \begin{inparaenum}[1)]
-% %     \item $\delta_\mathit{Int} \subseteq Q \times \Sigma_\mathit{Int} \times Q$ es la relación de transicion por acciones internas de $A_\mathcal{P}$, %transiciones internas
-
-% %     \item $\delta_\mathit{Ex} \subseteq Q \times \{\mathit{In}(c,m), \mathit{Out}(c,m) | c \in \Sigma_{Ex} \land m \in \mathcal{M} \} \times Q$ es la relación de transición de comunicación externa de $A_\mathcal{P}$, %comunicación externa
-
-% %     \item $\delta_\mathit{Buff} \subseteq Q \times \Sigma_\mathit{Buff} \times Q$ %comunicación interna
-% % \end{inparaenum}    
-% \item $q_i \in Q'$ es el estado inicial del autómata proyectado, 
-%     \item $F \subseteq Q$ es el conjunto de estados finales del autómata.
-% \end{itemize}
-
-% \end{definition}
+\end{definition}
 
 \subsection{Composición parcial vs composición total}
 En esta sección definimos los Autómatas Finitos de Comunicación Asincrónica para modelar la composición parcial de CFSMs. Ahora necesitamos demostrar que esta composición parcial es equivalente a una composición total.

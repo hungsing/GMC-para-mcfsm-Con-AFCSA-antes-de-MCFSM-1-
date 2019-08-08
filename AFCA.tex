@@ -284,6 +284,16 @@ Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos,
 
 \end{definition} 
 
+\begin{figure}
+    \centering
+    \begin{example}
+    
+    \end{example}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+
 \begin{prop} El sistema emulado preserva los errores comunicacionales
 
 \begin{proof} Primero notemos que los repetidores no pueden generar errores de comunicación dado que en el estado inicial pueden recibir el rango completo de mensajes y luego de ocnsumir un mensaje su única acción posible es reenviarlo. Recordemos también que el orden de los mensajes se preserva. Esto significa que si en el sistema original los mensajes $ m $ y $m'$ fueron enviados en ese orden sobre el canal $sr$ en el sistema emulado se envían en el mismo orden sobre el canal $sp^{sr}$ y por lo tanto son enviados en ese mismo orden a través del canal $p^{sr}r$. Entonces se puede mostrar que para cada error de configuración alcanzable en el sistema original, hay una configuración que presenta el mismo error que es alcanzable en el sistema emulado y viceversa.

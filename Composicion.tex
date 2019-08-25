@@ -14,8 +14,17 @@ Para modelar este comportamiento introducimos los Autómatas Finitos de Comunica
 \begin{inparaenum}[1)]
 \item internas, que sirven el propósito de representar cómputo realizado por la componente; 
 \item de buffer, que representan comunicación asincrónica interna entre elementos de la componente, y que permiten representar la comunicación entre dos participantes luego de una composición; y por último 
-\item de antrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
-\end{inparaenum}
+\item de entrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
+\end{inparaenum} \\
+Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
+
+\xymatrix{   
+	\{\mathcal{A}_i\}_{i \in I} \ar[r]_{\Pi} \ar[d]_{||} & \{C_i\}_{i \in I}  \ar[dr]_{semántica}  \\
+	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & {\mathcal{L}' \ =} & {\mathcal{L}}  \\
+	  \emptyset
+  } 
+ 
+
 
 Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
  \begin{enumerate}
@@ -28,7 +37,7 @@ Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de 
     \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
     \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
     \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
-    \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
+    \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup  \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
     \begin{inparaenum}[1)]
         \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Int}}$,
         \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
@@ -77,22 +86,15 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 
 \end{definition}
 
-
-\begin{figure}[ht]
+\begin{figure}
 \begin{example}[Composición de Autómatas Finitos de Comunicación Asincrónica]
-\label{ex:Composición}
+\label{ex:Composicion}
 Considere los siguientes AFCA:
 \begin{itemize}
     \item $S= \langle \{q_0,..,q_4\},[b_0],\{sr_1,rs_1\}, \Sigma_S, \delta_S, q_0, \{q_4\} \rangle$, con $\Sigma_S =\{wait, b_0 \ll m_1,b_0 \gg m_1, In(rs_1,b), Out(sr_1,c) \}$
     \item $R=\langle \{q_0,q_1,q_2\},[],\{sr_1,rs_1\}, \Sigma_R, \delta_R, q_0, \{q_4\} \rangle$, con $\Sigma_R = \{Out(rs_1,b), In(sr_1,c)\}$, y su composición
     \item $\RS =\langle Q_{RS}, [b_0, sr_1, rs_1], \Sigma_{RS}, \delta_{RS}, q_{00}, \{q_{42}\} \rangle$, con $\Sigma_{RS} =\{wait, b_0 \ll m_1,b_0 \gg m_1, rs_1 \ll b, rs_1 \gg b, sr_1 \ll c, sr_1 \gg c) \}$
 \end{itemize} 
-
-% \begin{itemize}
-%     \item $Q_{RS} = \{q_{00},q_{01},q_{11},q_{21},q_{31},q_{41},q_{42}\}$
-%     \item 
-% \end{itemize}
-
 
 \begin{tikzpicture}[->, thick][scale=0.33]
  \node[state,initial] (q_0)   {$q_0$}; 
@@ -119,7 +121,6 @@ Considere los siguientes AFCA:
         (q_1) edge[right] node{$In(sr_1,c)$} (q_2)
         ;
 \end{tikzpicture} 
-%\caption{R}
 \\
 
 \begin{tikzpicture}[->, thick][scale=0.33]
@@ -140,7 +141,6 @@ Considere los siguientes AFCA:
          (q_41) edge[above] node{$sr \gg c$} (q_42)
        ;
 \end{tikzpicture}
-%\caption{RS}
 
 \end{example}
 \caption{Ejemplo de composición autómata asíncrono de comunicación}
@@ -159,21 +159,20 @@ Decimos que la composición de estos autómatas preserva el determinismo. Esto e
 \end{definition}
 
 \begin{definition}[Transformación loca de AFCA]
-En la definición 26 definimos que un de AFCA puedo proyectar una mCFSM, eliminando las transiciones internas y de buffer. De este modo nos queda un autómata de comunicación solo con transiciones de comunicación externa. A esta proyección la denominaremos $\Pi$. Supongamos que tenemos un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA que sabemos no tienen transiciones de buffer. Sea el conjunto $\{C_i\}_{i \in I}$ de mCFSM donde cada una es el resultado de aplicar $\Pi$ a un elemento del conjunto de autómatas, llamamos $\mathcal{L}$ al sistema de transición etiquetado que representa las ejecuciones posibles del conjunto de mCFSM. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa las ejecuciones posibles de conjunto. Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
-\begin{enumerate}
-    \item $\Pi:AFCA \rightarrow mCFSM = $
-    \itm Dado un AFCA $A = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ tal que $A \in \{ \mathcal{A}_i\}_{i \in I}$ 
-    \item La composición total $||{A_i}_{i \in I}$ tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ donde $\mathcal{C} = \emptyset$ y no hay transiciones externas 
-    \item Sea $C_i$ mCFSM =  $\langle Q, t, q_0, \mathcal{M}, \delta, F \rangle$
-    
-\end{enumerate}
+Dado un conjunto de autómatas sin transiciones de comunicación interna $\{ \mathcal{A}_i\}_{i \in I}$, llamamos $\{T_i\}_{i \in I}$ un conjunto de mCFSM donde cada una es el resultado de la proyección $\Pi$ de un elemento del conjunto de autómatas. Llamamos $\mathcal{L}$ al sistema de transición etiquetado correspondiente al communicating system de $\{T_i\}_{i \in I}$. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa las ejecuciones posibles de conjunto.  Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
 
-
-Sean $\Pi:AFCA \rightarrow mCFSM$ 
-
+Sea $\{ \mathcal{A}_i \}_{i \in I}$ un conjunto de AFCA $\{ \mathcal{A}_i \} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ tal que $\delta_{Buff} =  \emptyset$. Llamamos $||{A_i}_{i \in I}$ a la composición total. La misma tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ donde $\delta_{Ex} =  \emptyset$. Definimos $\Pi': AFCA \rightarrow \mathcal{L}'$ tal que
+\begin{itemize}
+    \item $\forall $ Cada estado de $n$ de $\mathcal{L}'$ corresponde a una configuración $\langle q, \Omega \rangle$ de $||{A_i}_{i \in I}$ y
+    \item Un estado $n$ es alcanzable desde otro estado $n'$ sii $\exists \langle q, \sigma, q' \rangle \in \delta_{||{A_i}_{i \in I}}$ con $\sigma \in \Sigma_{Buff}$ y es de la forma $w_b\{\gg, \ll\}m$
+    % \item Sea $T_i$ mCFSM =  $\langle Q, \mathcal{C}, q_0, \mathcal{M}, \delta \rangle$
+    % \item Sea $\mathcal{L}$ el LTS $ $
+\end{itemize}
 \end{definition}
 
+
 \subsection{Composición parcial vs composición total}
+
 En esta sección definimos los Autómatas Finitos de Comunicación Asincrónica para modelar la composición parcial de CFSMs. Ahora necesitamos demostrar que esta composición parcial es equivalente a una composición total.
 
 Como sabemos que todas las CFSMs a componer se encuentran en $\mathcal{P}$ podemos decir que conocemos a priori todos los componentes de la composición final. Dado un conjunto finito $\mathcal{P}$ de CFSMs denominamos $ p_1, p_2, p_3, \ldots, p_n$. 

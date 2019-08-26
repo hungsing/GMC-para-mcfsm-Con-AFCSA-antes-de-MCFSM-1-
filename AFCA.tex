@@ -236,23 +236,39 @@ Al igual que antes la semántica de un communicating system se obtiene considera
   $\vectorize{w} = \left(w_{pq}\right)_{pq \in \C}$ con
   $w_{pq} \in \mathcal{M} $.
   
-  Una configuración $s' = \sysconf{q'}{w'}$ es \emph{alcanzable} desde otra
-  configuración $s = \sysconf{q}{w}$ a través de la \emph{ejecución de la
-    transición}  $\tau $ (escrito $s \overset{t}{\rightarrow} s'$) si existe un
-   $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
+  Una configuración $s' = \langle \overrightarrow{q'} ; \overrightarrow{w'} \rangle$ es \emph{alcanzable} desde otra
+  configuración $s = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
 	\begin{enumerate}
-		\item $t = (q_p, pq_n!m,  q'_p) \in \delta_p$ y 
+		\item $l = sr!m$, $\langle q_s, l,  q'_s\rangle \in \delta_s$ y 
 			\begin{enumerate}
-				\item $q'_{p'} = q_{p'}$ for all $p' \neq p$; y
-				\item $w'_{pq_n} = w_{pq_n} \cdot m$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$; \\
+				\item $q'_p = q_p$ para todo $\p \neq s$; y
+				\item $w'_{sr} = w_{sr} \cdot m$ y  $w'_{pq} = w_{pq}$ para todo $pq \neq sr$; o bien
 			\end{enumerate}
-                O bien
-		\item $t = (q_q, pq?m,  q'_q) \in \delta_q$ y 
+		\item $l = sr?m$, $\langle q_r, l,  q'_r\rangle \in \delta_r$ y 
 			\begin{enumerate}
-				\item $q'_{p'} = q_{p'}$ for all $p' \not= q$; y
-				\item $m \cdot w'_{pq_n} = w_{pq_n}$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$
+			\item $q'_{p} = q_{p}$ para todo $p \neq r$; y
+				\item $w_{sr} = m \cdot w'_{pq}$ y $w'_{pq} = w_{pq}$ para todo $pq' \neq sr$
 			\end{enumerate}
 	\end{enumerate}
+Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
+
+%   Una configuración $s' = \sysconf{q'}{w'}$ es \emph{alcanzable} desde otra
+%   configuración $s = \sysconf{q}{w}$ a través de la \emph{ejecución de la
+%     transición}  $\tau $ (escrito $s \overset{t}{\rightarrow} s'$) si existe un
+%   $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
+% 	\begin{enumerate}
+% 		\item $t = (q_p, pq_n!m,  q'_p) \in \delta_p$ y 
+% 			\begin{enumerate}
+% 				\item $q'_{p'} = q_{p'}$ for all $p' \neq p$; y
+% 				\item $w'_{pq_n} = w_{pq_n} \cdot m$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$; \\
+% 			\end{enumerate}
+%                 O bien
+% 		\item $t = (q_q, pq?m,  q'_q) \in \delta_q$ y 
+% 			\begin{enumerate}
+% 				\item $q'_{p'} = q_{p'}$ for all $p' \not= q$; y
+% 				\item $m \cdot w'_{pq_n} = w_{pq_n}$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$
+% 			\end{enumerate}
+% 	\end{enumerate}
 \end{definition}
 
 Multichannel CFSMs  con un único canal para cada par ordenado de participantes son equivalentes a CFSMs puras.

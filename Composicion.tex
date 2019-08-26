@@ -16,11 +16,11 @@ Para modelar este comportamiento introducimos los Autómatas Finitos de Comunica
 \item de buffer, que representan comunicación asincrónica interna entre elementos de la componente, y que permiten representar la comunicación entre dos participantes luego de una composición; y por último 
 \item de entrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
 \end{inparaenum} \\
-Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
+Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak deterministic sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
 \xymatrix{   
-	\{\mathcal{A}_i\}_{i \in I} \ar[r]_{\Pi} \ar[d]_{||} & \{C_i\}_{i \in I}  \ar[dr]_{semántica}  \\
-	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & {\mathcal{L}' \ =} & {\mathcal{L}}  \\
+	\{\mathcal{A}_i\}_{i \in I} \ar[rr]_{\Pi} \ar[d]_{||} & & \{C_i\}_{i \in I}  \ar[dl]_{semantica}  \\
+	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & {\mathcal{L}' =} {\mathcal{L}}  \\
 	  \emptyset
   } 
  
@@ -69,8 +69,16 @@ $$
 \end{array}
  $$
 
+
  
-%Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$ y $\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Buff}$ $ \delta_\mathit{\mathcal{P}Buff} \iff \exists$ las configuracioes $c_i = \langle q_i, [\omega_\mathit{b},...,\omega_\mathit{b}:m, ..., \omega_\mathit{b}] \rangle, c_j =\langle q_j, [\omega_\mathit{b},...,\omega_\mathit{b}, ..., \omega_\mathit{b}] \rangle$ y $c_i \vdash c_j$
+Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$
+
+$\langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists q'_i, q'_j \in Q_\mathit{\mathcal{P}}$ tal que $\ \langle q'_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \ll m, q'_j \rangle \in \delta_\mathit{\mathcal{P}Buff}$ y se cumple una de las siguientes condiciones:
+\begin{enumerate}
+\item $q'_j = q_i$ 
+\item $\exists \sigma \in \Sigma_\mathit{\mathcal{P}}$ tal que $\langle q'_j, \sigma, q_i \rangle \in \delta_\mathit{\mathcal{P}} \land \sigma \neq [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m $
+\item $\exists s=[q'_j,...,q_i] $ donde s es una secuencia finita de estados tales que $s[0]= q'_j, s[n-1]=q_i$ y sea $ 0 \ll x \ll$ n-1,$s[x] \in Q_\mathit{\mathcal{P}}$ y $\forall s[x], s[x+1], \exists \sigma \in \Sigma_\mathit{\mathcal{P}} \land \langle s[x], \sigma, s[x+1] \rangle \in \delta_\mathit{\mathcal{P}} $  
+\end{enumerate} 
 \end{enumerate}
 \item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, y
 \item $F_{\mathcal{P}} = \bigcup_{1..n} F_{p_i}$.
@@ -122,7 +130,6 @@ Considere los siguientes AFCA:
         ;
 \end{tikzpicture} 
 \\
-
 \begin{tikzpicture}[->, thick][scale=0.33]
  \node[state,initial] (q_00)   {$q_{00}$}; 
   \node[state] (q_01) [right= 1.8cm of q_00 ] {$q_{01}$};
@@ -141,7 +148,6 @@ Considere los siguientes AFCA:
          (q_41) edge[above] node{$sr \gg c$} (q_42)
        ;
 \end{tikzpicture}
-
 \end{example}
 \caption{Ejemplo de composición autómata asíncrono de comunicación}
 \label{fig:ejemplo-comp}
@@ -155,18 +161,14 @@ $ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \i
 \end{centering} 
 
 Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
-
 \end{definition}
 
 \begin{definition}[Transformación loca de AFCA]
 Dado un conjunto de autómatas sin transiciones de comunicación interna $\{ \mathcal{A}_i\}_{i \in I}$, llamamos $\{T_i\}_{i \in I}$ un conjunto de mCFSM donde cada una es el resultado de la proyección $\Pi$ de un elemento del conjunto de autómatas. Llamamos $\mathcal{L}$ al sistema de transición etiquetado correspondiente al communicating system de $\{T_i\}_{i \in I}$. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa las ejecuciones posibles de conjunto.  Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
-
 Sea $\{ \mathcal{A}_i \}_{i \in I}$ un conjunto de AFCA $\{ \mathcal{A}_i \} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ tal que $\delta_{Buff} =  \emptyset$. Llamamos $||{A_i}_{i \in I}$ a la composición total. La misma tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ donde $\delta_{Ex} =  \emptyset$. Definimos $\Pi': AFCA \rightarrow \mathcal{L}'$ tal que
 \begin{itemize}
     \item $\forall $ Cada estado de $n$ de $\mathcal{L}'$ corresponde a una configuración $\langle q, \Omega \rangle$ de $||{A_i}_{i \in I}$ y
-    \item Un estado $n$ es alcanzable desde otro estado $n'$ sii $\exists \langle q, \sigma, q' \rangle \in \delta_{||{A_i}_{i \in I}}$ con $\sigma \in \Sigma_{Buff}$ y es de la forma $w_b\{\gg, \ll\}m$
-    % \item Sea $T_i$ mCFSM =  $\langle Q, \mathcal{C}, q_0, \mathcal{M}, \delta \rangle$
-    % \item Sea $\mathcal{L}$ el LTS $ $
+    \item Un estado $n$ es alcanzable desde otro estado $n'$ sii $\exists \langle q, \sigma, q' \rangle \in \delta_{||{A_i}_{i \in I}}$ con $\sigma \in \Sigma_{Buff}$ y es de la forma $w_b\{\gg, \ll\}m$ 
 \end{itemize}
 \end{definition}
 

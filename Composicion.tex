@@ -149,7 +149,7 @@ Considere los siguientes AFCA:
        ;
 \end{tikzpicture}
 \end{example}
-\caption{Ejemplo de composición autómata asíncrono de comunicación}
+\caption{Ejemplo de composición autómata asincrónico de comunicación}
 \label{fig:ejemplo-comp}
 \end{figure} 
 
@@ -164,59 +164,86 @@ Decimos que la composición de estos autómatas preserva el determinismo. Esto e
 \end{definition}
 
 \begin{definition}[Transformación loca de AFCA]
-Dado un conjunto de autómatas sin transiciones de comunicación interna $\{ \mathcal{A}_i\}_{i \in I}$, llamamos $\{T_i\}_{i \in I}$ un conjunto de mCFSM donde cada una es el resultado de la proyección $\Pi$ de un elemento del conjunto de autómatas. Llamamos $\mathcal{L}$ al sistema de transición etiquetado correspondiente al communicating system de $\{T_i\}_{i \in I}$. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa las ejecuciones posibles de conjunto.  Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
+Dado un conjunto de autómatas sin transiciones de comunicación interna $\{ \mathcal{A}_i\}_{i \in I}$, llamamos $\{T_i\}_{i \in I}$ un conjunto de mCFSM donde cada una es el resultado de la proyección $\Pi$ de un elemento del conjunto de autómatas. Llamamos $\mathcal{L}$ al sistema de transición etiquetado correspondiente al communicating system de $\{T_i\}_{i \in I}$. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa la semántica de comunicación interna del autómata composición.  Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
 Sea $\{ \mathcal{A}_i \}_{i \in I}$ un conjunto de AFCA $\{ \mathcal{A}_i \} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ tal que $\delta_{Buff} =  \emptyset$. Llamamos $||{A_i}_{i \in I}$ a la composición total. La misma tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ donde $\delta_{Ex} =  \emptyset$. Definimos $\Pi': AFCA \rightarrow \mathcal{L}'$ tal que
 \begin{itemize}
-    \item $\forall $ Cada estado de $n$ de $\mathcal{L}'$ corresponde a una configuración $\langle q, \Omega \rangle$ de $||{A_i}_{i \in I}$ y
-    \item Un estado $n$ es alcanzable desde otro estado $n'$ sii $\exists \langle q, \sigma, q' \rangle \in \delta_{||{A_i}_{i \in I}}$ con $\sigma \in \Sigma_{Buff}$ y es de la forma $w_b\{\gg, \ll\}m$ 
+    \item $\forall $ Cada estado de $n$ de $\mathcal{L}'$ corresponde a una configuración $\langle q, \Omega \rangle$ de $\mathcal{A}$ y
+    \item Un estado $n$ es alcanzable desde otro estado $n'$ sii $\exists \langle q, \sigma, q' \rangle \in \delta_{\mathcal{A}}$ con $\sigma \in \Sigma_{Buff}$
+     
 \end{itemize}
 \end{definition}
+
 
 \begin{figure}
 \begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]
 \label{ex:Transformación}
-Consideremos los autómatas representaos por el communicating system del ejemplo 2
-    \centering
-    
-\begin{tikzpicture}[->, thick][scale=0.20]
- \node[state,initial] (q_0)   {$q_{000}$}; 
- \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
- \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110}$};
- \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{111}$};
-  \node[state] (q_4) [below=  of q_0] {$q_{001}$};
-  \node[state] (q_5) [right = 1.5 of q_4 ] {$q_{201}$};
-  \node[state] (q_6) [right = 1.5 of q_5 ] {$q_{301}$};
- \node[state,accepting] (q_7) [right= 1.5cm of q_6 ] {$q_{311}$};
+Consideremos los siguientes AFCA 
+\begin{center}
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
+ \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= 1.5cm of q_2 ] {$q_3$};
+ \node[state, accepting] (q_4) [below= of q_3 ] {$q_4$};
+	
  \draw[]        
-        (q_0) edge[above] node{$PR \ll a$} (q_1)
-        (q_1) edge[above] node{$PR \gg a$} (q_2)
-        (q_2) edge[above] node{$SP \ll b$} (q_3)
-        (q_0) edge[left] node{$SP \ll b$} (q_4)
-        (q_4) edge[below] node{$SP \gg b$} (q_5)
-        (q_5) edge[below] node{$PR \ll a$} (q_6)
-        (q_6) edge[below] node{$PR \gg a$} (q_7)
-        (q_3) edge[right] node{$SP \gg b$} (q_7)
+        (q_0) edge[above] node{out(pr,a)} (q_1)
+        (q_0) edge[left] node{in(sp,b)} (q_2)
+        (q_1) edge[right] node{in(sp,b)} (q_3)
+        (q_2) edge[above] node{out(pr,a)} (q_3)
+        (q_3) edge[right] node{$int_p$} (q_4)
+        ; 
+\end{tikzpicture} 
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+ \node[state, accepting] (q_2) [below= of q_1 ] {$q_2$};
+ \draw[]        
+        
+        (q_0) edge[right] node{$int_r$} (q_1)
+        (q_1) edge[right] node{in(pr,a)} (q_2)
         ;
-\end{tikzpicture}
-\\
-\begin{tikzpicture}[->, thick][scale=0.20]
+\end{tikzpicture} 
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{out(sp,b)} (q_1)
+        
+        ;
+\end{tikzpicture} 
+
+\end{center}
+
+El autómata compuesto resultante es el AFCA $\mathcal{A}$  \\  
+\begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
  \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110}$};
- \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{111}$};
-  \node[state] (q_4) [below=  of q_0] {$q_{001}$};
-  \node[state] (q_5) [right = 1.5 of q_4 ] {$q_{201}$};
-  \node[state] (q_6) [right = 1.5 of q_5 ] {$q_{301}$};
- \node[state,accepting] (q_7) [right= 1.5cm of q_6 ] {$q_{311}$};
+ \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{120}$};
+  \node[state] (q_4) [right = 1.5 of q_3 ] {$q_{121}$};
+  \node[state] (q_5) [below=  of q_0] {$q_{001}$};
+  \node[state] (q_6) [right = 1.5cm of q_5] {$q_{201}$};
+  \node[state] (q_7) [right = 1.5 of q_6 ] {$q_{301}$};
+  \node[state] (q_8) [right = 1.5 of q_7 ] {$q_{311}$};
+  \node[state] (q_9) [right = 1.5 of q_8 ] {$q_{321}$};
+ \node[state,accepting] (q_10) [right= 1.5cm of q_9 ] {$q_{421}$};
  \draw[]        
         (q_0) edge[above] node{$PR \ll a$} (q_1)
-        (q_1) edge[above] node{$PR \gg a$} (q_2)
-        (q_2) edge[above] node{$SP \ll b$} (q_3)
-        (q_0) edge[left] node{$SP \ll b$} (q_4)
-        (q_4) edge[below] node{$SP \gg b$} (q_5)
-        (q_5) edge[below] node{$PR \ll a$} (q_6)
-        (q_6) edge[below] node{$PR \gg a$} (q_7)
-        (q_3) edge[right] node{$SP \gg b$} (q_7)
+        (q_1) edge[above] node{$int_r$} (q_2)
+		(q_2) edge[above] node{$PR \gg a$} (q_3)
+        (q_3) edge[above] node{$SP \ll b$} (q_4) 
+        (q_4) edge[right] node{$SP \gg b$} (q_9)
+        (q_0) edge[left] node{$SP \ll b$} (q_5)
+        (q_5) edge[below] node{$SP \gg b$} (q_6)
+        (q_6) edge[below] node{$PR \ll a$} (q_7)
+        (q_7) edge[below] node{$int_r$} (q_8)
+        (q_8) edge[below] node{$PR \gg a$} (q_9)
+        (q_9) edge[below] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
     \caption{Transformación}
@@ -224,6 +251,76 @@ Consideremos los autómatas representaos por el communicating system del ejemplo
 \end{example}
 \end{figure}
 
+
+\begin{figure}
+\begin{example}[communicating system de transformación]
+\label{ex:cmst} El communicating system correspondiente al conjunto de autómatas es el siguiente
+\centering
+
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= of q_0 ] {$q_1$};
+  \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= of q_2 ] {$q_3$};
+
+ \draw[]        
+        (q_0) edge[above] node{pr!a} (q_1)
+        (q_0) edge[right] node{sp?b} (q_2)
+        (q_1) edge[right] node{sp?b} (q_3)
+        (q_2) edge[above] node{pr!a} (q_3)
+        ; 
+\end{tikzpicture} 
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{pr?a} (q_1)
+        
+        ;
+\end{tikzpicture} 
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{sp!b} (q_1)
+        
+        ;
+\end{tikzpicture} 
+
+La semántica del communicating system es el sistema de transición etiquetado $\mathcal{L}$
+\\
+\begin{tikzpicture}[->, thick][scale=0.20]
+ \node[state,initial] (q_0)   {$q_{000},\epsilon,\epsilon$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100},a, \epsilon$};
+ \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110},\epsilon, \epsilon$};
+ \node[state] (q_3) [below = of q_2 ] {$q_{111}, \epsilon,b$};
+ \node[state,accepting] (q_4) [below=  of q_3] {$q_{311}, \epsilon,\epsilon$};
+ \node[state] (q_5) [below = of q_0] {$q_{001}, \epsilon, b$};
+ \node[state] (q_6) [below = of q_5 ] {$q_{201}, \epsilon, \epsilon$};
+ \node[state] (q_7) [right= 1.5cm of q_6 ] {$q_{301}, a, \epsilon$};
+ \draw[]        
+        (q_0) edge[above] node{$PR!a$} (q_1)
+        (q_1) edge[above] node{$PR?a$} (q_2)
+        (q_2) edge[right] node{$SP!b$} (q_3)
+        (q_3) edge[right] node{$SP?b$} (q_4)
+        (q_0) edge[left] node{$SP!b$} (q_5)
+        (q_5) edge[left] node{$SP?b$} (q_6)
+        (q_6) edge[below] node{$PR!a$} (q_7)
+        (q_7) edge[below] node{$PR?a$} (q_4)
+        ;
+\end{tikzpicture}
+    \caption{Transformación}
+    \label{fig:transformacion}
+\end{example}
+\end{figure}
+
+\newpage
 \subsection{Composición parcial vs composición total}
 
 En esta sección definimos los Autómatas Finitos de Comunicación Asincrónica para modelar la composición parcial de CFSMs. Ahora necesitamos demostrar que esta composición parcial es equivalente a una composición total.

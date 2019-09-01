@@ -172,6 +172,57 @@ Sea $\{ \mathcal{A}_i \}_{i \in I}$ un conjunto de AFCA $\{ \mathcal{A}_i \} = \
 \end{itemize}
 \end{definition}
 
+\begin{figure}
+\begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]
+\label{ex:Transformación}
+Consideremos los autómatas representaos por el communicating system del ejemplo 2
+    \centering
+    
+\begin{tikzpicture}[->, thick][scale=0.20]
+ \node[state,initial] (q_0)   {$q_{000}$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
+ \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110}$};
+ \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{111}$};
+  \node[state] (q_4) [below=  of q_0] {$q_{001}$};
+  \node[state] (q_5) [right = 1.5 of q_4 ] {$q_{201}$};
+  \node[state] (q_6) [right = 1.5 of q_5 ] {$q_{301}$};
+ \node[state,accepting] (q_7) [right= 1.5cm of q_6 ] {$q_{311}$};
+ \draw[]        
+        (q_0) edge[above] node{$PR \ll a$} (q_1)
+        (q_1) edge[above] node{$PR \gg a$} (q_2)
+        (q_2) edge[above] node{$SP \ll b$} (q_3)
+        (q_0) edge[left] node{$SP \ll b$} (q_4)
+        (q_4) edge[below] node{$SP \gg b$} (q_5)
+        (q_5) edge[below] node{$PR \ll a$} (q_6)
+        (q_6) edge[below] node{$PR \gg a$} (q_7)
+        (q_3) edge[right] node{$SP \gg b$} (q_7)
+        ;
+\end{tikzpicture}
+\\
+\begin{tikzpicture}[->, thick][scale=0.20]
+ \node[state,initial] (q_0)   {$q_{000}$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
+ \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110}$};
+ \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{111}$};
+  \node[state] (q_4) [below=  of q_0] {$q_{001}$};
+  \node[state] (q_5) [right = 1.5 of q_4 ] {$q_{201}$};
+  \node[state] (q_6) [right = 1.5 of q_5 ] {$q_{301}$};
+ \node[state,accepting] (q_7) [right= 1.5cm of q_6 ] {$q_{311}$};
+ \draw[]        
+        (q_0) edge[above] node{$PR \ll a$} (q_1)
+        (q_1) edge[above] node{$PR \gg a$} (q_2)
+        (q_2) edge[above] node{$SP \ll b$} (q_3)
+        (q_0) edge[left] node{$SP \ll b$} (q_4)
+        (q_4) edge[below] node{$SP \gg b$} (q_5)
+        (q_5) edge[below] node{$PR \ll a$} (q_6)
+        (q_6) edge[below] node{$PR \gg a$} (q_7)
+        (q_3) edge[right] node{$SP \gg b$} (q_7)
+        ;
+\end{tikzpicture}
+    \caption{Transformación}
+    \label{fig:transformacion}
+\end{example}
+\end{figure}
 
 \subsection{Composición parcial vs composición total}
 

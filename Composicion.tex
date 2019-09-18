@@ -18,12 +18,12 @@ Para modelar este comportamiento introducimos los Autómatas Finitos de Comunica
 \end{inparaenum} \\
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak deterministic sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
+\centering
 \xymatrix{   
 	\{\mathcal{A}_i\}_{i \in I} \ar[rr]_{\Pi} \ar[d]_{||} & & \{C_i\}_{i \in I}  \ar[dl]_{semantica}  \\
 	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & {\mathcal{L}' =} {\mathcal{L}}  \\
 	  \emptyset
-  } 
- 
+  }     
 
 
 Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
@@ -165,11 +165,13 @@ Decimos que la composición de estos autómatas preserva el determinismo. Esto e
 
 \begin{definition}[Transformación loca de AFCA]
 Dado un conjunto de autómatas sin transiciones de comunicación interna $\{ \mathcal{A}_i\}_{i \in I}$, llamamos $\{T_i\}_{i \in I}$ un conjunto de mCFSM donde cada una es el resultado de la proyección $\Pi$ de un elemento del conjunto de autómatas. Llamamos $\mathcal{L}$ al sistema de transición etiquetado correspondiente al communicating system de $\{T_i\}_{i \in I}$. Sea $\mathcal{A} = || \{ \mathcal{A}_i\}_{i \in I}$ la composición de todos los autómatas del conjunto. Definimos $\Pi'$ como la proyección que resulta en el sistema de transición etiquetado $\mathcal{L}'$ que representa la semántica de comunicación interna del autómata composición.  Queremos ver que $\mathcal{L}' \simeq \mathcal{L}$, es decir que ambos sistemas de transición son semánticamente equivalentes.
-Sea $\{ \mathcal{A}_i \}_{i \in I}$ un conjunto de AFCA $\{ \mathcal{A}_i \} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ tal que $\delta_{Buff} =  \emptyset$. Llamamos $||{A_i}_{i \in I}$ a la composición total. La misma tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \delta, q_0, F \rangle$ donde $\delta_{Ex} =  \emptyset$. Definimos $\Pi': AFCA \rightarrow \mathcal{L}'$ tal que
+Sea $\{ \mathcal{A}_i \}_{i \in I}$ un conjunto de AFCA $\{ \mathcal{A}_i \} = \langle Q, B, \mathcal{C}, \Sigma \delta, q_0, F \rangle$ tal que $\delta_{Buff} =  \emptyset$. Llamamos $||{A_i}_{i \in I}$ a la composición total. La misma tiene la forma $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$ donde $\delta_{Ex} = \emptyset$ . Definimos $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ tal que:
 \begin{itemize}
-    \item $\forall $ Cada estado de $n$ de $\mathcal{L}'$ corresponde a una configuración $\langle q, \Omega \rangle$ de $\mathcal{A}$ y
-    \item Un estado $n$ es alcanzable desde otro estado $n'$ sii $\exists \langle q, \sigma, q' \rangle \in \delta_{\mathcal{A}}$ con $\sigma \in \Sigma_{Buff}$
-     
+    \item Definimos la clase de equivalencia de un AFCA $[q]_{Buff} = \{q'| q \xrightarrow{\sigma} q', \sigma \in \Sigma_{\mathit{Int}} \}$ y $[q] \xrightarrow{\epsilon} [q']$ sii $\exists \hat{q} \in [q] \hat{q'} \in [q'] | \hat{q} \xrightarrow{\epsilon} \hat{q'}$. Es decir que para todo estado $q$ su clase de equivalencia incluye a todo otro estado $q'$ que esté conectado con $q$ por una transición interna.
+    \item $ \hat{Q} = \{ [q]_{Buff}| q \in Q_{\mathcal{A}} \}$ Cada estado del autómata resultante es una clase de equivalencia de los estados del autómata original.
+    \item $\hat{q_0} = [q_0]$ donde $q_0$ es el estado inicial de $\mathcal{A}$.
+    \item $\hat{\delta} = \{\langle q, \delta_i, q' \rangle | \delta_i \in \delta_{\mathit{\mathcal{A} Buff}} \land \delta_i = \langle q_i, \sigma, q_j \rangle \land \q_i, q_j \in Q_{\mathcal{A}} \land \sigma \in \Sigma_{\mathcal{A}} \}$ donde $q = [q_i]_{Buff} \land q' = [q_j]_{Buff}$. Un estado de $\hat{Q}$ es alcanzable desde otro si existe una transición de comunicación interna en el autómata $\mathcal{A}$ 
+    
 \end{itemize}
 \end{definition}
 
@@ -319,6 +321,7 @@ La semántica del communicating system es el sistema de transición etiquetado $
     \label{fig:transformacion}
 \end{example}
 \end{figure}
+
 
 \newpage
 \subsection{Composición parcial vs composición total}

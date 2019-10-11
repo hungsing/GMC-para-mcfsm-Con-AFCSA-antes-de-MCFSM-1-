@@ -82,7 +82,9 @@ Una configuración instantánea del autómata como $\langle q, \Omega \rangle \i
 \end{itemize}
 \end{definition}
 
-\begin{definition}[Relación de transición entre configuraciones] Sean $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, $q_1, q_2 \in Q$, $ m \in \mathcal{M}$ definimos $\vdash$, relación de transición entre configuraciones, como:  
+\begin{definition}[Relación de transición entre configuraciones]
+\label{def:reltransAFCA}
+Sean $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, $q_1, q_2 \in Q$, $ m \in \mathcal{M}$ definimos $\vdash$, relación de transición entre configuraciones, como:  
 \begin{enumerate}
 \item $\langle q_1, \Omega \rangle \vdash \langle q_2, \Omega \rangle \iff \langle q_1,r, q_2 \rangle \in \delta \land r \in \Sigma \setminus \Sigma_\mathit{Buff}$
 
@@ -161,9 +163,8 @@ Decimos que la configuración tiene mensajes huérfanos si, en un estado $q_i$  
 \end{definition}
 Decimos que una configuración está en modo Receptor no Especificado si la única transición saliente de un estado $q_i$ consume un mensaje $m$ y el primer mensaje de la cola es un mensaje $m'$ distinto de $m$.
 
-\begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
+\begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración válida. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
 \end{definition}
-
 
 \begin{example}[Ejemplo de un Autómata Finito de Comunicación Asincrónica]
 \label{ex:AFCA}
@@ -227,7 +228,10 @@ Al igual que antes la semántica de un communicating system se obtiene considera
 % 
 
 
-\begin{definition}[Semántica de una mCSFSM]La configuración de un multichannel communicating system se define en términos de transiciones entre configuraciones como se ve a continuación:
+\begin{definition}[Semántica de una mCSFSM]
+\label{def:semanticamCFSM}
+
+La configuración de un multichannel communicating system se define en términos de transiciones entre configuraciones como se ve a continuación:
 
   La configuración de un communicating system S es un par
   $s = \sysconf{q}{w}$ donde
@@ -251,25 +255,13 @@ Al igual que antes la semántica de un communicating system se obtiene considera
 			\end{enumerate}
 	\end{enumerate}
 Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
-
-%   Una configuración $s' = \sysconf{q'}{w'}$ es \emph{alcanzable} desde otra
-%   configuración $s = \sysconf{q}{w}$ a través de la \emph{ejecución de la
-%     transición}  $\tau $ (escrito $s \overset{t}{\rightarrow} s'$) si existe un
-%   $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
-% 	\begin{enumerate}
-% 		\item $t = (q_p, pq_n!m,  q'_p) \in \delta_p$ y 
-% 			\begin{enumerate}
-% 				\item $q'_{p'} = q_{p'}$ for all $p' \neq p$; y
-% 				\item $w'_{pq_n} = w_{pq_n} \cdot m$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$; \\
-% 			\end{enumerate}
-%                 O bien
-% 		\item $t = (q_q, pq?m,  q'_q) \in \delta_q$ y 
-% 			\begin{enumerate}
-% 				\item $q'_{p'} = q_{p'}$ for all $p' \not= q$; y
-% 				\item $m \cdot w'_{pq_n} = w_{pq_n}$ and $w'_{p'q'_m} = w_{p'q'_m}$ for all $p'q'_m \neq pq_n$
-% 			\end{enumerate}
-% 	\end{enumerate}
 \end{definition}
+
+\begin{prop}[La semántica de una mCFSM es igual a la de transiciones de comunicación interna de un AFCA]
+Si comparamos las reglas 2 y 3 de la \ref{def:reltransAFCA} con las reglas 1 y 2 de \ref{def:semanticamCFSM} vemos que hay mucha similitud.
+Una transición de comunicación interna de un AFCA tiene la siguiente semántica 
+\end{prop}
+
 
 Multichannel CFSMs  con un único canal para cada par ordenado de participantes son equivalentes a CFSMs puras.
 

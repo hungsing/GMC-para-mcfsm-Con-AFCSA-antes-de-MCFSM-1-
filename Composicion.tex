@@ -18,13 +18,17 @@ Para modelar este comportamiento introducimos los Autómatas Finitos de Comunica
 \end{inparaenum} \\
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak deterministic sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
-\centering
+\begin{figure}[ht]
+%\begin{center}
 \xymatrix{   
-	\{\mathcal{A}_i\}_{i \in I} \ar[rr]_{\Pi} \ar[d]_{||} & & \{C_i\}_{i \in I}  \ar[dl]_{semantica}  \\
-	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & {\mathcal{L}' =} {\mathcal{L}}  \\
+	\{\mathcal{A}_i\}_{i \in I} \ar[rrr]_{\Pi} \ar[d]_{|l|} & & & \{C_i\}_{i \in I}  \ar[d]_{semantica}  \\
+	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & \mathcal{L}' & = & {\mathcal{L}}  \\
 	  \emptyset
-  }     
-
+}     
+%\end{center}
+\caption{La composición de componentes asincrónicas preserva la semántica asincrónica de su interfaz de comunicación.}
+\label{fig:preservacion}
+\end{figure}
 
 Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
  \begin{enumerate}

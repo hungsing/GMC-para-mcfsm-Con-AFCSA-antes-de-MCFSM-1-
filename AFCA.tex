@@ -243,12 +243,12 @@ La configuración de un multichannel communicating system se define en términos
   Una configuración $s' = \langle \overrightarrow{q'} ; \overrightarrow{w'} \rangle$ es \emph{alcanzable} desde otra
   configuración $s = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
 	\begin{enumerate}
-		\item $l = sr!m$, $\langle q_s, l,  q'_s\rangle \in \delta_s$ y 
+		\item $l = \langle q_s, sr!m,  q'_s\rangle \in \delta_s$ y 
 			\begin{enumerate}
 				\item $q'_p = q_p$ para todo $\p \neq s$; y
 				\item $w'_{sr} = w_{sr} \cdot m$ y  $w'_{pq} = w_{pq}$ para todo $pq \neq sr$; o bien
 			\end{enumerate}
-		\item $l = sr?m$, $\langle q_r, l,  q'_r\rangle \in \delta_r$ y 
+		\item $l = \langle q_r, sr?m,  q'_r\rangle \in \delta_r$ y 
 			\begin{enumerate}
 			\item $q'_{p} = q_{p}$ para todo $p \neq r$; y
 				\item $w_{sr} = m \cdot w'_{pq}$ y $w'_{pq} = w_{pq}$ para todo $pq' \neq sr$

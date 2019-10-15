@@ -172,14 +172,15 @@ Decimos que la composición de estos autómatas preserva el determinismo. Esto e
 \end{definition}
 
 \begin{definition}[Equivalencia por comunicación interna]
-Dado un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, weak deterministic. Dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma^*} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ decimos que son bisimilares $q \approx q'$. Definimos la clase de equivalencia por comunicación interna de un $[q]_{Buff}= \{q'| q \approx q'\}$. Para un estado $q$ del autómata, su clase de equivalencia por comunicación interna $[q]_{Buff}$ son aquellos estados $q'$ alcanzables en cero o más pasos de transiciones internas. Decimos que dos clases de equivalencia están relacionadas $[q] \xrightarrow{\sigma} [q']$ sii $\exists \hat{q} \in [q], \hat{q'} \in [q']$ tales que $\hat{q} \xrightarrow{\sigma} \hat{q'}$ con $\sigma \in \Sigma_{Buff}$\end{definition}
+Dado un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, weak deterministic. Dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma^*} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ decimos que son bisimilares $q \approx q'$. Llamamos $[q]_\mathcal{M}$ a la clase de equivalencia por comunicación interna de un estado $q$ y la definimos como $[q]_\mathcal{M}= \{q'| q \xrightarrow{\sigma^*} q'\}$. Para un estado $q$ del autómata, su clase de equivalencia por comunicación interna $[q]_\mathcal{M}$ son aquellos estados $q'$ alcanzables en cero o más pasos de transiciones internas. Decimos que dos clases de equivalencia están relacionadas $[q]_\mathcal{M} \xrightarrow{\sigma} [q']_\mathcal{M}$ sii $\exists q_i \in [q]_\mathcal{M}, q'_i \in [q']_\mathcal{M}$ tales que $\langle q_i,\sigma,q'_i \rangle \in \delta_{Buff}$
+\end{definition}
 
 \begin{definition}[Proyección de comuniación interna de AFCA]
 Dado un conjunto de weak deterministic AFCA sin transiciones de comunicación interna $\{ \mathcal{A}_i \}_{i \in I} = \langle Q_i, B_i, \mathcal{C}, \Sigma_i \delta_i, q_{0i}, F_i \rangle$. Sea $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$ el AFCA resultante de la composición $||_{i \in I}\mathcal{A}_i$, pedimos que $\mathcal{A}$ sea weak deterministic. Definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \hat{Q}, \hat{q_0}, \hat{\Delta} \rangle$ tal que:
 \begin{itemize}
     \item $ \hat{Q} = \{ \langle q, \overrightarrow{\Omega} \rangle | q \in Q \land \overrightarrow{\Omega} = (\Omega_b)_{b \in B},$ con $\Omega_b \in \mathcal{M}^* \}$ Cada estado del sistema de transición resultante es una configuración de $\mathcal{A}$.
     \item $\hat{q_0} = \langle q, \overrightarrow{\epsilon} \rangle$, es la configuración inicial de $\mathcal{A}$.
-    \item $\hat{\Delta}= \{\langle q_i,\hat{\sigma},q_j,\rangle | q_i,q_j \in Q, \hat{\sigma} \in \delta \}$ a la relación de transición de $\hat{\mathcal{A}}$. Un estado de $\hat{Q}$ es alcanzable desde otro si existe una transición de comunicación interna en el autómata $\mathcal{A}$ que conecta un estado de la clase de equivalencia $[q]$ con uno de la $[q']$
+    \item $\hat{\Delta}= \{\langle \langle q_i, \Omega \rangle, \hat{\sigma},\langle q_j, \Omega' \rangle \rangle | q_i,q_j \in Q, \hat{\sigma} \in \delta_{Buff} \land \exists \sigma \in \Sigma$ tal que  $[q_i]_\mathcal{M} \xrightarrow{\sigma} [q_j]_\mathcal{M} \}$. Definimos $\hat{\Delta}$ como la relación de transición de $\hat{\mathcal{A}}$. Un estado de $\hat{q_j}$ es alcanzable desde otro $\hat{q_i}$ si la clase de equivalencia $[q_j]_\mathcal{M}$ es alcanzable desde $[q_i]_\mathcal{M}$
     
 \end{itemize}
 \end{definition}
@@ -310,7 +311,7 @@ La semántica del communicating system es el sistema de transición etiquetado $
  \node[state] (q_1) [right= 3cm of q_0 ] {$q_{100},a, \epsilon$};
  \node[state] (q_2) [right = 3cm of q_1 ] {$q_{110},\epsilon, \epsilon$};
  \node[state] (q_3) [below = of q_2 ] {$q_{111}, \epsilon,b$};
- \node[state,accepting] (q_4) [below=  of q_3] {$q_{311}, \epsilon,\epsilon$};
+ \node[state,accepting] (q_4) [below=  of q_3] {$q_{321}, \epsilon,\epsilon$};
  \node[state] (q_5) [below = of q_0] {$q_{001}, \epsilon, b$};
  \node[state] (q_6) [below = of q_5 ] {$q_{201}, \epsilon, \epsilon$};
  \node[state] (q_7) [right= 3cm of q_6 ] {$q_{301}, a, \epsilon$};
@@ -356,10 +357,11 @@ La semántica del communicating system es el sistema de transición etiquetado $
     \label{fig: transformación loca}
 \end{figure}
 
-\begin{prop}[Equivalencia de semánticas] Dado un conjunto de weak deterministic AFCA $\{\mathcal{A_i}\}_{i \in I}$ sin transiciones de comunicación interna y su composición $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}$ el sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
+\begin{prop}[Equivalencia de semánticas] Dado un conjunto de weak deterministic AFCA $\{\mathcal{A_i}\}_{i \in I}$ sin transiciones de comunicación interna y su composición $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
 
-\begin{proof}Primero necesitamos ver que para cada estado de $\hat{\mathcal{A}}$ existe un estado equivalente en $C$, y viceversa. Es decir $\forall q \in \hat{Q} p \in Q_C$.
+\begin{proof}Primero necesitamos ver que para cada estado de $\hat{\mathcal{A}}$ existe un estado equivalente en $C$, y viceversa. Es decir $(\exists \hat{q} \in \hat{Q} \iff \exists p \in Q_C) \land q \approx p$.
 
+Cada transición $\hat{sigma} \in \hat{\Delta}$ es un movimiento en un buffer $b \in B_{\mathcal{A}}$ tal que existe un canal $c \in \mathcal{C}$ que le corresponde. 
 \end{proof}
 \end{prop}
 

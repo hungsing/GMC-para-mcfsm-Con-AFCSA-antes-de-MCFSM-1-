@@ -185,7 +185,7 @@ Dado un conjunto de weak deterministic AFCA sin transiciones de comunicación in
 \end{itemize}
 \end{definition}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]
 \label{ex:Transformación}
 Consideremos los siguientes AFCA 
@@ -263,7 +263,7 @@ El autómata compuesto resultante es el AFCA $\mathcal{A}$  \\
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[h]
 \begin{example}[communicating system de transformación]
 \label{ex:cmst} El communicating system correspondiente al conjunto de autómatas es el siguiente
 \centering
@@ -357,11 +357,22 @@ La semántica del communicating system es el sistema de transición etiquetado $
     \label{fig: transformación loca}
 \end{figure}
 
+
 \begin{prop}[Equivalencia de semánticas] Dado un conjunto de weak deterministic AFCA $\{\mathcal{A_i}\}_{i \in I}$ sin transiciones de comunicación interna y su composición $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
 
-\begin{proof}Primero necesitamos ver que para cada estado de $\hat{\mathcal{A}}$ existe un estado equivalente en $C$, y viceversa. Es decir $(\exists \hat{q} \in \hat{Q} \iff \exists p \in Q_C) \land q \approx p$.
+\begin{proof}
 
-Cada transición $\hat{sigma} \in \hat{\Delta}$ es un movimiento en un buffer $b \in B_{\mathcal{A}}$ tal que existe un canal $c \in \mathcal{C}$ que le corresponde. 
+\begin{itemize}
+    \item[\textbf{Transiciones}]
+    \item[$\implies$]Toda transición $\hat{sigma} \in \hat{\Delta}$ representa un movimiento en un buffer $a_ka_j \in B_{\mathcal{A}}$ de $\mathcal{A}$. Todo buffer $a_ka_j$ es, por la definición de composición, a un canal $a_ka_j \in \mathcal{C}$ entre dos autómatas componentes $\mathcal{A}_k$ y $\mathcal{A}_j$ que fue internalizado. Entonces cada transición entre dos estados de $\hat{\mathcal{A}}$ equivale a una transición de comunicación externa entre dos autómatas componentes. Toda transición de comunicación externa está representada en una mCFSM, por lo tanto tiene una transición correspondiente en $C = \langle Q_c, q_{0C}, \Delta_C \rangle$. Entonces toda transición de $\hat{\mathcal{A}}$ tiene su transición equivalente en $C$. 
+
+% $\forall \hat{\sigma} \in \hat{\Delta} \exists \langle q,a_ka_j{\ll,gg}m,q' \in \delta_{\mathcal{A}}$ con $a_ka_j \in B_{\mathcal{A}}$. $a_ka_j \in B_{\mathcal{A}} \iff \exists a_ka_j \in \mathcal{C}$
+    \item[$\impliedby$]Toda transición de $C$ es una comunicación externa entre dos autómatas $\mathcal{A}_k, \mathcal{A}_j \in \{\mathcal{A}_i\}_{i \in I}$, por definición de communicating system. Toda comunicación externa entre un par de autómatas del conjunto es una comunicación interna de $\mathcal{A}$, y por lo tanto está representada en una transición del lts $\hat{\mathcal{A}}$. 
+    \item[] Entonces $\hat{\sigma} \in \hat{\Delta} \iff \sigma_C \in \Delta_C$
+    \item[\textbf{Estados}]
+    \item[$\implies$]Todo estado $\hat{q} \in \hat{Q}$ es una configuración $\langle q, \overrightarrow{\Omega} \rangle$ de $\mathcal{A}$ con $q \in Q$ y $\overrightarrow{\Omega} = (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. Por definición de $\hat{\Delta}$, un estado $\langle q', \overrightarrow{\Omega} \rangle$ es alcanzable desde otro $\langle q, \overrightarrow{\Omega} \rangle$ ($q,q' \in \Q$) si existe una transición de comunicación interna $\langle q,a_ka_j \ll m ,q' \rangle \in \delta_{\mathcal{A}}$ o $\langle q,a_ka_j \ll m ,q' \rangle \in \delta_{\mathcal{A}}$. En la parte anterior demostramos para toda transición que $\hat{\sigma} \in \hat{\Delta} \iff \sigma_c \in \Delta_C$. Por lo tanto los buffers que cambian su contenido de estado a estado en $\hat{\mathcal{A}}$ se corresponden con los canales que se modifican en $C$. 
+\end{itemize}
+
 \end{proof}
 \end{prop}
 

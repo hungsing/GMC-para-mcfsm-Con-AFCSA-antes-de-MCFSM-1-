@@ -185,7 +185,48 @@ Dado un conjunto de weak deterministic AFCA sin transiciones de comunicación in
 \end{itemize}
 \end{definition}
 
-\begin{figure}[htpb]
+\begin{definition}[Bisimulación]
+Dado un sistema de transición etiquetado $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
+\begin{itemize}
+    \item $(\forall \sigma \in \Sigma \  | \  p \ \overset{\sigma}{\rightarrow} p' \implies \exists q'\in Q \ \mathit{tal que} \ q \overset{\sigma}{\rightarrow} q' \land \langle p', q' \rangle \in R )$ y, simétricamente vale 
+    \item $(\forall \sigma \in \Sigma \  | \  q \overset{\sigma}{\rightarrow} q' \implies \exists p'\in Q \ \mathit{tal que} \ p \overset{\sigma}{\rightarrow} p' \land \langle p', q' \rangle \in R ) $
+\end{itemize}
+
+Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si existe una bisimulación R tal que $\langle p,q \rangle \in R$. La relación de bisimilaridad $\sim$ es una relación de equivalencia. Además es la relación de bisimulación más grande sobre un sistema dado.
+
+\end{definition}
+
+\begin{prop}[Equivalencia de semánticas] Dado un conjunto de weak deterministic AFCA $\{\mathcal{A_i}\}_{i \in I}$ sin transiciones de comunicación interna y su composición $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
+
+\begin{proof}
+
+\begin{itemize}
+    \item[\textbf{Transiciones}]
+    \item[$\implies$]Toda transición $\hat{\sigma} \in \hat{\Delta}$ representa una operación en un buffer $a_ka_j \in B_{\mathcal{A}}$ de $\mathcal{A}$. Todo buffer $a_ka_j$ es, por la definición de composición, un canal $a_ka_j \in \mathcal{C}$ entre dos autómatas componentes $\mathcal{A}_k$ y $\mathcal{A}_j$ que fue internalizado. Entonces cada transición entre dos estados de $\hat{\mathcal{A}}$ corresponde a una transición de comunicación externa entre dos autómatas componentes. Toda transición de comunicación externa está representada en una mCFSM, por lo tanto tiene una transición correspondiente en $C = \langle Q_c, q_{0C}, \Delta_C \rangle$. Entonces toda transición de $\hat{\mathcal{A}}$ tiene su transición equivalente en $C$. 
+
+% $\forall \hat{\sigma} \in \hat{\Delta} \exists \langle q,a_ka_j{\ll,gg}m,q' \in \delta_{\mathcal{A}}$ con $a_ka_j \in B_{\mathcal{A}}$. $a_ka_j \in B_{\mathcal{A}} \iff \exists a_ka_j \in \mathcal{C}$
+    \item[$\impliedby$]Toda transición de $C$ es una comunicación externa entre dos autómatas $\mathcal{A}_k, \mathcal{A}_j \in \{\mathcal{A}_i\}_{i \in I}$, por definición de communicating system. Toda comunicación externa entre un par de autómatas del conjunto es una comunicación interna de $\mathcal{A}$, y por lo tanto está representada en una transición del lts $\hat{\mathcal{A}}$. 
+    \item[] Entonces $((\forall \hat{\sigma} \in \hat{\Delta}) (\exists \sigma_C \in \Delta_C)) \land ((\forall \sigma_C \in \Delta_C) (\exists \hat{\sigma} \in \hat{\Delta}))$ 
+    
+    \item[\textbf{Estados}] 
+    \item Todo estado $\hat{q} \in \hat{Q}$ es una configuración $\langle q, \overrightarrow{\Omega} \rangle$ de $\mathcal{A}$ con $q \in Q$ y $\overrightarrow{\Omega}= (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. 
+    
+    \item[$\implies$] $\overrightarrow{\Omega}$ es la secuencia de buffers $B$ con sus respectivos contenidos en cada estado. Por la definición de composición [Def~\ref{def:comp}] $B$ contiene los buffers que eran canales de comunicación externa $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$, más los buffers propios de cada componente $b \in B_{\mathcal{A}_i}$. Por definición de $\hat{\Delta}$, un estado $\langle q', \overrightarrow{\Omega} \rangle$ es alcanzable desde otro $\langle q, \overrightarrow{\Omega} \rangle$, $(q,q' \in Q$, si existe una transición de comunicación interna $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$ o $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$. Sabemos por la definición de proyección de comunicación interna (Def~\ref{def:pci}) que los autómatas de $\{\mathcal{A}_i\}_{i \in I}$ no tienen transiciones de comunicación interna. Por lo tanto podemos afirmar que los buffers que cambian su contenido en cada estado de $\hat{\mathcal{A}}$ son únicamente los de la forma $(a_ka_j)_n$. Ya probamos que las transiciones de $\hat{A}$ son semánticamente equivalentes a las de $C$. Entonces podemos decir que los buffers que se modifican en $\hat{A}$ son los mismos canales que se modifican en $C$.
+    
+    \item[$\impliedby$] Para todo canal $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$ existe un buffer $(a_ka_j)_n \in \mathcal{B}_{\mathcal{A}}$. Todas las transiciones de buffer de $\mathcal{A}$ están representadas en $\hat{\mathcal{A}}$ y afectan únicamente a los buffers $(a_ka_j)_n$. Por lo tanto los canales que sufren cambios de estado a estado en $C$ son los mismos buffers afectados en $\hat{\mathcal{A}}$
+    
+    \item Ya vimos que para todo $\hat{\sigma} \in \hat{\Delta}$ existe una transición equivalente entre los estados de $C$ y viceversa. También vimos que los buffers representados en los estados de $\hat{\mathcal{A}}$ son los mismos canales representados en los estados de $C$. Entonces podemos decir que para todo estado $p \in \hat{Q}$ tal que $p \xrightarrow{\hat{\sigma}} p'$ entonces $\exists q \in Q_C$ tal que $q \xrightarrow{\sigma} q'$ y como $\hat{\sigma}$ y $\sigma$ son equivalentes podemos decir que $\langle p', q' \rangle \in R$ dónde R es una relación de bisimulación. 
+    
+    \item Simétricamente podemos decir $\forall q \in Q_C$ tal que $q \xrightarrow{\sigma} q'$ entonces $\exists p \in Q_C$ tal que $p \xrightarrow{\hat{\sigma}} p'$ y como $\hat{\sigma}$ y $\sigma$ son equivalentes podemos decir que $\langle p', q' \rangle \in R$.
+    
+\end{itemize}
+
+\end{proof}
+\end{prop}
+
+\newpage
+
+\begin{figure}[ht]
 \begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]
 \label{ex:Transformación}
 Consideremos los siguientes AFCA 
@@ -331,57 +372,32 @@ La semántica del communicating system es el sistema de transición etiquetado $
 \end{example}
 \end{figure}
 
-\begin{figure}[htpb]
-    \centering
-\begin{tikzpicture}[->, thick]
-\node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
- \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
- \node[state] (q_2) [right = 3.5cm of q_1 ] {$[q_{120}],\epsilon, \epsilon$};
-  \node[state] (q_3) [below= of q_2 ] {$[q_{121}],\epsilon, b$};
-  \node[state] (q_4) [below=  of q_0] {$[q_{001}],\epsilon, b$};
-  \node[state] (q_5) [below = of q_4] {$[q_{201}],\epsilon, \epsilon$};
-  \node[state] (q_6) [right = 3.5cm of q_5 ] {$[q_{301}], a, \epsilon$};
-  \node[state,accepting] (q_7) [below = of q_3 ] {$[q_{321}],\epsilon, \epsilon$};
- \draw[]        
-        (q_0) edge[above] node{$\langle q_{000}, PR \ll a, q_{100} \rangle$} (q_1)
-    	(q_1) edge[above] node{$\langle q_{110}, PR \gg a, q_{120} \rangle$} (q_2)
-        (q_2) edge[right] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
-        (q_3) edge[right] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
-        (q_0) edge[left] node{$\langle q_{000}, SP \ll b, q_{001} \rangle$} (q_4)
-        (q_4) edge[left] node{$\langle q_{001}, SP \gg b, q_{201} \rangle$} (q_5)
-        (q_5) edge[below] node{$\langle q_{201}, SP \gg b, q_{301} \rangle$} (q_6)
-       (q_6) edge[below] node{$\langle q_{311}, PR \ll a, q_{321} \rangle$} (q_7)
-        ;\end{tikzpicture}
-
+\begin{figure}[ht]
+    \begin{centering}
+      \begin{tikzpicture}[->, thick]
+         \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
+         \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
+         \node[state] (q_2) [right = 3.5cm of q_1 ] {$[q_{120}],\epsilon,\epsilon$};
+         \node[state] (q_3) [below= of q_2 ] {$[q_{121}],\epsilon, b$};
+         \node[state] (q_4) [below=  of q_0] {$[q_{001}],\epsilon, b$};
+         \node[state] (q_5) [below = of q_4] {$[q_{201}],\epsilon, \epsilon$};
+         \node[state] (q_6) [right = 3.5cm of q_5 ] {$[q_{301}], a, \epsilon$};
+         \node[state,accepting] (q_7) [below = of q_3 ] {$[q_{321}],\epsilon, \epsilon$};
+    \draw[]        
+         (q_0) edge[above] node{$\langle q_{000}, PR \ll a, q_{100} \rangle$} (q_1)
+    	 (q_1) edge[above] node{$\langle q_{110}, PR \gg a, q_{120} \rangle$} (q_2)
+         (q_2) edge[right] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
+         (q_3) edge[right] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
+         (q_0) edge[left] node{$\langle q_{000}, SP \ll b, q_{001} \rangle$} (q_4)
+         (q_4) edge[left] node{$\langle q_{001}, SP \gg b, q_{201} \rangle$} (q_5)
+         (q_5) edge[below] node{$\langle q_{201}, SP \gg b, q_{301} \rangle$} (q_6)
+        (q_6) edge[below] node{$\langle q_{311}, PR \ll a, q_{321} \rangle$} (q_7)
+         ;
+        \end{tikzpicture}
     \caption{Caption}
     \label{fig: transformación loca}
+ \end{centering}
 \end{figure}
-
-
-\begin{prop}[Equivalencia de semánticas] Dado un conjunto de weak deterministic AFCA $\{\mathcal{A_i}\}_{i \in I}$ sin transiciones de comunicación interna y su composición $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
-
-\begin{proof}
-
-\begin{itemize}
-    \item[\textbf{Transiciones}]
-    \item[$\implies$]Toda transición $\hat{\sigma} \in \hat{\Delta}$ representa una operación en un buffer $a_ka_j \in B_{\mathcal{A}}$ de $\mathcal{A}$. Todo buffer $a_ka_j$ es, por la definición de composición, un canal $a_ka_j \in \mathcal{C}$ entre dos autómatas componentes $\mathcal{A}_k$ y $\mathcal{A}_j$ que fue internalizado. Entonces cada transición entre dos estados de $\hat{\mathcal{A}}$ corresponde a una transición de comunicación externa entre dos autómatas componentes. Toda transición de comunicación externa está representada en una mCFSM, por lo tanto tiene una transición correspondiente en $C = \langle Q_c, q_{0C}, \Delta_C \rangle$. Entonces toda transición de $\hat{\mathcal{A}}$ tiene su transición equivalente en $C$. 
-
-% $\forall \hat{\sigma} \in \hat{\Delta} \exists \langle q,a_ka_j{\ll,gg}m,q' \in \delta_{\mathcal{A}}$ con $a_ka_j \in B_{\mathcal{A}}$. $a_ka_j \in B_{\mathcal{A}} \iff \exists a_ka_j \in \mathcal{C}$
-    \item[$\impliedby$]Toda transición de $C$ es una comunicación externa entre dos autómatas $\mathcal{A}_k, \mathcal{A}_j \in \{\mathcal{A}_i\}_{i \in I}$, por definición de communicating system. Toda comunicación externa entre un par de autómatas del conjunto es una comunicación interna de $\mathcal{A}$, y por lo tanto está representada en una transición del lts $\hat{\mathcal{A}}$. 
-    \item[] Entonces $((\forall \hat{\sigma} \in \hat{\Delta}) (\exists \sigma_C \in \Delta_C)) \land ((\forall \sigma_C \in \Delta_C) (\exists \hat{\sigma} \in \hat{\Delta}))$ 
-    
-    \item[\textbf{Estados}] 
-    \item Todo estado $\hat{q} \in \hat{Q}$ es una configuración $\langle q, \overrightarrow{\Omega} \rangle$ de $\mathcal{A}$ con $q \in Q$ y $\overrightarrow{\Omega}= (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. 
-    
-    \item[$\implies$] $\overrightarrow{\Omega}$ es la secuencia de buffers $B$ con sus respectivos contenidos en cada estado. Por la definición de composición [Def~\ref{def:comp}] $B$ contiene los buffers que eran canales de comunicación externa $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$, más los buffers propios de cada componente $b \in B_{\mathcal{A}_i}$. Por definición de $\hat{\Delta}$, un estado $\langle q', \overrightarrow{\Omega} \rangle$ es alcanzable desde otro $\langle q, \overrightarrow{\Omega} \rangle$, $(q,q' \in Q$, si existe una transición de comunicación interna $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$ o $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$. Sabemos por la definición de proyección de comunicación interna (Def~\ref{def:pci}) que los autómatas de $\{\mathcal{A}_i\}_{i \in I}$ no tienen transiciones de comunicación interna. Por lo tanto podemos afirmar que los buffers que cambian su contenido en cada estado de $\hat{\mathcal{A}}$ son únicamente los de la forma $(a_ka_j)_n$. Ya probamos que las transiciones expresadas $\hat{A}$ son semánticamente equivalentes a las de $C$. Entonces podemos decir que los buffers que se modifican en $\hat{A}$ son los mismos canales que se modifican en $C$.
-    
-    \item[$\impliedby$] Para todo canal $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$ existe un buffer $(a_ka_j)_n \in \mathcal{B}_{\mathcal{A}}$. Todas las transiciones de buffer de $\mathcal{A}$ están representadas en $\hat{\mathcal{A}}$ y afectan únicamente a los buffers $(a_ka_j)_n$. Por lo tanto los canales que sufren cambios de estado a estado en $C$ son los mismos buffers afectados en $\hat{\mathcal{A}}$
-    
-    \item  Para cada par de estados $\hat{p}, \hat{q} \in \hat{Q}$ existe una transición de comunicación $\hat{\alpha} \in \hat{\Delta}$ tal que $\hat{p} \xrightarrow{\hat{\alpha}} \hat{q}$. Y para cada par de estados $p, q \in Q_C$ existe una transición $\alpha \in \Delta_C$ tal que $p \xrightarrow{\alpha} q$. Como $alpha \approx \hat{\alpha}$, lo único que se modifica de estado a estado son buffers/canales que son los mismos y cambian del mismo modo en ambos LTS podemos decir que los estados de $\hat{\mathcal{A}}$ reflejan lo mismo que los de $C$, por lo tanto son bisimilares.
-\end{itemize}
-
-\end{proof}
-\end{prop}
 
 \newpage
 \subsection{Composición parcial vs composición total}
@@ -402,13 +418,4 @@ Queremos demostrar que
 \item tm1 es bisimilar a tm2, es decir que para cada configuración las acciones realizables son las mismas
 \end{enumerate}
 
-\begin{definition}[Bisimulación]
-Dado conjunto de mCFSM correspondientes a loso un sists dema de transición con etiquetas $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
-\begin{itemize}
-    \item $(\forall p' \in \Sigma \  | \  p \ \overset{\sigma}{\rightarrow} p' \implies \exists q'\in Q \ \mathit{tal que} \ q \overset{\sigma}{\rightarrow} q' \land \langle p', q' \rangle \in R )$ y, simétricamente vale 
-    \item $(\forall q' \in \Sigma \  | \  q \overset{\sigma}{\rightarrow} q' \implies \exists p'\in Q \ \mathit{tal que} \ p \overset{\sigma}{\rightarrow} p' \land \langle p', q' \rangle \in R ) $
-\end{itemize}
 
-Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si existe una bisimulación R tal que $\langle p,q \rangle \in R$. La relación de bisimilaridad $\sim$ es una relación de equivalencia. Además es la relación de bisimulación más grande sobre un sistema dado.
-
-\end{definition}

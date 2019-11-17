@@ -32,7 +32,7 @@ Esta sección va a estar enfocada en la definición de composición total de aut
 
 Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
  \begin{enumerate}
-\item $\Sigma_E \cap \Sigma_R = \emptyset$ el conjunto de etiquetas debe ser disjunto, tanto internas, como de entrada/salida y de bufffer
+\item $\Sigma_{E Int} \cap \Sigma_{R Int} = \emptyset$ el conjunto de etiquetas internas debe ser disjunto. 
 \item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
 \end{enumerate}
 \begin{definition}[Composición]\label{def:comp}
@@ -72,8 +72,6 @@ $$
 \end{array}
 \end{array}
  $$
-
-
  
 Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$
 
@@ -87,16 +85,16 @@ $\langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle \in \
 \item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, y
 \item $F_{\mathcal{P}} = \bigcup_{1..n} F_{p_i}$.
 \end{itemize}
+\end{definition}
 
-Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Decimos que si un conjunto de autómatas tienen una acción con la misma etiqueta, al componerlos, ambas transiciones se ejecutarían a la vez. Como estos autómatas son de comunicación asincrónica, queremos evitar que las transiciones se sincronicen de ese modo. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
+
+Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
 
 Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
 
 Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $\mathit{In} (c_{p_i, p_{j_n}},m)$ y $\mathit{Out}(c_{p_j, p_{i_n}},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j, p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i, p_{j_n}}}, \omega_{c_{p_j, p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
 
 Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
-
-\end{definition}
 
 \begin{figure}
 \begin{example}[Composición de Autómatas Finitos de Comunicación Asincrónica]
@@ -157,12 +155,9 @@ Considere los siguientes AFCA:
 \label{fig:ejemplo-comp}
 \end{figure} 
 
-\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir 
-
-\begin{centering}
-Sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
+\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
+sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
 $ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
-\end{centering} 
 
 Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
 \end{definition}
@@ -171,12 +166,12 @@ Decimos que la composición de estos autómatas preserva el determinismo. Esto e
 
 \end{definition}
 
-\begin{definition}[Equivalencia por comunicación interna]
+\begin{definition}[Cociente por comunicación interna]
 Dado un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, weak deterministic. Dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma^*} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ decimos que son bisimilares $q \approx q'$. Llamamos $[q]_\mathcal{M}$ a la clase de equivalencia por comunicación interna de un estado $q$ y la definimos como $[q]_\mathcal{M}= \{q'| q \xrightarrow{\sigma^*} q'\}$. Para un estado $q$ del autómata, su clase de equivalencia por comunicación interna $[q]_\mathcal{M}$ son aquellos estados $q'$ alcanzables en cero o más pasos de transiciones internas. Decimos que dos clases de equivalencia están relacionadas $[q]_\mathcal{M} \xrightarrow{\sigma} [q']_\mathcal{M}$ sii $\exists q_i \in [q]_\mathcal{M}, q'_i \in [q']_\mathcal{M}$ tales que $\langle q_i,\sigma,q'_i \rangle \in \delta_{Buff}$
 \end{definition}
 
 \begin{definition}[Proyección de comuniación interna de AFCA]\label{def:pci}
-Dado un conjunto de weak deterministic AFCA sin transiciones de comunicación interna $\{ \mathcal{A}_i \}_{i \in I} = \langle Q_i, B_i, \mathcal{C}, \Sigma_i \delta_i, q_{0i}, F_i \rangle$. Sea $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$ el AFCA resultante de la composición $||_{i \in I}\mathcal{A}_i$, pedimos que $\mathcal{A}$ sea weak deterministic. Definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \hat{Q}, \hat{q_0}, \hat{\Delta} \rangle$ tal que:
+Dado un AFCA $A = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \hat{Q}, \hat{q_0}, \hat{\Delta} \rangle$ tal que:
 \begin{itemize}
     \item $ \hat{Q} = \{ \langle q, \overrightarrow{\Omega} \rangle | q \in Q \land \overrightarrow{\Omega} = (\Omega_b)_{b \in B},$ con $\Omega_b \in \mathcal{M}^* \}$ Cada estado del sistema de transición resultante es una configuración de $\mathcal{A}$.
     \item $\hat{q_0} = \langle q, \overrightarrow{\epsilon} \rangle$, es la configuración inicial de $\mathcal{A}$.
@@ -196,7 +191,7 @@ Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si e
 
 \end{definition}
 
-\begin{prop}[Equivalencia de semánticas] Dado un conjunto de weak deterministic AFCA $\{\mathcal{A_i}\}_{i \in I}$ sin transiciones de comunicación interna y su composición $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
+\begin{prop}[Equivalencia de semánticas] Sea $\{\mathcal{A_i}\}_{i \in I}$ un conjunto de weak deterministic AFCA sin transiciones de comunicación interna y $\mathcal{A}$ su composición. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{C_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $C$ al LTS que representa la semántica de $\{C_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $C$ son bisimilares.
 
 \begin{proof}
 
@@ -211,7 +206,7 @@ Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si e
     \item[\textbf{Estados}] 
     \item Todo estado $\hat{q} \in \hat{Q}$ es una configuración $\langle q, \overrightarrow{\Omega} \rangle$ de $\mathcal{A}$ con $q \in Q$ y $\overrightarrow{\Omega}= (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. 
     
-    \item[$\implies$] $\overrightarrow{\Omega}$ es la secuencia de buffers $B$ con sus respectivos contenidos en cada estado. Por la definición de composición [Def~\ref{def:comp}] $B$ contiene los buffers que eran canales de comunicación externa $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$, más los buffers propios de cada componente $b \in B_{\mathcal{A}_i}$. Por definición de $\hat{\Delta}$, un estado $\langle q', \overrightarrow{\Omega} \rangle$ es alcanzable desde otro $\langle q, \overrightarrow{\Omega} \rangle$, $(q,q' \in Q$, si existe una transición de comunicación interna $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$ o $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$. Sabemos por la definición de proyección de comunicación interna (Def~\ref{def:pci}) que los autómatas de $\{\mathcal{A}_i\}_{i \in I}$ no tienen transiciones de comunicación interna. Por lo tanto podemos afirmar que los buffers que cambian su contenido en cada estado de $\hat{\mathcal{A}}$ son únicamente los de la forma $(a_ka_j)_n$. Ya probamos que las transiciones de $\hat{A}$ son semánticamente equivalentes a las de $C$. Entonces podemos decir que los buffers que se modifican en $\hat{A}$ son los mismos canales que se modifican en $C$.
+    \item[$\implies$] $\overrightarrow{\Omega}$ es la secuencia de buffers $B$ con sus respectivos contenidos en cada estado. Por la definición de composición [Def~\ref{def:comp}] $B$ contiene los buffers que eran canales de comunicación externa $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$, más los buffers propios de cada componente $b \in B_{\mathcal{A}_i}$. Por definición de $\hat{\Delta}$, un estado $\langle q', \overrightarrow{\Omega} \rangle$ es alcanzable desde otro $\langle q, \overrightarrow{\Omega} \rangle$, $(q,q' \in Q$, si existe una transición de comunicación interna $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$ o $\langle q,(a_ka_j)_n \ll m ,q' \rangle \in \delta_{\mathcal{A}}$. Como los autómatas de $\{\mathcal{A}_i\}_{i \in I}$ no tienen transiciones de comunicación interna, podemos afirmar que los buffers que cambian su contenido en cada estado de $\hat{\mathcal{A}}$ son únicamente los de la forma $(a_ka_j)_n$. Ya probamos que las transiciones de $\hat{A}$ son semánticamente equivalentes a las de $C$. Entonces podemos decir que los buffers que se modifican en $\hat{A}$ son los mismos canales que se modifican en $C$.
     
     \item[$\impliedby$] Para todo canal $(a_ka_j)_n \in \mathcal{C}_{\mathcal{A}_i}$ existe un buffer $(a_ka_j)_n \in \mathcal{B}_{\mathcal{A}}$. Todas las transiciones de buffer de $\mathcal{A}$ están representadas en $\hat{\mathcal{A}}$ y afectan únicamente a los buffers $(a_ka_j)_n$. Por lo tanto los canales que sufren cambios de estado a estado en $C$ son los mismos buffers afectados en $\hat{\mathcal{A}}$
     

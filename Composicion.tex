@@ -171,11 +171,11 @@ Dado un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle
 \end{definition}
 
 \begin{definition}[Cociente de comunicación interna]\label{def:pci}
-Dado un AFCA $A = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \hat{Q}, \hat{q_0}, \hat{\Delta} \rangle$ tal que:
+Dado un AFCA $A = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\hat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \hat{Q}, \hat{\Sigma}, \hat{\Delta} \rangle$ tal que:
 \begin{itemize}
     \item $ \hat{Q} = \{ \langle q, \overrightarrow{\Omega} \rangle | q \in Q \land \overrightarrow{\Omega} = (\Omega_b)_{b \in B},$ con $\Omega_b \in \mathcal{M}^* \}$ Cada estado del sistema de transición resultante es una configuración de $\mathcal{A}$.
-    \item $\hat{q_0} = \langle q, \overrightarrow{\epsilon} \rangle$, es la configuración inicial de $\mathcal{A}$.
-    \item $\hat{\Delta}= \{\langle \langle q_i, \Omega \rangle, \hat{\sigma},\langle q_j, \Omega' \rangle \rangle | q_i,q_j \in Q, \hat{\sigma} \in \delta_{Buff} \land \exists \sigma \in \Sigma$ tal que  $[q_i]_\mathcal{M} \xrightarrow{\sigma} [q_j]_\mathcal{M} \}$. Definimos $\hat{\Delta}$ como la relación de transición de $\hat{\mathcal{A}}$. Un estado de $\hat{q_j}$ es alcanzable desde otro $\hat{q_i}$ si la clase de equivalencia $[q_j]_\mathcal{M}$ es alcanzable desde $[q_i]_\mathcal{M}$
+    \item $\hat{\Sigma} = \delta_{Buff} $ es el conjunto de etiquetas del LTS, donde cada etiqueta es una transición de comunicación interna de $\mathcal{A}$.
+    \item $\hat{\Delta}= \{\langle \langle q_i, \Omega \rangle, \hat{\sigma},\langle q_j, \Omega' \rangle \rangle | q_i,q_j \in Q, \hat{\sigma} \in \hat{\Sigma} \land \exists \sigma \in \Sigma$ tal que  $[q_i]_\mathcal{M} \xrightarrow{\sigma} [q_j]_\mathcal{M} \}$. Definimos $\hat{\Delta}$ como la relación de transición de $\hat{\mathcal{A}}$. Un estado de $\hat{q_j}$ es alcanzable desde otro $\hat{q_i}$ si la clase de equivalencia $[q_j]_\mathcal{M}$ es alcanzable desde $[q_i]_\mathcal{M}$
     
 \end{itemize}
 \end{definition}
@@ -196,12 +196,6 @@ Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si e
 \begin{proof}
 
 \begin{itemize}
-    \item[\textbf{Transiciones}]
-    \item[$\implies$]Toda transición $\hat{\sigma} \in \hat{\Delta}$ representa una operación en un buffer $a_ka_j \in B_{\mathcal{A}}$ de $\mathcal{A}$. Todo buffer $a_ka_j$ es, por la definición de composición, un canal $a_ka_j \in \mathcal{C}$ entre dos autómatas componentes $\mathcal{A}_k$ y $\mathcal{A}_j$ que fue internalizado. Entonces cada transición entre dos estados de $\hat{\mathcal{A}}$ corresponde a una transición de comunicación externa entre dos autómatas componentes. Toda transición de comunicación externa está representada en una mCFSM, por lo tanto tiene una transición correspondiente en $C = \langle Q_c, q_{0C}, \Delta_C \rangle$. Entonces toda transición de $\hat{\mathcal{A}}$ tiene su transición equivalente en $C$. 
-
-% $\forall \hat{\sigma} \in \hat{\Delta} \exists \langle q,a_ka_j{\ll,gg}m,q' \in \delta_{\mathcal{A}}$ con $a_ka_j \in B_{\mathcal{A}}$. $a_ka_j \in B_{\mathcal{A}} \iff \exists a_ka_j \in \mathcal{C}$
-    \item[$\impliedby$]Toda transición de $C$ es una comunicación externa entre dos autómatas $\mathcal{A}_k, \mathcal{A}_j \in \{\mathcal{A}_i\}_{i \in I}$, por definición de communicating system. Toda comunicación externa entre un par de autómatas del conjunto es una comunicación interna de $\mathcal{A}$, y por lo tanto está representada en una transición del lts $\hat{\mathcal{A}}$. 
-    \item[] Entonces $((\forall \hat{\sigma} \in \hat{\Delta}) (\exists \sigma_C \in \Delta_C)) \land ((\forall \sigma_C \in \Delta_C) (\exists \hat{\sigma} \in \hat{\Delta}))$ 
     
     \item[\textbf{Estados} $\implies$] 
     \item Todo estado $\hat{q} \in \hat{Q}$ es una configuración $\langle \overrightarrow{q}, \overrightarrow{\Omega} \rangle$ de $\mathcal{A}$ con $\overrightarrow{q} \in Q$ y $\overrightarrow{\Omega}= (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. 
@@ -215,9 +209,20 @@ Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si e
     \item[\textbf{Estados} $\impliedby$]
     \item Sea $M$ el LTS que representa la semántica el communicating system $\langle \langle q_1,..,q_m \rangle, \overrightarrow{\Omega} \rangle \in Q_M  \iff q_i \in Q_{M_i} \iff q_i \in Q_i$ y ya establecimos $\forall q_i \in  Q_{M_i}$ vale que $\exists [q_i]_m$. Por definición de composición $q_i \in Q_i \iff \iff \langle q_1, q_2,.., q_i \rangle \in Q $. Como ya establecimos que por la composición $\exists [q_i]_m$ para $\mathcal{A}_i$ $\iff \exists [\langle q_1, q_2,.., q_i \rangle]_m$ para $\mathcal{A}$, y por definición de proyección $\exists \langle \langle q_1, q_2,.., q_m \rangle, \overrightarrow{\Omega} \rangle \in \hat{Q}$
     
-    \item Simétricamente podemos decir $\forall q \in Q_C$ tal que $q \xrightarrow{\sigma} q'$ entonces $\exists p \in Q_C$ tal que $p \xrightarrow{\hat{\sigma}} p'$ y como $\hat{\sigma}$ y $\sigma$ son equivalentes podemos decir que $\langle p', q' \rangle \in R$. 
+    \item[\textbf{Buffers} $\implies$] 
+    \item Por definición de proyección de comunicación, los buffers representados en $\hat{\mathcal{A}}$ son buffers de $\mathcal{A}$. Por definición de composición, estos buffers surgen de los buffers $B_i$ de los AFCA componentes más los canales de comunicación internalizados. Es decir los buffers de tipo $(a_ka_j)_l \in \mathcal{C}_i$. Como los AFCA del conjunto $\{\mathcal{A}_i\}_{i \in I}$ carecen de operaciones de comunicación interna, los buffers que se modifican entre estados de $\hat{\mathcal{A}}$ son únicamente los de canales internalizados. Por definición de interfaz de comunicación de AFCA, son los mismos canales que aparecen en las mCFSM $M_i$ y por lo tanto son los mismos que aparecen en los estados del lts $M$.
+
+    \item[\textbf{Buffers} $\impliedby$]
+    \item Los $\Omega$ que se modifican entre estados de $M$ son canales de comunicación externa del conjunto de mCFFSM $\{M_i\}_{i \in I}$. Para toda mCFSM del conjunto $M_i$, un canal de comunicación está pertenece a su cojunto de canales $\mathcal{C}_{M_i}$ si y solo si, son canales en el AFCA correspondiente. Por definición de composición estos canales se internalizan como buffers de comunicación interna en $\mathcal{A}$. Por definición de proyección de comunicación interna, estos buffers están en los estados del lts $\hat{\mathcal{A}}$. Como los $\mathcal{A}_i$ no tienen operaciones de comunicación interna. Estos los buffers que se modifican entre estados de $\hat{\mathcal{A}}$ son únicamente los canales internalizados. Por lo tanto los canales de los estados de $M$ son exactamente los mismos que se modifican en los estados de $\hat{\mathcal{A}}$.
     
+    \item[\textbf{Transiciones}]
+    \item Ya demostramos que los estados de $\hat{\mathcal{A}}$ y $M$ son equivalentes. Llamemos $R \subseteq \hat{Q} \times P$ a esta relación de equivalencia donde $P$ es el conjunto de estados de $M$ y para todo un par $\langle q, p \rangle \in R$ sii son $q$ y $p$ son estados equivalentes. Queremos probar que $R$ es una bisimulación.
+    
+    \item Sean $q \in \hat{Q}, p \in P $, para todo $\sigma \in \hat{\Sigma}$, $q \xrightarrow{\sigma} q'$, $\sigma$ es una transición sobre un buffer  $(a_ka_j)_i$ de la forma $\langel q, (a_ka_j)_i \{\ll, \gg\} m, q'$. Como los estados son equivalentes y los buffers modificados en $\hat{\mathcal{A}}$ son los canales de $M$, podemos deci que existe un $\sigma' \in Sigma_M$ tal que $p \xrightarrow{\sigma'} p'$ y $\langle q', p' \rangle \in R$
+    
+    \item Simétricamente podemos decir que $\forall \sigma' \in \Sigma_M$ tal que $p \xrightarrow{\sigma'} p'$, $\sigma'$ es una operación sobre un canal de comunicación. Como los estados son equivalente, los canales comunicación de $M$ están en $\hat{\mathcal{A}}$ como buffers y de hecho son los únicos buffers que se modifican de estado a estado, sabemos que hay una transición $\sigma \in \hat{\Sigma}$ tal que $q \xrightarrow{\sigma} q'$ y $\langle q', p' \rangle \in R$.
 \end{itemize}
+Como probamos que el conjunto de estados de $\hat{\mathcal{A}}$ y $M$ son equivalentes, y lo mismo para las transiciones, podemos afirmar que $\hat{\mathcal{A}}$ y $M$ son bisimilares. 
 
 \end{proof}
 \end{prop}

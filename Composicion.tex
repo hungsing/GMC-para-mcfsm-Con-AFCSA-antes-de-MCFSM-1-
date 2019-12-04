@@ -207,11 +207,17 @@ Definimos $R \subseteq \hat{Q} \times P$ a la relación de equivalencia donde $P
     \item Sean $\hat{q},\hat{q'} \in \hat{Q}$ y $p,p' \in P$
     \item Todo estado $\hat{q} \in \hat{Q}$ es una configuración $\langle \overrightarrow{q}, \overrightarrow{\Omega} \rangle$ de $\mathcal{A}$ con $\overrightarrow{q} \in Q$ y $\overrightarrow{\Omega}= (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. 
     
-    \item Por definición de Proyección de comunicación, $\langle \overrightarrow{q}, \overrightarrow{\Omega} \rangle \in \hat{Q} \iff \overrightarrow{q} \in Q \land \exists [\overrightarrow{q}]_m = \{\overrightarrow{q}' \in Q | \overrightarrow{q} \xrightarrow{\sigma^*} \overrightarrow{q'} \land \sigma  \in  \Sigma_{Int}\}$. Todo estado de la proyección es una configuración del autómata compuesto $\mathcal{A}$ donde cada $\overrightarrow{q}$ pertenece a una Clase de Cociente por comunicación.
+    \item Por definición de Proyección de comunicación, $\langle \overrightarrow{q}, \overrightarrow{\Omega} \rangle \in \hat{Q} \iff \overrightarrow{q} \in Q \land \exists \overrightarrow{q}' \in Q | (\overrightarrow{q}'\xrightarrow{\sigma} \overrightarrow{q} \land \sigma \in \Sigma_{Buff}) \lor (\overrightarrow{q}' \in [\overrightarrow{q}]_m ) \lor (\hat{q}= \langle \overrightarrow{q_0}, [ [ ] ] \rangle)$. Es decir que todo $\overrightarrow{q}$ de un $\hat{q}$ es un estado en el cual los buffers de $\mathcal{A}$ fueron modificados o el estado inicial de $\mathcal{A}$.
+    
+    \item Si $\hat{q}= \hat{q_0}$ es trivial dado que $\langle  \overrightarrow{q_0}, [[]] \rangle \in \hat{Q} \iff \overrightarrow{q_0} \in Q$ y por definción de composición $\overrightarrow{q_0} = \langle q^0_0, q^1_0,\ldots, q^n_0 \rangle$ donde $q^i_0$ es el estado inicial del AFCA $\mathcal{A}_i$. Por definición de interfaz de comunicación de AFCA $q^i_0 \in Q_i \iff \exists p^i_0 \in P_i$ y son estados equivalentes. Y por definición de communicating system $p_i \in P_i \iff \langle \overrightarrow{p}, [[]] \rangle \in P$.´
+    
+    \item Si $\hat{q}=$
+    
+    % definición de cociente de comunicación, no se si tiene sentido copiarla tal cual \{\overrightarrow{q}' \in Q | \overrightarrow{q} \xrightarrow{\sigma^*} \overrightarrow{q'} \land \sigma  \in  \Sigma_{Int}\}
     
     \item Sea $\overrightarrow{q} \in Q$ por la propiedad de Weak Determinsim de $\mathcal{A}$, vale que $\forall \overrightarrow{q}' in [\overrightarrow{q}]_m$ $\overrightarrow{q}$ y $\overrightarrow{q}'$ son bisimilares. Por lo tanto podemos afirmar que la proyección preserva la comunicación.
     
-    \item Por definición de composición $\overrightarrow{q} \in Q \iff \overrightarrow{q} = \langle q_1, q_2,.., q_i \rangle $donde $q_i \in Q_i$, es decir que cada $\overrightarrow{q}$ es una tupla de estados donde cada elemento es un estado de un AFCA componente. Como $\overrightarrow{q}$ pertenece a un Clase de Cociente por comunicación, sus estados componentes son estados que reflejan un cambio en la comunicación. Por lo tanto todo componente de $\overrightarrow{q}$ tiene su propia $[q_i]_m$.
+    \item Por definición de composición $\overrightarrow{q} \in Q \iff \overrightarrow{q} = \langle q_1, q_2,\ldots, q_i \rangle $donde $q_i \in Q_i$, es decir que cada $\overrightarrow{q}$ es una tupla de estados donde cada elemento es un estado de un AFCA componente. Como $\overrightarrow{q}$ pertenece a un Clase de Cociente por comunicación, sus estados componentes son estados que reflejan un cambio en la comunicación. Por lo tanto todo componente de $\overrightarrow{q}$ tiene su propia $[q_i]_m$.
     
     \item Por lo tanto, $q_i \in Q_{M_i}$, donde $M_i$ es su mCFSM correspondiente por definición de Interfaz de Comunicación de AFCA. Y $q_i \in Q_{M_i} \iff \langle \langle q_i,..,q_r \rangle, \overrightarrow{\Omega} \rangle \in Q_M$ dónde $M$ es el LTS que representa la semántica del communicating system.
     

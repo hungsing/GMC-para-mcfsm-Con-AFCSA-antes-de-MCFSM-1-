@@ -195,14 +195,138 @@ En el ejemplo podemos ver los tres tipos de transiciones que los AFCA pueden rea
     \item Transiciones de comunicación externa: $Out(sr_1,a),Out(sr_2,c), In(rs_1,b)$ y $In(rs_2,d) $
     \item Transiciones internas: $wait$
 \end{itemize}
-
-
 \end{example}
 
+Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
+ \begin{enumerate}
+\item $\Sigma_{E Int} \cap \Sigma_{R Int} = \emptyset$ el conjunto de etiquetas internas debe ser disjunto. 
+\item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
+\end{enumerate}
+\begin{definition}[Composición]\label{def:comp}
+\label{composicion}
+Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas se exige que todo par de integrantes sean compatibles (i.e. se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$). Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
+\begin{itemize}
+    \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
+    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
+    \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
+    \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup  \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
+    \begin{inparaenum}[1)]
+        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Int}}$,
+        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
+        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
+    \end{inparaenum}
+donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$
+\item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
+\begin{enumerate}
+\item $\delta_{\mathcal{P}\mathit{Int}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Int} \times Q_{\mathcal{P}}$  es la relación de transición interna, tal que que se satisface la siguiente fórmula:
+$$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}})(\exists p_i \in \mathcal{P})(\exists q_{p_i}, q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i})(\langle q_{p_i}, \sigma, q'_{p_i} \rangle \in \delta_{p_i Int})$$
+
+\item $\delta_{\mathcal{P}\mathit{Ex}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Ex}} \times Q_{\mathcal{P}}$ es la relación de transición externa, tal que que se satisface la siguiente fórmula: $$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Ex}}) (\exists p_i \in \mathcal{P})(\exists q_{p_i},q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i}) (\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Ex})$$
+
+\item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} \mathit{Buff}} \times Q_{\mathcal{P}}$ es la relación de transición por comunicación asincrónica interna tal que se satisface la siguiente fórmula:
+$$
+\begin{array}{l}
+\langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}} \mbox{ sii } (q = \langle q_k \rangle_{p_k \in \mathcal{P}} \land q' = \langle q'_{k'} \rangle_{p_{k'} \in \mathcal{P}} \land\\
+\qquad
+\begin{array}{l}
+((\exists p_i \in \mathcal{P})((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \\
+\qquad(\exists \omega_b \in B_{p_i}, \omega_b \{\gg, \ll\} m \in \Sigma_{{p_i} \mathit{Buff}})(\langle q_i, \omega_b \{\gg, \ll\} m, q'_i \rangle \in \delta_{p_i \mathit{Buff}}) \land\\
+\qquad\qquad \sigma = \omega_b \{\gg, \ll\} m)\lor\\
+(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ 
+\qquad ((\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i, \mathit{Out}(c_{{p_i, p_j}_n}, m), q'_i \rangle \in \delta_{p_i  \mathit{Ex}} \land\\
+\qquad\qquad \sigma = \omega_{c_{{p_i p_j}_n}} \ll m) \lor \\ 
+\qquad (\exists \mathit{In}(c_{p_j,{p_i}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i, \mathit{In}(c_{p_j,{p_i}_n}, m), q'_i \rangle \in \delta_{p_i \mathit{Ex}} \land\\
+\qquad\qquad \sigma = \omega_{c_{p_j,{p_i}_n}} \gg m))))
+\end{array}
+\end{array}
+ $$
+ 
+Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$
+
+$\langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists q'_i, q'_j \in Q_\mathit{\mathcal{P}}$ tal que $\ \langle q'_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \ll m, q'_j \rangle \in \delta_\mathit{\mathcal{P}Buff}$ y se cumple una de las siguientes condiciones:
+\begin{enumerate}
+\item $q'_j = q_i$ 
+\item $\exists \sigma \in \Sigma_\mathit{\mathcal{P}}$ tal que $\langle q'_j, \sigma, q_i \rangle \in \delta_\mathit{\mathcal{P}} \land \sigma \neq [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m $
+\item $\exists s=[q'_j,...,q_i] $ donde s es una secuencia finita de estados tales que $s[0]= q'_j, s[n-1]=q_i$ y sea $ 0 \ll x \ll$ n-1,$s[x] \in Q_\mathit{\mathcal{P}}$ y $\forall s[x], s[x+1], \exists \sigma \in \Sigma_\mathit{\mathcal{P}} \land \langle s[x], \sigma, s[x+1] \rangle \in \delta_\mathit{\mathcal{P}} $  
+\end{enumerate} 
+\end{enumerate}
+\item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, y
+\item $F_{\mathcal{P}} = \bigcup_{1..n} F_{p_i}$.
+\end{itemize}
+\end{definition}
+
+
+Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
+
+Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
+
+Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $\mathit{In} (c_{p_i, p_{j_n}},m)$ y $\mathit{Out}(c_{p_j, p_{i_n}},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j, p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i, p_{j_n}}}, \omega_{c_{p_j, p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
+
+Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
+
+\begin{figure}
+\begin{example}[Composición de Autómatas Finitos de Comunicación Asincrónica]
+\label{ex:Composicion}
+Considere los siguientes AFCA:
+\begin{itemize}
+    \item $S= \langle \{q_0,..,q_4\},[b_0],\{sr_1,rs_1\}, \Sigma_S, \delta_S, q_0, \{q_4\} \rangle$, con $\Sigma_S =\{wait, b_0 \ll m_1,b_0 \gg m_1, In(rs_1,b), Out(sr_1,c) \}$
+    \item $R=\langle \{q_0,q_1,q_2\},[],\{sr_1,rs_1\}, \Sigma_R, \delta_R, q_0, \{q_4\} \rangle$, con $\Sigma_R = \{Out(rs_1,b), In(sr_1,c)\}$, y su composición
+    \item $\RS =\langle Q_{RS}, [b_0, sr_1, rs_1], \Sigma_{RS}, \delta_{RS}, q_{00}, \{q_{42}\} \rangle$, con $\Sigma_{RS} =\{wait, b_0 \ll m_1,b_0 \gg m_1, rs_1 \ll b, rs_1 \gg b, sr_1 \ll c, sr_1 \gg c) \}$
+\end{itemize} 
+
+\begin{tikzpicture}[->, thick][scale=0.33]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
+ \node[state] (q_2) [right = 1.5 of q_1 ] {$q_2$};
+ \node[state] (q_3) [below=  of q_1 ] {$q_3$};
+ \node[state,accepting] (q_4) [left= 2cm of q_3 ] {$q_4$};
+ \draw[]        
+        (q_0) edge[above] node{$In(rs_1,b)$} (q_1)
+        (q_1) edge[above] node{$b_0 \ll m_1$} (q_2)
+        (q_1) edge[left] node{$wait$} (q_3)
+        (q_2) edge[right] node{$\ b_0 \gg m_1$} (q_3)
+        (q_3) edge[above] node{$Out(sr_1,c)$} (q_4)
+        ;
+\end{tikzpicture}
+%\caption{S}
+\ 
+\begin{tikzpicture}[->, thick][scale=0.33]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+  \node[state,accepting] (q_2) [below= of q_1] {$q_2$};
+ \draw[]        
+        (q_0) edge[right] node{$Out(rs_1,b)$} (q_1)
+        (q_1) edge[right] node{$In(sr_1,c)$} (q_2)
+        ;
+\end{tikzpicture} 
+\\
+\begin{tikzpicture}[->, thick][scale=0.33]
+ \node[state,initial] (q_00)   {$q_{00}$}; 
+  \node[state] (q_01) [right= 1.8cm of q_00 ] {$q_{01}$};
+  \node[state] (q_11) [right= 1.8cm of q_01 ] {$q_{11}$};
+  \node[state] (q_21) [right= 1.8cm of q_11 ] {$q_{21}$};
+  \node[state] (q_31) [below= of q_21 ] {$q_{31}$};
+  \node[state] (q_41) [left= 1.8cm of q_31 ] {$q_{41}$};
+  \node[state,accepting] (q_42) [left= 1.8cm of q_41] {$q_{42}$};
+  \draw[]        
+         (q_00) edge[above] node{$rs_1 \ll b$} (q_01)
+         (q_01) edge[above] node{$rs_1 \gg b$} (q_11)
+         (q_11) edge[above] node{$b_0 \ll m$} (q_21)
+         (q_11) edge[right] node{$wait$} (q_31)
+         (q_21) edge[right] node{$b_0 \gg m$} (q_31)
+         (q_31) edge[above] node{$sr \ll c$} (q_41)
+         (q_41) edge[above] node{$sr \gg c$} (q_42)
+       ;
+\end{tikzpicture}
+\end{example}
+\caption{Ejemplo de composición autómata asincrónico de comunicación}
+\label{fig:ejemplo-comp}
+\end{figure} 
+\newpage
 
 \subsection{Aspectos comunicacionales de los AFCA}
 
-Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de contratos en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.
+Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.
 Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección atendemos dicha problemática introduciendo las Multichannel Communicating Finite State Machines. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
 
 \begin{definition}[mCFSM] Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
@@ -262,7 +386,6 @@ Si comparamos las reglas 2 y 3 de la \ref{def:reltransAFCA} con las reglas 1 y 2
 Una transición de comunicación interna de un AFCA tiene la siguiente semántica 
 \end{prop}
 
-
 Multichannel CFSMs  con un único canal para cada par ordenado de participantes son equivalentes a CFSMs puras.
 
 \begin{definition}[Interfaz de comunicación de un AFCA] Es la mCFSM que resulta de aplicarle el siguiente procedimiento a un AFCA.
@@ -272,6 +395,45 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{enumerate}
 \end{definition}
 
+\begin{figure}[ht]
+\begin{example}
+        \begin{tikzpicture}[->, thick]
+            \node[state,initial] (q_0)   {$q_0$}; 
+            \node[state] (q_1) [right= 1.8cm of q_0 ] {$q_1$};
+            \node[state, accepting] (q_3) [right= 1.5cm of q_1 ] {$q_3$};
+            \node[state] (q_5) [right= 1.8cm of q_3 ] {$q_5$};
+            \node[state] (q_2) [below= 1.5cm of q_0 ] {$q_2$};
+            \node[state] (q_4) [right= 1.8cm of q_2 ] {$q_4$};
+        
+            \draw[]        
+            (q_0) edge[above] node{$out(pr_1,a)$} (q_1)
+            (q_1) edge[above] node{$in(rp_2,d)$} (q_3)
+            (q_0) edge[left] node{$in(rp_1,b)$} (q_2) 
+            (q_2) edge[below] node{$out(pr_2,c)$} (q_4)
+            (q_4) edge[left] node{$intr$} (q_3)
+            (q_3) edge[bend right] node{$b_1 \ll m_1$} (q_5)
+            (q_5) edge[bend right] node{$b_1 \gg m_1$} (q_3)
+        ;
+        \end{tikzpicture} 
+
+        \begin{tikzpicture}[->, thick]
+            \node[state,initial] (q_0)   {$q_0$}; 
+            \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
+            \node[state] (q_2) [below= 1.5cm of q_0 ] {$q_2$};
+            \node[state] (q_3) [right= 1.5cm of q_2 ] {$q_3$};
+
+            \draw[]        
+            (q_0) edge[above] node{$pr_1!a$} (q_1)
+            (q_0) edge[right] node{$rp_1?b$} (q_2)
+            (q_1) edge[right] node{$rp_2?d$} (q_3)
+            (q_2) edge[above] node{$pr_2!c$} (q_3)
+        ; 
+        \end{tikzpicture}     
+    \caption{AFCA y su mCFSM}
+    \label{fig:mCFSM}
+
+\end{example}{}
+\end{figure}
 En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre dos otros participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. Una applicación de este procedimiento se ve en la Figura X. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
 \begin{definition}[Sistema emulado] Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
@@ -287,20 +449,20 @@ Cada viejo participante $q \in \mathcal{P}$ se reemplaza por un nuevo participan
 \item $ \delta_{q'} = \bigcup_{m \in \mathcal{M}} \{ (q, qp_n^{qr_n}!m, q') \ | \ (q, qr_n!m, q') \in \delta_q \} \cup \{q, p^{sq_n}q_n?m,q' \ | \ (q, sq_n?m, q') \in \delta_q \}$
 
 \end{itemize}
+\end{definition} 
 
 Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos, el orden de los mensajes está garantizado como resultado del modo en que $\delta$ está definido para los repetidores. Nótese que los repetidores respetan ese orden porque al consumir un mensaje desde el canal de 'entrada' (el canal que sirve para recibir mensajes del emisor original) la única acción posible del repetidor es mandar el mensaje a través del canal de salida (el canal que sirve para enviar mensajes al receptor original). Como todo canal es FIFO y los repetidores se comportan del mismo modo, el orden entre dentro de cada canal queda garantiado. Por oro lado, no hay garantía respecto al orden de la comunicación entre canales del modelo original. Por lo tanto podemos decir que los repetidores no introducen más concurrencia que la que estaba en el modelo original y debido a eso los dos sistemas, a pesar de no ser bisimilares y no tener las mismas trazas, son equivalentes respecto a la ausencia de deadlock, recepciones no especificadas y mensajes huérfanos. Esta observación es importante porque provee una forma de chequear multichannesl communication systems recurriendo nuevamente al chequeo de GMC del sistema emulado.
 
-\end{definition} 
+\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
+sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
+$ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
 
-\begin{figure}
-    \centering
-    \begin{example}
-    
-    \end{example}
-    \caption{mCFSM}
-    \label{fig:my_label}
-\end{figure}
+Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
+\end{definition}
 
+\begin{definition}[Weak Determinism]Un autómata $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ es weak determinate si para todo esado $q \in Q$ y para toda cadena $s \in \Sigma^*$ siempre que $q \xrightarrow{s} q'$ y $q \xrightarrow{s} q''$, con $q',q'' \in Q$, entonces $q' \approx q''$.
+
+\end{definition}
 
 \begin{prop} El sistema emulado preserva los errores comunicacionales
 

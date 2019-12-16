@@ -1,7 +1,5 @@
 %!TEX root = ./main.tex
 
-\section{Composición de Componentes Asincrónicas}
-\label{composicion}
 Como ya hemos mencionado, en SOC (Service-Oriented Computing) los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
  
 Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado a priori de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, ausencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no se encuentra a la espera de un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.
@@ -29,142 +27,6 @@ Esta sección va a estar enfocada en la definición de composición total de aut
 \caption{La composición de componentes asincrónicas preserva la semántica asincrónica de su interfaz de comunicación.}
 \label{fig:preservacion}
 \end{figure}
-
-Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
- \begin{enumerate}
-\item $\Sigma_{E Int} \cap \Sigma_{R Int} = \emptyset$ el conjunto de etiquetas internas debe ser disjunto. 
-\item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
-\end{enumerate}
-\begin{definition}[Composición]\label{def:comp}
-Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas se exige que todo par de integrantes sean compatibles (i.e. se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$). Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
-\begin{itemize}
-    \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
-    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
-    \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
-    \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup  \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
-    \begin{inparaenum}[1)]
-        \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Int}}$,
-        \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
-        \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
-    \end{inparaenum}
-donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$
-\item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
-\begin{enumerate}
-\item $\delta_{\mathcal{P}\mathit{Int}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Int} \times Q_{\mathcal{P}}$  es la relación de transición interna, tal que que se satisface la siguiente fórmula:
-$$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Int}})(\exists p_i \in \mathcal{P})(\exists q_{p_i}, q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i})(\langle q_{p_i}, \sigma, q'_{p_i} \rangle \in \delta_{p_i Int})$$
-
-\item $\delta_{\mathcal{P}\mathit{Ex}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P}\mathit{Ex}} \times Q_{\mathcal{P}}$ es la relación de transición externa, tal que que se satisface la siguiente fórmula: $$(\forall \langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Ex}}) (\exists p_i \in \mathcal{P})(\exists q_{p_i},q'_{p_i} \in Q_{p_i}, \sigma \in \Sigma_{p_i}) (\langle q_{p_i},\sigma,q'_{p_i} \rangle \in \delta_{p_i Ex})$$
-
-\item $\delta_{\mathcal{P}\mathit{Buff}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} \mathit{Buff}} \times Q_{\mathcal{P}}$ es la relación de transición por comunicación asincrónica interna tal que se satisface la siguiente fórmula:
-$$
-\begin{array}{l}
-\langle q, \sigma, q' \rangle \in \delta_{\mathcal{P}\mathit{Buff}} \mbox{ sii } (q = \langle q_k \rangle_{p_k \in \mathcal{P}} \land q' = \langle q'_{k'} \rangle_{p_{k'} \in \mathcal{P}} \land\\
-\qquad
-\begin{array}{l}
-((\exists p_i \in \mathcal{P})((\forall p_k \in \mathcal{P})(p_k \neq p_i \implies q_k = q'_k) \land \\
-\qquad(\exists \omega_b \in B_{p_i}, \omega_b \{\gg, \ll\} m \in \Sigma_{{p_i} \mathit{Buff}})(\langle q_i, \omega_b \{\gg, \ll\} m, q'_i \rangle \in \delta_{p_i \mathit{Buff}}) \land\\
-\qquad\qquad \sigma = \omega_b \{\gg, \ll\} m)\lor\\
-(\exists p_i, p_j \in \mathcal{P})(p_i \neq p_j \land (\forall p_k \in \mathcal{P})((p_k \neq p_i \land p_k \neq p_j) \implies q_k = q'_k) \land \\ 
-\qquad ((\exists \mathit{Out}(c_{{p_i, p_j}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i, \mathit{Out}(c_{{p_i, p_j}_n}, m), q'_i \rangle \in \delta_{p_i  \mathit{Ex}} \land\\
-\qquad\qquad \sigma = \omega_{c_{{p_i p_j}_n}} \ll m) \lor \\ 
-\qquad (\exists \mathit{In}(c_{p_j,{p_i}_n}, m) \in \Sigma_{{p_i} \mathit{Ex}})(\langle q_i, \mathit{In}(c_{p_j,{p_i}_n}, m), q'_i \rangle \in \delta_{p_i \mathit{Ex}} \land\\
-\qquad\qquad \sigma = \omega_{c_{p_j,{p_i}_n}} \gg m))))
-\end{array}
-\end{array}
- $$
- 
-Además vale que $\forall q_i,q_j \in Q_\mathit{\mathcal{P}}, \ m \in \mathcal{M} \ |	 \ \langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle$
-
-$\langle q_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m, q_j \rangle \in \delta_\mathit{\mathcal{P}Buff} \iff \exists q'_i, q'_j \in Q_\mathit{\mathcal{P}}$ tal que $\ \langle q'_i, [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \ll m, q'_j \rangle \in \delta_\mathit{\mathcal{P}Buff}$ y se cumple una de las siguientes condiciones:
-\begin{enumerate}
-\item $q'_j = q_i$ 
-\item $\exists \sigma \in \Sigma_\mathit{\mathcal{P}}$ tal que $\langle q'_j, \sigma, q_i \rangle \in \delta_\mathit{\mathcal{P}} \land \sigma \neq [\omega_\mathit{b}]_{b \in B_\mathcal{P}} \gg m $
-\item $\exists s=[q'_j,...,q_i] $ donde s es una secuencia finita de estados tales que $s[0]= q'_j, s[n-1]=q_i$ y sea $ 0 \ll x \ll$ n-1,$s[x] \in Q_\mathit{\mathcal{P}}$ y $\forall s[x], s[x+1], \exists \sigma \in \Sigma_\mathit{\mathcal{P}} \land \langle s[x], \sigma, s[x+1] \rangle \in \delta_\mathit{\mathcal{P}} $  
-\end{enumerate} 
-\end{enumerate}
-\item $q_0 = \langle {q_0}_{p_1}, \ldots, {q_0}_{p_n} \rangle$, y
-\item $F_{\mathcal{P}} = \bigcup_{1..n} F_{p_i}$.
-\end{itemize}
-\end{definition}
-
-
-Cada autómata es un sistema independiente que cumple una función (o una serie de funciones), y se relaciona con otros a través del envío de mensajes. Para asegurarnos esto pedimos que para todo par de autómatas a componerse tengan conjuntos de etiquetas de acciones que sean disjuntos. 
-
-Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
-
-Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $\mathit{In} (c_{p_i, p_{j_n}},m)$ y $\mathit{Out}(c_{p_j, p_{i_n}},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j, p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i, p_{j_n}}}, \omega_{c_{p_j, p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
-
-Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
-
-\begin{figure}
-\begin{example}[Composición de Autómatas Finitos de Comunicación Asincrónica]
-\label{ex:Composicion}
-Considere los siguientes AFCA:
-\begin{itemize}
-    \item $S= \langle \{q_0,..,q_4\},[b_0],\{sr_1,rs_1\}, \Sigma_S, \delta_S, q_0, \{q_4\} \rangle$, con $\Sigma_S =\{wait, b_0 \ll m_1,b_0 \gg m_1, In(rs_1,b), Out(sr_1,c) \}$
-    \item $R=\langle \{q_0,q_1,q_2\},[],\{sr_1,rs_1\}, \Sigma_R, \delta_R, q_0, \{q_4\} \rangle$, con $\Sigma_R = \{Out(rs_1,b), In(sr_1,c)\}$, y su composición
-    \item $\RS =\langle Q_{RS}, [b_0, sr_1, rs_1], \Sigma_{RS}, \delta_{RS}, q_{00}, \{q_{42}\} \rangle$, con $\Sigma_{RS} =\{wait, b_0 \ll m_1,b_0 \gg m_1, rs_1 \ll b, rs_1 \gg b, sr_1 \ll c, sr_1 \gg c) \}$
-\end{itemize} 
-
-\begin{tikzpicture}[->, thick][scale=0.33]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
- \node[state] (q_2) [right = 1.5 of q_1 ] {$q_2$};
- \node[state] (q_3) [below=  of q_1 ] {$q_3$};
- \node[state,accepting] (q_4) [left= 2cm of q_3 ] {$q_4$};
- \draw[]        
-        (q_0) edge[above] node{$In(rs_1,b)$} (q_1)
-        (q_1) edge[above] node{$b_0 \ll m_1$} (q_2)
-        (q_1) edge[left] node{$wait$} (q_3)
-        (q_2) edge[right] node{$\ b_0 \gg m_1$} (q_3)
-        (q_3) edge[above] node{$Out(sr_1,c)$} (q_4)
-        ;
-\end{tikzpicture}
-%\caption{S}
-\ 
-\begin{tikzpicture}[->, thick][scale=0.33]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below= of q_0 ] {$q_1$};
-  \node[state,accepting] (q_2) [below= of q_1] {$q_2$};
- \draw[]        
-        (q_0) edge[right] node{$Out(rs_1,b)$} (q_1)
-        (q_1) edge[right] node{$In(sr_1,c)$} (q_2)
-        ;
-\end{tikzpicture} 
-\\
-\begin{tikzpicture}[->, thick][scale=0.33]
- \node[state,initial] (q_00)   {$q_{00}$}; 
-  \node[state] (q_01) [right= 1.8cm of q_00 ] {$q_{01}$};
-  \node[state] (q_11) [right= 1.8cm of q_01 ] {$q_{11}$};
-  \node[state] (q_21) [right= 1.8cm of q_11 ] {$q_{21}$};
-  \node[state] (q_31) [below= of q_21 ] {$q_{31}$};
-  \node[state] (q_41) [left= 1.8cm of q_31 ] {$q_{41}$};
-  \node[state,accepting] (q_42) [left= 1.8cm of q_41] {$q_{42}$};
-  \draw[]        
-         (q_00) edge[above] node{$rs_1 \ll b$} (q_01)
-         (q_01) edge[above] node{$rs_1 \gg b$} (q_11)
-         (q_11) edge[above] node{$b_0 \ll m$} (q_21)
-         (q_11) edge[right] node{$wait$} (q_31)
-         (q_21) edge[right] node{$b_0 \gg m$} (q_31)
-         (q_31) edge[above] node{$sr \ll c$} (q_41)
-         (q_41) edge[above] node{$sr \gg c$} (q_42)
-       ;
-\end{tikzpicture}
-\end{example}
-\caption{Ejemplo de composición autómata asincrónico de comunicación}
-\label{fig:ejemplo-comp}
-\end{figure} 
-
-\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
-sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
-$ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
-
-Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
-\end{definition}
-
-\begin{definition}[Weak Determinism]Un autómata $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ es weak determinate si para todo esado $q \in Q$ y para toda cadena $s \in \Sigma^*$ siempre que $q \xrightarrow{s} q'$ y $q \xrightarrow{s} q''$, con $q',q'' \in Q$, entonces $q' \approx q''$.
-
-\end{definition}
 
 \begin{definition}[Cociente por comunicación interna]
 Dado un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, weak deterministic. Dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma^*} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ decimos que son bisimilares $q \approx q'$. Es decir que dada la condición de weak determinism, podemos afirmar que como las transiciones internas no afectan el contenido de los buffers, los estados son equivalentes para la comunicación. Llamamos $[q]_\mathcal{M}$ a la clase de equivalencia por comunicación interna de un estado $q$ y la definimos como $[q]_\mathcal{M}= \{q'| q \xrightarrow{\sigma^*} q'\}$. Para un estado $q$ del autómata, su clase de equivalencia por comunicación interna $[q]_\mathcal{M}$ son aquellos estados $q'$ alcanzables en cero o más pasos de transiciones internas. Decimos que dos clases de equivalencia están relacionadas $[q]_\mathcal{M} \xrightarrow{\sigma} [q']_\mathcal{M}$ sii $\exists q_i \in [q]_\mathcal{M}, q'_i \in [q']_\mathcal{M}$ tales que $\langle q_i,\sigma,q'_i \rangle \in \delta_{Buff}$
@@ -205,14 +67,6 @@ Definimos $R \subseteq \hat{Q} \times P$ a la relación de equivalencia donde $P
     
     \item[\textbf{R'} $\implies$] 
     \item Sean $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \hat{Q}$ y $\langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$. Sabemos que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle$ es una configuración de $\mathcal{A}$ para una clase de equivalencia por cociente de comuniación de $\overrightarrow{q} \in Q$ y $\overrightarrow{\Omega}= (\Omega_b)_{b \in B} \land \Omega_b \in \mathcal{M}^*$. Es decir $[\overrightarrow{q}]_m = \{\overrightarrow{q}' \in Q | \overrightarrow{q} \xrightarrow{\sigma^*} \overrightarrow{q}' \land \sigma  \in  \Sigma_{Int}\}$ y $\overrightarrow{\Omega}$ son los buffers de $\mathcal{A}$ para el conjunto de estados de $[\overrightarrow{q}]_m$. Por definción de cociente como sabemos que todos esos estados son alcanzables desde $\overrightarrow{q}$ por transiciones internas, los buffers se mantienen y por lo tanto son bisimilares entre sí a nivel comunicacional.
-    
-    % \item Por definición de Proyección de comunicación, $\langle \overrightarrow{q}, \overrightarrow{\Omega} \rangle \in \hat{Q} \iff \overrightarrow{q} \in Q \land \exists \overrightarrow{q}' \in Q | (\overrightarrow{q}'\xrightarrow{\sigma} \overrightarrow{q} \land \sigma \in \Sigma_{Buff}) \lor (\overrightarrow{q}' \in [\overrightarrow{q}]_m ) \lor (\hat{q}= \langle \overrightarrow{q_0}, [ [ ] ] \rangle)$. Es decir que todo $\overrightarrow{q}$ de un $\hat{q}$ es un estado en el cual los buffers de $\mathcal{A}$ fueron modificados o el estado inicial de $\mathcal{A}$.
-    
-    % \item Si $\hat{q}= \hat{q_0}$ es trivial dado que $\langle  \overrightarrow{q_0}, [[]] \rangle \in \hat{Q} \iff \overrightarrow{q_0} \in Q$ y por definción de composición $\overrightarrow{q_0} = \langle q^0_0, q^1_0,\ldots, q^n_0 \rangle$ donde $q^i_0$ es el estado inicial del AFCA $\mathcal{A}_i$. Por definición de interfaz de comunicación de AFCA $q^i_0 \in Q_i \iff \exists p^i_0 \in P_i$ y son estados equivalentes. Y por definición de communicating system $p_i \in P_i \iff \langle \overrightarrow{p}, [[]] \rangle \in P$.´
-    
-    % \item Si $\hat{q}=$
-    
-    % definición de cociente de comunicación, no se si tiene sentido copiarla tal cual 
     
     \item Por definición de composición $\overrightarrow{q} \in Q \iff \overrightarrow{q} = \langle q_1, q_2,\ldots, q_i \rangle $donde $q_i \in Q_i$, es decir que cada $\overrightarrow{q}$ es una tupla de estados donde cada elemento es un estado de un AFCA componente. Como $\overrightarrow{q}$ pertenece a un Clase de Cociente por comunicación, sus estados componentes son estados que reflejan un cambio en la comunicación. Por lo tanto todo componente de $\overrightarrow{q}$ tiene su propia $[q_i]_m$.
     

@@ -434,6 +434,18 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 
 \end{example}{}
 \end{figure}
+
+\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
+sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
+$ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
+
+Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
+\end{definition}
+
+\begin{definition}[Weak Determinism]Un autómata $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ es weak determinate si para todo esado $q \in Q$ y para toda cadena $s \in \Sigma^*$ siempre que $q \xrightarrow{s} q'$ y $q \xrightarrow{s} q''$, con $q',q'' \in Q$, entonces $q' \approx q''$.
+\end{definition}
+
+
 En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre dos otros participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. Una applicación de este procedimiento se ve en la Figura X. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
 \begin{definition}[Sistema emulado] Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
@@ -452,17 +464,6 @@ Cada viejo participante $q \in \mathcal{P}$ se reemplaza por un nuevo participan
 \end{definition} 
 
 Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos, el orden de los mensajes está garantizado como resultado del modo en que $\delta$ está definido para los repetidores. Nótese que los repetidores respetan ese orden porque al consumir un mensaje desde el canal de 'entrada' (el canal que sirve para recibir mensajes del emisor original) la única acción posible del repetidor es mandar el mensaje a través del canal de salida (el canal que sirve para enviar mensajes al receptor original). Como todo canal es FIFO y los repetidores se comportan del mismo modo, el orden entre dentro de cada canal queda garantiado. Por oro lado, no hay garantía respecto al orden de la comunicación entre canales del modelo original. Por lo tanto podemos decir que los repetidores no introducen más concurrencia que la que estaba en el modelo original y debido a eso los dos sistemas, a pesar de no ser bisimilares y no tener las mismas trazas, son equivalentes respecto a la ausencia de deadlock, recepciones no especificadas y mensajes huérfanos. Esta observación es importante porque provee una forma de chequear multichannesl communication systems recurriendo nuevamente al chequeo de GMC del sistema emulado.
-
-\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
-sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
-$ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
-
-Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
-\end{definition}
-
-\begin{definition}[Weak Determinism]Un autómata $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ es weak determinate si para todo esado $q \in Q$ y para toda cadena $s \in \Sigma^*$ siempre que $q \xrightarrow{s} q'$ y $q \xrightarrow{s} q''$, con $q',q'' \in Q$, entonces $q' \approx q''$.
-
-\end{definition}
 
 \begin{prop} El sistema emulado preserva los errores comunicacionales
 

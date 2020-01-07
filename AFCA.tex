@@ -130,38 +130,6 @@ El comportamiento de un AFCA es el conjunto de todas las trazas posibles.
 
 % Entonces decimos que una ejecución aceptable es aquella que cumple que en una cantidad finita de pasos llegó a un estado final con los buffers vacíos, asegurándonos la ausencia de mensajes huérfanos y deadlocks.
 
-\begin{definition}[Deadlock]Sean $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$, $q_{i} \in Q$, $\sigma \in \Sigma^*$,  $\Omega = \{ \omega_{b_1},..,\omega_{b_i},..,\omega_{b_n} \}$, decimos que una configuración está en deadlock cuando ocurre:
-\begin{itemize}
-\item En la configuración $\langle q_i, \Omega \rangle$,
-
-\item $ \forall \langle q_i, s, q_j \rangle \in \delta$, $s \in \Sigma_\mathit{Buff} \land (s= b \gg m \Rightarrow \omega_b = [\ ])$
-\end{itemize}
-\end{definition}
-
-Decimos que ocurre deadlock cuando partiendo de un estado la única transición posible hacia un estado siguiente es consumiendo un mensaje de algún buffer y esos buffers se encuentran vacíos.  \\
-
-\begin{definition}[Mensajes huérfanos]Sean $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$, $q_{i} \in Q$, $\sigma \in \Sigma^*$,  $\Omega = \{ \omega_{b_1},..,\omega_{b_i},..,\omega_{b_n} \}$, decimos que una configuración tiene mensajes huérfanos cuando ocurre:
-\begin{itemize}
-\item En la configuración $\langle q_i, \Omega \rangle$ ,
-
-\item $ \exists \omega_{b} \in \Omega$ tal que $ \omega_b \neq [\ ] $
-
-\item $ \delta(q_i) = \emptyset  $
-\end{itemize}
-\end{definition}
-
-Decimos que la configuración tiene mensajes huérfanos si, en un estado $q_i$  quedan mensajes sin consumir en algún buffer y no hay ninguna transición saliente. 
-
-
-\begin{definition}[Receptor no especificado]Sean $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$, $q_{i} \in Q$, $\sigma \in \Sigma^*$,  $\Omega = [ \omega_{b_1},..,\omega_{b_i},..,\omega_{b_n} ]$ decimos que una configuración es de receptor no especificado cuando ocurre:
-\begin{itemize}\item En la configuración $\langle q_i, \Omega \rangle$ ,
-
-\item $ \exists \omega_{b} \in \Omega$ tal que $\omega_b \neq [\ ] $
-
-\item  $ \left(\forall \langle q_i, b \gg m, q_j \rangle \in \delta \right) \left(\omega_b = [ \ldots, m' ] \right)$, con $m' \neq m$
-\end{itemize}
-\end{definition}
-Decimos que una configuración está en modo Receptor no Especificado si la única transición saliente de un estado $q_i$ consume un mensaje $m$ y el primer mensaje de la cola es un mensaje $m'$ distinto de $m$.
 
 \begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración válida. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
 \end{definition}

@@ -37,7 +37,7 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
 A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} \cite[Def.2.2]{GMC} como un conjunto de CFSMs que cumplen determinadas propiedades.
 
 \begin{definition}[Communicating System] Dada una CFSM $\textit{M}_p = \langle Q_p, q_{0_p}, \mathcal{M}, \delta_p \rangle $ para cada participante $p \in \mathcal{P}$, la tupla $S= \langle M_p \rangle_{p \in \mathcal{P}} $ es un communicating system CS.
-Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{w} = (w_{pq})_{pq \in C}$ con $ w_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es $s_0 = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$
+Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es $s_0 = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$
 % Un \emph{communicating system} es un mapa \textit{S} que asigna una CFSM $S(p)$ a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando $q$ es un estado de la máquina $S(p)$ y $t \in S(p)$ cuando $t$ es una transición de $S(p)$.\\
 
 \end{definition}
@@ -47,18 +47,18 @@ La semántica de los CSs está dada por un sistema de transición etiquetado cuy
 
 \begin{definition}[Estados y configuraciones alcanzables]
 \label{def:estadosyconf}
-  Una configuración $c' = \langle \overrightarrow{q'} ; \overrightarrow{w'} \rangle$ es \emph{alcanzable} desde otra
-  configuración $c = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
+  Una configuración $c' = \langle \overrightarrow{q'} ; \overrightarrow{\omega'} \rangle$ es \emph{alcanzable} desde otra
+  configuración $c = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
 	\begin{enumerate}
 		\item $l = sr!m$, $\langle q_s, l,  q'_s\rangle \in \delta_s$ y 
 			\begin{enumerate}
 				\item $q'_p = q_p$ para todo $\p \neq s$; y
-				\item $w'_{sr} = w_{sr} \cdot m$ y  $w'_{pq} = w_{pq}$ para todo $pq \neq sr$; o bien
+				\item $\omega'_{sr} = \omega_{sr} \cdot m$ y  $\omega'_{pq} = \omega_{pq}$ para todo $pq \neq sr$; o bien
 			\end{enumerate}
 		\item $l = sr?m$, $\langle q_r, l,  q'_r\rangle \in \delta_r$ y 
 			\begin{enumerate}
 			\item $q'_{p} = q_{p}$ para todo $p \neq r$; y
-				\item $w_{sr} = m \cdot w'_{pq}$ y $w'_{pq} = w_{pq}$ para todo $pq' \neq sr$
+				\item $\omega_{sr} = m \cdot \omega'_{pq}$ y $\omega'_{pq} = \omega_{pq}$ para todo $pq' \neq sr$
 			\end{enumerate}
 	\end{enumerate}
 Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
@@ -66,12 +66,25 @@ Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
 
+\begin{definition} Sea $S$ un communicating system, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones.
+\begin{itemize}
+    \item $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
+    
+    \item $s$ es una \textit{configuración de recepción no especificada} si existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ implica que $|\omega_sr| > 0$ y $\omega_sr \notin a\mathcal{M}*$. Una configuración de recepción no especificada corresponde a una configuración en la que la máquina está bloqueada definitivamente por su incapacidad para recibir el mensaje que se encuentra en sus canales.
+    
+    \item $s$ es una \textit{configuración de mensaje huérfano} si todos los $q_p \in \overrightarrow{q}$ son finales pero $\overrightarrow{\omega} \neq \overrightarrow{\epsilon}$. Es decir quedó un mensaje en algún canal pero no hay ninguna transición que lo reciba. 
+\end{itemize}
+Decimos que 
+
+\end{definition}
+
 \begin{definition}[Communicating System seguro] Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
 \begin{enumerate}
-\item $s$ no es una configuración de deadlock (cuando la única transición de salida necesita consumir un mensaje que no está en el buffer)
-\item $s$ no posee mensajes huérfanos (cuando no hay transiciones salientes y quedaron mensajes en el buffer) , y
-\item $s$ no posee recepciones no especificadas (cuanndo la única transición saliente consume un mensaje disinto al primero de la cola).
+\item $s$ no es una configuración de deadlock 
+\item $s$ no posee recepciones no especificadas, y
+\item $s$ no posee mensajes huérfanos  
 \end{enumerate}
+
 Para poder expresar esta condición de seguridad es necesario identificar conjuntos de acciones que pueden ser llevadas a cabo concurrentemente. Para esto definimos las siguientes relaciones sobre el conjunto de transiciones de una CFSM. Dados $q, q' \in Q$, se define $\mathit{act}(q,q') = \left\{\ell \ \left|\right. \ (q,\ell,q') \in \delta \right\}$ y $\Diamond, \blacklozenge \subseteq \delta \times \delta$ como las relaciones de equivalencia más pequeñas que contienen $\romboeqb$ y $\underline{\blacklozenge}$ donde:
 \begin{itemize}
 \item $(q_1, \ell, q_2) \underline{\Diamond} (q'_1, \ell, q'_2)$ sii $ l \notin \mathit{act}(q_1, q'_1) \land \mathit{act}(q_1, q'_1) = \mathit{act}(q_2, q'_2) \land \mathit{act}(q_2, q'_2) \neq \emptyset $

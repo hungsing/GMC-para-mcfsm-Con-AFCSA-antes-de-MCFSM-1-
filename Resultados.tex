@@ -46,6 +46,7 @@ Dado un AFCA $A = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, de
 \end{itemize}
 \end{definition}
 
+
 \begin{definition}[Bisimulación]
 Dado un sistema de transición etiquetado $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
 \begin{itemize}
@@ -57,7 +58,9 @@ Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si e
 
 \end{definition}
 
-\begin{prop}[Equivalencia de semánticas] Sea $\{\mathcal{A_i}\}_{i \in I}$ un conjunto de weak deterministic AFCA sin transiciones de comunicación interna. Sea su composición $\mathcal{A} = \langle Q, B, \mathcal{C},\Sigma, \delta, q_0, F \rangle$, también weak deterministic. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{M_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $M$ al LTS que representa la semántica de $\{M_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $M$ son bisimilares. 
+
+\begin{theorem}[Equivalencia de semánticas] Sea $\{\mathcal{A_i}\}_{i \in I}$ un conjunto de weak deterministic AFCA sin transiciones de comunicación interna. Sea su composición $\mathcal{A} = \langle Q, B, \mathcal{C},\Sigma, \delta, q_0, F \rangle$, también weak deterministic. Llamamos $\hat{\mathcal{A}}=\langle \hat{Q}, \hat{q_0}, \hat{\delta} \rangle$ al sistema de transición etiquetado (LTS) resultante de la proyección $\Tau(\mathcal{A})$. Sea $\{M_i\}_{i \in I}$ el communicating system conformado por las mCFSM correspondientes al conjunto autómatas. Llamamos $M$ al LTS que representa la semántica de $\{M_i\}_{i \in I}$. Decimos que $\hat{\mathcal{A}}$ y $M$ son bisimilares. 
+\end{theorem}
 
 \begin{proof}
 
@@ -114,7 +117,6 @@ Definimos $R \subseteq \hat{Q} \times P$ a la relación de equivalencia donde $P
 
 
 \end{proof}
-\end{prop}
 
 \begin{figure}[ht]
 \begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]

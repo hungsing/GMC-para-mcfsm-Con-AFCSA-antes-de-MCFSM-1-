@@ -66,16 +66,14 @@ Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
 
-\begin{definition} Sea $S$ un communicating system, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones.
-\begin{itemize}
-    \item $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
-    
-    \item $s$ es una \textit{configuración de recepción no especificada} si existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ implica que $|\omega_sr| > 0$ y $\omega_sr \notin a\mathcal{M}*$. Una configuración de recepción no especificada corresponde a una configuración en la que la máquina está bloqueada definitivamente por su incapacidad para recibir el mensaje que se encuentra en sus canales.
-    
-    \item $s$ es una \textit{configuración de mensaje huérfano} si todos los $q_p \in \overrightarrow{q}$ son finales pero $\overrightarrow{\omega} \neq \overrightarrow{\epsilon}$. Es decir quedó un mensaje en algún canal pero no hay ninguna transición que lo reciba. 
-\end{itemize}
-Decimos que 
 
+\begin{definition}[Deadlock]Sea $S$ un communicating system, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
+\end{definition}
+
+\begin{definition}[Recepción no especificada]Sea $S$ un communicating system, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de recepción no especificada} si existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ implica que $|\omega_sr| > 0$ y $\omega_sr \notin a\mathcal{M}*$. Una configuración de recepción no especificada corresponde a una configuración en la que la máquina está bloqueada definitivamente por su incapacidad para recibir el mensaje que se encuentra en sus canales.
+\end{definition}
+
+\begin{definition}[Mensaje Huérfano] Sea $S$ un communicating system, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de mensaje huérfano} si todos los $q_p \in \overrightarrow{q}$ son finales pero $\overrightarrow{\omega} \neq \overrightarrow{\epsilon}$. Es decir quedó un mensaje en algún canal pero no hay ninguna transición que lo reciba.
 \end{definition}
 
 \begin{definition}[Communicating System seguro] Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
@@ -83,7 +81,7 @@ Decimos que
 \item $s$ no es una configuración de deadlock 
 \item $s$ no posee recepciones no especificadas, y
 \item $s$ no posee mensajes huérfanos  
-\end{enumerate}
+\end{enumerate} 
 
 Para poder expresar esta condición de seguridad es necesario identificar conjuntos de acciones que pueden ser llevadas a cabo concurrentemente. Para esto definimos las siguientes relaciones sobre el conjunto de transiciones de una CFSM. Dados $q, q' \in Q$, se define $\mathit{act}(q,q') = \left\{\ell \ \left|\right. \ (q,\ell,q') \in \delta \right\}$ y $\Diamond, \blacklozenge \subseteq \delta \times \delta$ como las relaciones de equivalencia más pequeñas que contienen $\romboeqb$ y $\underline{\blacklozenge}$ donde:
 \begin{itemize}
@@ -239,11 +237,6 @@ La proyección se define sobre secuencias de eventos en el modo evidente. La pro
 
 \end{definition}
 
-\begin{example}{Proyecciones}
-
-
-\end{example}
-
 Introducimos el concepto de generalized multiparty compatibility (GMC) como una condición completa y sólida para construir CFSMs. 
 % Usé sólida como traducción de sound. En el paper habla de construir global graphs, término que acá no usamos, no se si puse bien
 A partir de este punto, fijamos un sistema $S =(M_p)_{p \in \mathcal{P}} $ con $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$. GMC depende de dos condiciones, representabilidad y propiedad de ramificación.\\
@@ -292,6 +285,11 @@ Representabilidad garantiza que TS(S) contiene suficiente información para decd
  
 Con esto definimos que toda ramificación es o bien (1) la ejecución concurrente de dos eventos; o, para cada participante p (2(a)I) si p no termina antes de n entonces las primeras dos acciones de p en dos ramas distintas son disjuntas; o (2(a)II) p no está involucrado en la elección, o sea la ramas se juntan antes de que p realice ninguna acción; (2(b)) hay un único participante s tomando la decisión; y (2(c)) para cada participante r involucrado en la elección, no puede haber race condition entre los mensajes que puede recibir r. La no race condition asegura que en ninguna ejecución (asincrónica) de S, si una máquina tiene más de un buffer no vacío, entonces puede leerlos en cualquier orden (interleaving es posible). Notar que si una máquina r recibe todos sus mensajes de un mismo emisor, entonces hay una $\triangleleft$-relación entre todas sus acciones.
 
-\begin{definition}[Generalised Multiparty Compatibilty] Un sistmea S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
+\begin{definition}[Generalised Multiparty Compatibilty] Un communicating system S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
 \end{definition}
+
+\begin{theorem}[Solvencia]Si S es GMC entonces es seguro (no tiene configuraciones de deadlock, recepción no especificada o mensaje huérfano)
+\end{theorem}
+
+El teorema dice que ninguna ejecución asincrónica de S va a resultar en una configuración de mensaje huérfano, deadlock o recepción no especificada. Basándose en la propiedad de representabilidad (toda transición y ramificación de cada máquina está representada en TS(S)), la demostración \cite{GMC} muestra que todo mensaje enviado es recibido eventualmente y que una máquina en un estado receptor eventualmente recibe el mensaje que espera, según la Definición 16.
 

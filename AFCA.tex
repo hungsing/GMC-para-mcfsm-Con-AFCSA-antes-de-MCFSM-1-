@@ -297,7 +297,7 @@ Considere los siguientes AFCA:
 Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.
 Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección atendemos dicha problemática introduciendo las Multichannel Communicating Finite State Machines. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
 
-\begin{definition}[mCFSM] Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
+\begin{definition}[Multichannel Communicating Finite State Machine - mCFSM] Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
 \begin{itemize}
   \item $Q$ es un conjunto finito de estados
   \item $\mathcal{C} = \{ pq_n \mid pq \in \mathcal{P}^2, n \in \mathbb{N}, p \not= q\}$ es un conjunto de canales
@@ -402,6 +402,8 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 
 \end{example}{}
 \end{figure}
+
+Introducimos las nociones de determinismo y weak determinis 
 
 \begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
 sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple

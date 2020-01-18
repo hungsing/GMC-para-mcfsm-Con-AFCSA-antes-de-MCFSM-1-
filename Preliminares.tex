@@ -15,10 +15,6 @@ A continuación presentaremos algunas definiciones y resultados preliminares que
 \end{enumerate}
 \end{definition}
 
-\begin{prop}
- La clausura reflexo-transitiva de una relación binaria es una relación de equivalencia
-\end{prop}
-
 \subsection{Comunicación Asincrónica}
 Como se dijo en la primera sección, buscamos una implementación del paradigma de SOC donde la comunicación entre distintos componentes se realiza en forma asincrónica. Esto no es un requerimiento del paradigma propiamente dicho pero resulta una implementación más eficiente. El intercambio de mensajes en forma asincrónica permite a los componentes maximizar su uso de la cpaacidad de cómputo.  El intercambio de mensajes con cada componente es independiente entre sí, salvo que exista alguna necesidad de lo contrario. Para representar este comportamiento utilizamos un tipo de autómata finito denominado \emph{Communicating Finite State Machines} (llamado a partir de ahora CFSM). El concepto de CFSM fue introducido en \cite{CFSM} con el objetivo modelar y estudiar el comportamiento de sistemas distribuidos constituidos por un conjunto de procesos secuenciales que ejecutan concurrentemente y se comunican a partir de intercambiar mensajes a través de canales de comunicación previamente declarados. Las CFSMs con autómatas que modelan únicamente la comunicación externa con otros autómatas. De este modo cada CFSM representa los distintos componentes del sistema distribuido, pero solo el comportamiento que es relevante a la interacción entre los mismos. Una CFSM se puede ver como la proyección de este comportamiento específico de un autómata más complejo que tenga otro tipo de transiciones adicionales.
 
@@ -34,10 +30,9 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
   
 \end{definition} 
 
-Introducimos la noción de bisimulación 
+A continuación introducimos una noción de equivalencia entre participantes basada intuitivamente en la idea de que solo queremos distinguir entre dos particpantes $P$ y $Q$ si la diferencia puede ser detectada por un participante externo interactuando con ambos. Esta equivalencia, denominada bisimulación \cite[]{comm} es la noción de equivalencia comportamental standard para este tipo de formalismos y por lo tanto, la técnica de demostración más utilizada.
 
-\begin{definition}[Bisimulación]
-Dado un sistema de transición etiquetado $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
+\begin{definition}[Bisimulación] Dado un sistema de transición etiquetado $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
 \begin{itemize}
     \item $(\forall \sigma \in \Sigma \  | \  p \ \overset{\sigma}{\rightarrow} p' \implies \exists q'\in Q \ \mathit{tal que} \ q \overset{\sigma}{\rightarrow} q' \land \langle p', q' \rangle \in R )$ y, simétricamente vale 
     \item $(\forall \sigma \in \Sigma \  | \  q \overset{\sigma}{\rightarrow} q' \implies \exists p'\in Q \ \mathit{tal que} \ p \overset{\sigma}{\rightarrow} p' \land \langle p', q' \rangle \in R ) $

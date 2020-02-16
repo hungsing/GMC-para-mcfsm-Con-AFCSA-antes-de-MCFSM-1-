@@ -28,6 +28,83 @@ Esta sección va a estar enfocada en la definición de composición total de aut
 \label{fig:preservacion}
 \end{figure}
 
+
+En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. La siguiente figura muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
+
+\begin{figure}[ht]
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below = of q_0 ] {$q_1$};
+ \node[state] (q_2) [right = of q_1 ] {$q_2$};
+ \node[state] (q_3) [below = of q_1 ] {$q_3$};
+ \node[state] (q_4) [below = of q_2 ] {$q_4$};
+ \node[state, accepting] (q_5) [below = of q_3 ] {$q_5$};
+ \draw[]        
+        (q_0) edge[left] node{int1} (q_1)
+        (q_0) edge[right] node{int2} (q_2)
+        (q_1) edge[left] node{in(sp,a)} (q_3)
+        (q_3) edge[left] node{in(sp,b)} (q_5)
+        (q_2) edge[right] node{in(sp,b)} (q_4)
+        ; 
+\end{tikzpicture}
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below = of q_0 ] {$q_1$};
+  \node[state, accepting] (q_2) [below = of q_1 ] {$q_2$};
+ \draw[]        
+        (q_0) edge[left] node{out(sp,a)} (q_1)
+        (q_1) edge[left] node{out(sp,b)} (q_2)
+        ; 
+\end{tikzpicture}
+
+\caption{Los AFCA P y S, donde P no es Weak deterministic}
+\label{fig:weak determinacy afca}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+  \node[state] (q_1) [below = of q_0 ] {$q_1$};
+ \node[state] (q_2) [right = of q_1 ] {$q_2$};
+ \node[state, accepting] (q_3) [below = of q_1 ] {$q_3$};
+ \draw[]        
+        (q_0) edge[left] node{sp?a} (q_1)
+        (q_0) edge[right] node{sp?b} (q_2)
+        (q_1) edge[left] node{sp?b} (q_3)
+        ; 
+\end{tikzpicture}
+\qquad
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below = of q_0 ] {$q_1$};
+  \node[state, accepting] (q_2) [below = of q_1 ] {$q_2$};
+ \draw[]        
+        (q_0) edge[left] node{sp!a} (q_1)
+        (q_1) edge[left] node{sp!b} (q_2)
+        ; 
+\end{tikzpicture}
+
+   \caption{Las mcfsm correspondientes a los autómatas S y P}
+    \label{fig:weak determinacy mcfsm}
+\end{figure}
+
+En la figura 3.4 podemos ver al sistema compuesto de los AFCA S y P. En la misma podemos observar como S tiene un único camino lineal donde envía los meensajes a y b al autómata P. Por su lado P puede tomar dos caminos, ejecutando una de sus dos transiciones internas. Si bien para el autómata S esas transiciones no le afectan, el camino que tome P sí. Al tomar el primer camino el sistema se ejecuta de manera correcta, pero si ejecuta la transición interna int2, no puede recibir el mensaje a y por lo tanto el sistema entra en deadlock. El autómata P es un autómata determinístico, pero esa noción no alcanza para que el sistema funciones correctamente. En la figura 3.5 se ve como la mcfsm proyectada preserva los errores comunicacionales.  
+
+Para prevenir este tipo de problemas surgen la noción de determinismo débil o weak determinacy. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. La idea de \emph{Weak Determinacy} \cite[Def. 11.3]{comm} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de Bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicacion interna como observacionalmente bisimilares para un participante externo.  
+
+\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
+sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
+$ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
+
+La composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.\end{definition}
+
+\begin{definition}[Weak Determinacy] \cite{comm} Un autómata $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ es weak determinate si para todo estado $q \in Q$ y para toda cadena $s \in \Sigma^*$ siempre que $q \xrightarrow{s} q'$ y $q \xrightarrow{s} q''$, con $q',q'' \in Q$, entonces $q' \sim q''$.
+\end{definition}
+
+
 \begin{definition}[Cociente por comunicación interna]
 Dado un autómata $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, weak deterministic. Dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma^*} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ decimos que son bisimilares $q \approx q'$. Es decir que dada la condición de weak determinism, podemos afirmar que como las transiciones internas no afectan el contenido de los buffers, los estados son equivalentes para la comunicación. Llamamos $[q]_\mathcal{M}$ a la clase de equivalencia por comunicación interna de un estado $q$ y la definimos como $[q]_\mathcal{M}= \{q'| q \xrightarrow{\sigma^*} q'\}$. Para un estado $q$ del autómata, su clase de equivalencia por comunicación interna $[q]_\mathcal{M}$ son aquellos estados $q'$ alcanzables en cero o más pasos de transiciones internas. Decimos que dos clases de equivalencia están relacionadas $[q]_\mathcal{M} \xrightarrow{\sigma} [q']_\mathcal{M}$ sii $\exists q_i \in [q]_\mathcal{M}, q'_i \in [q']_\mathcal{M}$ tales que $\langle q_i,\sigma,q'_i \rangle \in \delta_{Buff}$
 \end{definition}
@@ -88,9 +165,9 @@ Queremos probar que $R \subseteq \hat{Q} \times P$, definida como $R = \{ \langl
     
     \item[i]Dados $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \hat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle, \langle \overrightarrow{p}', \overrightarrow{\Omega_\mathcal{C}}' \rangle \in P$ tales que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Dado $(a_ka_j)_l?m \in \Sigma_M$ tal que $\langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \xrightarrow{(a_ka_j)_l?m} \langle \overrightarrow{p}', \overrightarrow{\Omega_\mathcal{C}}' \rangle$. Por definición del LTS $M$ vale $\overrightarrow{\Omega_{\mathcal{C}}}= \langle \ldots,(a_ka_j)_l \cdot m, \ldots \rangle$ y $\overrightarrow{\Omega_{\mathcal{C}}}'= \langle \ldots,(a_ka_j)_l, \ldots \rangle$.
     
-    \item[ii] Por definición del LTS $M$, $\overrightarrow{p} = \langle r^1, r^2, \ldots r, \ldots r^n \rangle$, $\overrightarrow{p}' = \langle r^1, r^2, \ldots r', \ldots r^i \rangle$, y $(a_ka_j)_l?m$ es una operación sobre un canal de la mCFSM $M_j$. Entonces vale que $r,r' \in Q_{M_j}$, $(a_ka_j)_l?m \in \Sigma_{M_j}$, y $r \xrightarrow{(a_ka_j)_l?m} r' \in \delta_{M_j}$
+    \item[ii] Por definición del LTS $M$, $\overrightarrow{p} = \langle r^1, r^2, \ldots r, \ldots r^i \rangle$, $\overrightarrow{p}' = \langle r^1, r^2, \ldots r', \ldots r^i \rangle$, y $(a_ka_j)_l?m$ es una operación sobre un canal de la mCFSM $M_j$. Entonces vale que $r,r' \in Q_{M_j}$, $(a_ka_j)_l?m \in \Sigma_{M_j}$, y $r \xrightarrow{(a_ka_j)_l?m} r' \in \delta_{M_j}$
     
-    \item[iii] Por definición de intefaz de comunicación de AFCA $r \xrightarrow{(a_ka_j)_l?m} r' \in \delta_{M_j} \iff \exists q_{\sigma},q'_{\sigma} \in Q_j \land q_{\sigma} \xrightarrow{(a_ka_j)_l?m} q'_{\sigma}$. Ya establecimos que $q_{\sigma}$ y $q'_{\sigma}$ se corresponden con $r$ y $r'$ respectivamente dado que $\exists q'' \in Q_j | q'' \xrightarrow{\sigma^*} q_{\sigma} \land \sigma \Sigma_{jInt}$ y por weak determinism de $\mathcal{A}_j$, $q''^j$ y $q_{\sigma}$ son bisimilares a nivel comunicacional.
+    \item[iii] Por definición de intefaz de comunicación de AFCA $r \xrightarrow{(a_ka_j)_l?m} r' \in \delta_{M_j} \iff \exists q_{\sigma},q'_{\sigma} \in Q_j \land q_{\sigma} \xrightarrow{(a_ka_j)_l?m} q'_{\sigma}$. Ya establecimos que $q_{\sigma}$ y $q'_{\sigma}$ se corresponden con $r$ y $r'$ respectivamente dado que $\exists q'' \in Q_j | q'' \xrightarrow{\sigma^*} q_{\sigma} \land \sigma \Sigma_{jInt}$ y por weak determinism de $\mathcal{A}_j$, $q''$ y $q_{\sigma}$ son bisimilares a nivel comunicacional.
     
     \item[iv] Por definición de composición $q_{\sigma}$ y $q'_{\sigma}$ son componentes de $\overrightarrow{q}_{\sigma}$ y $\overrightarrow{q}_{\sigma}'$, respectivamente, tales que $ \overrightarrow{q}_{\sigma} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q}_{\sigma}' \in \delta$. Donde $(a_ka_j)_l$ es el canal internalizado en forma de buffer.
     
@@ -98,7 +175,7 @@ Queremos probar que $R \subseteq \hat{Q} \times P$, definida como $R = \{ \langl
         
     \item[vi] Como $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$ sabemos que $[\overrightarrow{q}]_mR\overrightarrow{p}$ $\overrightarrow{\Omega}=\overrightarrow{\Omega_\mathcal{C}}$. Como $\overrightarrow{q}_{\sigma} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q}_{\sigma}' \in \delta$, podemos decir que vale $[\overrightarrow{q}]_m \xrightarrow{(a_ka_j)_l \gg m} [\overrightarrow{q}_{\sigma}']$. Entonces vale que $\overrightarrow{q}_{\sigma}'R'\overrightarrow{p}'$ y $\overrightarrow{\Omega}' = \overrightarrow{\Omega}'_\mathcal{C}$. Por la misma razón vale que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \hat{\Delta}$. Y por lo tanto $\langle \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle, \langle \overrightarrow{p}', \overrightarrow{\Omega'_\mathcal{C}} \rangle \rangle \in R$
     
-    \item[vii] Por lo tanto vale en forma simétrica que $\forall \sigma^M \in \Sigma_M | p \xrightarrow{\sigma^M} p \implies \exists \hat{q}' \in \hat{Q}, \hat{\sigma} \in \hat{\Sigma}$ talque $\hat{q} \xrightarrow{\hat{\Sigma}} \hat{q}' \land \langle \hat{q}', p', \rangle \in R$
+    \item[vii] Por lo tanto vale en forma simétrica que $\forall (a_ka_j)_l?m \in \Sigma_M | p \xrightarrow{(a_ka_j)_l?m} p \implies \exists \hat{q}' \in \hat{Q}, (a_ka_j)_l \gg m \in \hat{\Sigma}$ tal que $\hat{q} \xrightarrow{(a_ka_j)_l \gg m} \hat{q}' \land \langle \hat{q}', p'\rangle \in R$
     
 \end{itemize}
 
@@ -279,22 +356,5 @@ La semántica del communicating system es el sistema de transición etiquetado $
 \end{figure}
 
 \newpage
-\subsection{Composición parcial vs composición total}
-
-En esta sección definimos los Autómatas Finitos de Comunicación Asincrónica para modelar la composición parcial de CFSMs. Ahora necesitamos demostrar que esta composición parcial es equivalente a una composición total.
-
-Como sabemos que todas las CFSMs a componer se encuentran en $\mathcal{P}$ podemos decir que conocemos a priori todos los componentes de la composición final. Dado un conjunto finito $\mathcal{P}$ de CFSMs denominamos $ p_1, p_2, p_3, \ldots, p_n$. 
-
-Si componemos $p_1$ y $p_2$ nos quedaría el conjunto $\mathcal{P}_1 =\{ p_{12} \}, p_3, \ldots, p_n \} $, podemos hacer un paso siguiente componiendo $p_{n-1}$ y $p_n$. De esto obtenemos $\mathcal{P_2}_2= \{ p_{12}, p_3, \ldots, p_n-1 \} $. Podemos continuar este proceso hasta llegar a tener un único autómata. %Esto de acá capaz vuela cuando lo dibuje
-
-Decimos que en cada paso de la composición parcial tengo una función suryectiva, pero no inyectiva que garantiza que cada punto del codominio es la composición de al menos dos puntos de la preimagen.
-
-Llamemos TM1 y TM2 a los autómatas resultantes de la composición de todos los elementos de $\mathcal{P}$ por sucesión de composiciones parciales y por composición total respectivamente. Queremos ver que $ q \in Q_{TM1} \iff q \in Q_{TM2} $ y en ambos casos está entre los estados alcanzables. 
-
-Queremos demostrar que
-\begin{enumerate}
-\item Las configuraciones alcanzables entre tm1 y tm2 son las mismas
-\item tm1 es bisimilar a tm2, es decir que para cada configuración las acciones realizables son las mismas
-\end{enumerate}
 
 

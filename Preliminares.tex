@@ -34,8 +34,8 @@ A continuación introducimos una noción de equivalencia entre participantes bas
 
 \begin{definition}[Bisimulación] Dado un sistema de transición etiquetado $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
 \begin{itemize}
-    \item $(\forall \sigma \in \Sigma \  | \  p \ \overset{\sigma}{\rightarrow} p' \implies \exists q'\in Q \ \mathit{tal que} \ q \overset{\sigma}{\rightarrow} q' \land \langle p', q' \rangle \in R )$ y, simétricamente vale 
-    \item $(\forall \sigma \in \Sigma \  | \  q \overset{\sigma}{\rightarrow} q' \implies \exists p'\in Q \ \mathit{tal que} \ p \overset{\sigma}{\rightarrow} p' \land \langle p', q' \rangle \in R ) $
+    \item $(\forall \sigma \in \Sigma \  | \  p \ \overset{\sigma}{\rightarrow} p' \implies \exists q'\in Q \ \mbox{tal que} \ q \overset{\sigma}{\rightarrow} q' \land \langle p', q' \rangle \in R )$ y, simétricamente vale 
+    \item $(\forall \sigma \in \Sigma \  | \  q \overset{\sigma}{\rightarrow} q' \implies \exists p'\in Q \ \mbox{tal que} \ p \overset{\sigma}{\rightarrow} p' \land \langle p', q' \rangle \in R ) $
 \end{itemize}
 
 Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si existe una bisimulación R tal que $\langle p,q \rangle \in R$. La relación de bisimilaridad $\sim$ es una relación de equivalencia. Además es la relación de bisimulación más grande sobre un sistema dado.

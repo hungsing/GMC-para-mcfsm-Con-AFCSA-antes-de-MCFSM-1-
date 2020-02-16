@@ -23,7 +23,7 @@ Una cola es un tipo de estructura de datos caracterizada por ser una secuencia d
 \end{definition}
 
 \begin{definition}[Autómata finitos de comunicación asincrónica]
-\label{def:aa}
+\label{def:afca}
 Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Un \emph{autómata finitos de comunicación asíncrona} es una estructura $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$ tal que:
 
 \begin{itemize}
@@ -402,22 +402,10 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{example}{}
 \end{figure}
 
-Introducimos las siguientes nociones dado que son esenciales para caracterizar si la interfaz proyectada es efectivamente bisimilar al comportamiento visible desde afuera del AFCA. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas diseñados. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. La noción de \emph{Weak Determinacy} \cite[Def. 11.3]{comm} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de Bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicacion interna como observacionalmente bisimilares para un participante externo.  
-
-\begin{definition}[Determinismo] Decimos que un autómata es determinístico cuando cumple que no hay dos transiciones con la misma etiqueta que partan de un mismo estado y vayan a estados distintos. Es decir: 
-sea un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ se cumple
-$ \forall \  q_i, q_j, q_k \in Q_{j \neq k}, \  \nexists \ \delta_i, \delta_j \in \delta, t \in \Sigma \ \| \  \delta_1 = \langle q_i, t, q_j \rangle, \ \delta_2 = \langle q_i, t, q_k \rangle$ \\
-
-Decimos que la composición de estos autómatas preserva el determinismo. Esto es un resultado directo de que ambos autómatas no comparten acciones y de la definición de la composición de $\delta$.
-\end{definition}
-
-\begin{definition}[Weak Determinacy \cite{comm}] Un autómata $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ es weak determinate si para todo esado $q \in Q$ y para toda cadena $s \in \Sigma^*$ siempre que $q \xrightarrow{s} q'$ y $q \xrightarrow{s} q''$, con $q',q'' \in Q$, entonces $q' \approx q''$.
-\end{definition}
-
 
 En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre dos otros participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
-\begin{definition}[Sistema emulado \cite[Def. 84]{mCFSM} ] Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
+\begin{definition}[Sistema emulado] \cite[Def. 84]{mCFSM} Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
 \begin{itemize}
 \item $Q_{p^{sr_n}} = \{q_0\} \cup \bigcup_{m \in \mathcal{M}} \{q_m\}$
 \item $\mathcal{C}_{p^{sr_n}} = \{sp_n^{sr_n}, p^{sr_n}r_n,  p^{sr_n}s_n, rp_n^{sr_n} \}$

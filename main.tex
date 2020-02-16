@@ -80,41 +80,26 @@ title style={at={(1,0.5)}}}}
 
 
 \section{Trabajo futuro} 
+\subsection{Composición parcial vs composición total}
+
+En esta sección definimos los Autómatas Finitos de Comunicación Asincrónica para modelar la composición parcial de CFSMs. Ahora necesitamos demostrar que esta composición parcial es equivalente a una composición total.
+
+Como sabemos que todas las CFSMs a componer se encuentran en $\mathcal{P}$ podemos decir que conocemos a priori todos los componentes de la composición final. Dado un conjunto finito $\mathcal{P}$ de CFSMs denominamos $ p_1, p_2, p_3, \ldots, p_n$. 
+
+Si componemos $p_1$ y $p_2$ nos quedaría el conjunto $\mathcal{P}_1 =\{ p_{12} \}, p_3, \ldots, p_n \} $, podemos hacer un paso siguiente componiendo $p_{n-1}$ y $p_n$. De esto obtenemos $\mathcal{P_2}_2= \{ p_{12}, p_3, \ldots, p_n-1 \} $. Podemos continuar este proceso hasta llegar a tener un único autómata. %Esto de acá capaz vuela cuando lo dibuje
+
+Decimos que en cada paso de la composición parcial tengo una función suryectiva, pero no inyectiva que garantiza que cada punto del codominio es la composición de al menos dos puntos de la preimagen.
+
+Llamemos TM1 y TM2 a los autómatas resultantes de la composición de todos los elementos de $\mathcal{P}$ por sucesión de composiciones parciales y por composición total respectivamente. Queremos ver que $ q \in Q_{TM1} \iff q \in Q_{TM2} $ y en ambos casos está entre los estados alcanzables. 
+
+Queremos demostrar que
+\begin{enumerate}
+\item Las configuraciones alcanzables entre tm1 y tm2 son las mismas
+\item tm1 es bisimilar a tm2, es decir que para cada configuración las acciones realizables son las mismas
+\end{enumerate}
 
 
 
-\begin{definition} Sea $\mathcal{P}$ un conjunto de participantes, $\mathcal{C}$ un conjunto de canales de comunicación unidireccionales y $\mathcal{M}$ un conjunto de mensajes. Un autómata es una es una estructura $A_\mathcal{P} = \langle Q, B, \Sigma, \delta, q_0, F\rangle$ tal que:
-
-\begin{itemize}
-\item $Q$ es un conjunto finito de estados,
-\item $B$ es el conjunto de nombres de buffers,
-\item $\Sigma = \{ \Sigma_\mathit{Int} \cup \Sigma_\mathit{Ex} \cup \Sigma_\mathit{Buff}\} $ es el conjunto de etiquetas del autómata, siendo:
-\begin{inparaenum}[1)]
-
-\item $\Sigma_\mathit{Int}$ las acciones internas del autómata 
-
-\item $\Sigma_\mathit{Ex}$ un conjunto de etiquetas de la forma $\langle p_1,p_2,c\rangle$ dónde $p_1,p_2 \in \mathcal{P}$ son, respectivamente, el emisor y el receptor de la comunicación y $c \in \mathcal{C}$ es el canal a través del cual se resuelve la misma.
-%\item $\forall (p_1,P_2,c), (p'_1,P'_2,c') \in \Sigma_{Ex} c = c' \iff p_1= P'_1 \land p_2= P'_2 $
-
-\item $\Sigma_\mathit{Buff}$ es el conjunto de etiquetas de las acciones sobre los buffers de la forma $b \ll m$ o $b \gg m$, dónde $b \in B$ y $m \in \mathcal{M}$.
-\end{inparaenum}
-\item $\delta = (\delta_\mathit{Int} \cup \delta_\mathit{Ex} \cup \delta_\mathit{Buff})$ siendo:
-
-\begin{inparaenum}[1)]
-\item $\delta_\mathit{Int} \subseteq Q \times \Sigma_\mathit{Int} \times Q$ es la relación de transicion por acciones internas de $A_\mathcal{P}$, %transiciones internas
-
-\item $\delta_\mathit{Ex} \subseteq Q \times \{\mathit{In}(c,m), \mathit{Out}(c,m) | c \in \Sigma_{Ex} \land m \in \mathcal{M} \} \times Q$ es la relación de transición de comunicación externa de $A_\mathcal{P}$, %comunicación externa
-
-\item $\delta_\mathit{Buff} \subseteq Q \times \Sigma_\mathit{Buff} \times Q$ %comunicación interna
-\end{inparaenum}
-\item $q_0 \in Q$ es el estado inicial, y
-\item $F \subseteq \mathit{Partes(Q)}$ es el conjunto de conjuntos de estados finales. 
-\end{itemize}
-
-Se denota $P(A)$, al conjunto de participantes que integran el autómata A, y se define como $P(A) = \{ p \in \mathcal{P} \ | (\exists\ \langle p1,p2,c\rangle \in \Sigma_\mathit{Ex})(p1=p \lor p2=p) \} $ 
-\end{definition}
-
-Los autómatas de asincrónicos reactivos se comportan como los autómatas asincrónicos de comunicación en casi todo sentido. La diferencia principal es que con estos queremos representar el comportamiento de sistemas que no tienen una ejecución finita. Para esto tomamos comportamiento de los autómatas de Muller que nos genera una condición de aceptación doble. En este caso el conjunto de estados finales es un conjunto de conjuntos y decimos que el sistema terminó su ejecución cuando pasa al menos una cantidad infinita de veces por alguno de los conjuntos que componen a F. Para asegurarnos de que la ejecución sea correcta, pedimos también que en ese ciclo infinito los buffers estén vacíos.
 
 
 \section{Conclusiones}

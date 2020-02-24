@@ -5,7 +5,7 @@
 
 
 \subsection{Autómatas finitos de comunicación asincrónica}
-Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otro además comportamientos internos. Para esto primero recurrimos a los Input Output Atomata (Ref IO). 
+Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otros comportamientos internos. Para esto primero recurrimos a los Input Output Automata \cite{IOautomata}. 
 Un I/O automaton modela un componente de un sistema distribuido que puede interactuar con otros sistemas componentes. Es un tipo de máquina de estados en la cual las transiciones están asociadas con determinadas acciones específicas. Existen tres tipos de acciones: input, output, y acciones internas. El autómata usa sus acciones de input y output para comunicarse con el enotrno, mientras que las acciones internas son sólo visibles para el autómata. A diferencia de las acciones internas y las de output que son seleccionadas y resueltas por el autómata, las de entrada, que llegan del entorno, no están bajo control del autómata. Para componer estos autómatas se requiere que sincronicen las acciones compartidas. Es decir cuando un autómata ejecuta una transición con la etiqueta $\pi$, todo autómata que tenga esa acción $\pi$ la ejecuta en simultáneo.
 El problema es que los IO no representan bien la comunicación asincrónica. Las operaciones de comunicación externa sincronizan a todos los participantes del sistema. Es decir que si dos autómatas componentes tienen una misma transición, se ejecutan en simultáneo. Esto va en contra de la idea de asincronsidad que buscamos.
 
@@ -22,9 +22,9 @@ Una cola es un tipo de estructura de datos caracterizada por ser una secuencia d
 \end{itemize}
 \end{definition}
 
-\begin{definition}[Autómata finitos de comunicación asincrónica]
+\begin{definition}[Autómata finito de comunicación asincrónica]
 \label{def:afca}
-Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Un \emph{autómata finitos de comunicación asíncrona} es una estructura $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$ tal que:
+Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Un \emph{autómata finito de comunicación asíncrona} es una estructura $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$ tal que:
 
 \begin{itemize}
 \item $Q$ es un conjunto finito de estados,
@@ -42,11 +42,11 @@ Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de me
 \item $\delta = (\delta_\mathit{Int} \cup \delta_\mathit{Ex} \cup \delta_\mathit{Buff})$ siendo:
 
 \begin{inparaenum}[1)]
-\item $\delta_\mathit{Int} \subseteq Q \times \Sigma_\mathit{Int} \times Q$ es la relación de transicion por acciones internas de $A_\mathcal{P}$, %transiciones internas
+\item $\delta_\mathit{Int} \subseteq Q \times \Sigma_\mathit{Int} \times Q$ es la relación de transición por acciones internas de $A_\mathcal{P}$, %transiciones internas
 
 \item $\delta_\mathit{Ex} \subseteq Q \times \Sigma_\mathit{EX}  \times Q$ es la relación de transición de comunicación externa de $A_\mathcal{P}$, %comunicación externa
 
-\item $\delta_\mathit{Buff} \subseteq Q \times \Sigma_\mathit{Buff} \times Q$ %comunicación interna
+\item $\delta_\mathit{Buff} \subseteq Q \times \Sigma_\mathit{Buff} \times Q$  es la relación de transición de comunicación interna de $A_\mathcal{P}$ %comunicación interna
 \end{inparaenum}
 \item $q_0 \in Q$ es el estado inicial, y
 \item $F \subseteq Q$ es el conjunto de estados finales. 
@@ -55,7 +55,7 @@ Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de me
 Se denota $P(A)$, al conjunto de participantes que integran el autómata A, y se define como $P(A) = \left(p \in \mathcal{P} \ | \left(\exists\ \langle p1,p2,c\rangle \in \Sigma_\mathit{Ex}\right)\left(p1=p \lor p2=p\right) \right) $ 
 \end{definition}
 
-$\Sigma$ es el conjunto de todas las etiquetas del autómata y lo dividimos en tres subconjuntos disjuntos que la forman $\Sigma_{\mathit{Int}}$, $\Sigma_{\mathit{Ex}}$ y $\Sigma_{\mathit{Buff}}$ que corresponden a las acciones de procesamiento interno, las de comunicación externa con otros participantes y las de comunicación interna vía buffers.
+$\Sigma$ es el conjunto de todas las etiquetas del autómata y lo dividimos en tres subconjuntos disjuntos de la forma $\Sigma_{\mathit{Int}}$, $\Sigma_{\mathit{Ex}}$ y $\Sigma_{\mathit{Buff}}$ que corresponden a las acciones de procesamiento interno, las de comunicación externa con otros participantes y las de comunicación interna vía buffers.
 
 $\Sigma_{Ex}$ es el conjunto de etiquetas correspondientes a la comunicación externa del autómata. Como la comunicación es dirigida punto a punto, cada etiqueta incluye a dos participantes $p_1, P_2 \in \mathcal{P}$ (emisor y receptor) y un canal $c \in \mathcal{C}$. Necesariamente en todas las etiquetas vale que $p_1$ y $p_2$ son distintos y .
 
@@ -63,7 +63,7 @@ $\Sigma_{Buff}$ es el conjunto de etiquetas de acciones de comunicación interna
 
 $\delta$ es el conjunto de transciciones que se compone de $\delta_{Int}$, las acciones internas, $\delta_{Ex}$ las transiciones de comunicación con otros agentes y $\delta_{Buf}$ las acciones de buffer.
 
-$\delta_{Ex}$ se compone de dos tipos de acciones denotadas \textit{In(c,m)} y \textit{Out(c,m)}, con $c \in \Sigma_{Ex}$ y $m \in \mathcal{M}$ . Las acciones de entrada o input que representan la recepción de un mensaje de algún proceso externo al correspondiente al autómata,  y las acciones de output o salida que representan el envío de un mensaje y se denotan. Estas acciones son la parte externa de la comunicaión asincrónica. Como los canales son unidireccionales decimos que para todo par de participantes existen dos canales, uno por cada sentido.
+$\delta_{Ex}$ se compone de dos tipos de acciones que representan el intercambio de mensajes $m \in \mathcal{M}$ entre dos autómatas a través de un canal de comunicación $c \in \mathcal{C}$. Las acciones de entrada o input representan la recepción de un mensaje de algún proceso externo al correspondiente al autómata, denotadas \textit{In(c,m)}. Las acciones de output o salida que representan el envío de un mensaje y se denotan \textit{Out(c,m)}. Estas acciones son la parte externa de la comunicaión asincrónica. Como los canales son unidireccionales decimos que para todo par de participantes existen una cantidad finita de pares de canales.
 
 $\delta_{Buff}$ es la relación de transición de comunicación interna mediante buffers.\\
 
@@ -228,7 +228,7 @@ Cada autómata es un sistema independiente que cumple una función (o una serie 
 
 Del mismo modo, cada autómata tiene su propio conjunto de buffers que pedimos sean disjuntos, para distinguir la comunicación interna de cada autómata componente de la que ocurra entre componentes o con participantes externos. Para modelar la comunicación interna entre componentes, agregamos dos buffers por cada par de integrantes, uno para cada sentido de la comunicación, de $E_{p_i}$ a $E_{p_j}$ y viceversa.
 
-Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Existe un caso particular que ocurre cuando existían envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $\mathit{In} (c_{p_i, p_{j_n}},m)$ y $\mathit{Out}(c_{p_j, p_{i_n}},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j, p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i, p_{j_n}}}, \omega_{c_{p_j, p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
+Como los conjuntos de acciones son disjuntos podemos decir que las acciones internas, de comunicación externa y de buffer, de cada componente se preservan, siempre y cuando tenga sentido con la composición de estados. Hay un caso particular que se da cuando ocurren envíos de mensaje de un autómata componente a otro. En ese caso dado que ambos ahora son parte un mismo autómata, la comunicación pasa a ser envío de mensajes interno. Para representar este tipo de comunicación es que utilizamos buffers. De este modo el intercambio que antes era $\mathit{In} (c_{p_i, p_{j_n}},m)$ y $\mathit{Out}(c_{p_j, p_{i_n}},m)$ ahora es $\omega_{c_{p_i p_{j_n}}}  \ll m$ y $b_{c_{p_j, p_{i_n}}}  \gg  m$, donde $ \omega_{c_{p_i, p_{j_n}}}, \omega_{c_{p_j, p_{i_n}}} in \mathcal{C}_{\mathcal{P}} $ son los buffers exclusivos del autómata compuesto. 
 
 Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
 
@@ -295,7 +295,7 @@ Considere los siguientes AFCA:
 \subsection{Aspectos comunicacionales de los AFCA}
 
 Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.
-Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección atendemos dicha problemática introduciendo las Multichannel Communicating Finite State Machines \cite[Def. 82]{mCFSM}. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
+Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección abordamos dicha problemática introduciendo las Multichannel Communicating Finite State Machines \cite[Def. 82]{mCFSM}. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
 
 \begin{definition}[Multichannel Communicating Finite State Machine - mCFSM] Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
 \begin{itemize}
@@ -403,7 +403,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{figure}
 
 
-En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre dos otros participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
+En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
 \begin{definition}[Sistema emulado] \cite[Def. 84]{mCFSM} Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
 \begin{itemize}
@@ -420,7 +420,7 @@ Cada viejo participante $q \in \mathcal{P}$ se reemplaza por un nuevo participan
 \end{itemize}
 \end{definition} 
 
-Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos, el orden de los mensajes está garantizado como resultado del modo en que $\delta$ está definido para los repetidores. Nótese que los repetidores respetan ese orden porque al consumir un mensaje desde el canal de 'entrada' (el canal que sirve para recibir mensajes del emisor original) la única acción posible del repetidor es mandar el mensaje a través del canal de salida (el canal que sirve para enviar mensajes al receptor original). Como todo canal es FIFO y los repetidores se comportan del mismo modo, el orden entre dentro de cada canal queda garantiado. Por oro lado, no hay garantía respecto al orden de la comunicación entre canales del modelo original. Por lo tanto podemos decir que los repetidores no introducen más concurrencia que la que estaba en el modelo original y debido a eso los dos sistemas, a pesar de no ser bisimilares y no tener las mismas trazas, son equivalentes respecto a la ausencia de deadlock, recepciones no especificadas y mensajes huérfanos. Esta observación es importante porque provee una forma de chequear multichannesl communication systems recurriendo nuevamente al chequeo de GMC del sistema emulado.
+Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos, el orden de los mensajes está garantizado como resultado del modo en que $\delta$ está definido para los repetidores. Nótese que los repetidores respetan ese orden porque al consumir un mensaje desde el canal de 'entrada' (el canal que sirve para recibir mensajes del emisor original) la única acción posible del repetidor es mandar el mensaje a través del canal de salida (el canal que sirve para enviar mensajes al receptor original). Como todo canal es FIFO y los repetidores se comportan del mismo modo, el orden entre dentro de cada canal queda garantizado. Por oro lado, no hay garantía respecto al orden de la comunicación entre canales del modelo original. Por lo tanto podemos decir que los repetidores no introducen más concurrencia que la que estaba en el modelo original y debido a eso los dos sistemas, a pesar de no ser bisimilares y no tener las mismas trazas, son equivalentes respecto a la ausencia de deadlock, recepciones no especificadas y mensajes huérfanos. Esta observación es importante porque provee una forma de chequear multichannel communication systems recurriendo nuevamente al chequeo de GMC del sistema emulado.
 
 \begin{prop} El sistema emulado preserva los errores comunicacionales
 

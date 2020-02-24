@@ -1,6 +1,6 @@
 %!TEX root = ./main.tex
 
-Como ya hemos mencionado, en SOC (Service-Oriented Computing) los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
+Como ya hemos mencionado, en SOC los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
  
 Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado a priori de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, ausencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no se encuentra a la espera de un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.
 
@@ -29,7 +29,7 @@ Esta sección va a estar enfocada en la definición de composición total de aut
 \end{figure}
 
 
-En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. La siguiente figura muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
+En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. A continuación se muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
 
 \begin{figure}[ht]
 \begin{tikzpicture}[->, thick]
@@ -91,7 +91,7 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
     \label{fig:weak determinacy mcfsm}
 \end{figure}
 
-En la figura 3.4 podemos ver al sistema compuesto de los AFCA S y P. En la misma podemos observar como S tiene un único camino lineal donde envía los meensajes a y b al autómata P. Por su lado P puede tomar dos caminos, ejecutando una de sus dos transiciones internas. Si bien para el autómata S esas transiciones no le afectan, el camino que tome P sí. Al tomar el primer camino el sistema se ejecuta de manera correcta, pero si ejecuta la transición interna int2, no puede recibir el mensaje a y por lo tanto el sistema entra en deadlock. El autómata P es un autómata determinístico, pero esa noción no alcanza para que el sistema funciones correctamente. En la figura 3.5 se ve como la mcfsm proyectada preserva los errores comunicacionales.  
+En la figura 3.4 podemos ver al sistema compuesto de los AFCA $S$ y $P$. En la misma podemos observar como $S$ tiene un único camino lineal donde envía los meensajes $a$ y $b$ al autómata $P$. Por su lado $P$ puede tomar dos caminos, ejecutando una de sus dos transiciones internas. Esas transiciones no afectan directamente el comportamiento del autómata $S$. Pero cual de ellas elija ejecutar $P$, sí lo afecta. Al tomar el primer camino el sistema se ejecuta de manera correcta, pero si ejecuta la transición interna $int2$, no puede recibir el mensaje $a$ y por lo tanto el sistema entra en deadlock. El autómata $P$ es un autómata determinístico, pero esa noción no alcanza para que el sistema funciones correctamente. En la figura 3.5 se ve como la mCFSM proyectada preserva los errores comunicacionales.  
 
 Para prevenir este tipo de problemas surgen la noción de determinismo débil o weak determinacy. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. La idea de \emph{Weak Determinacy} \cite[Def. 11.3]{comm} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de Bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicacion interna como observacionalmente bisimilares para un participante externo.  
 
@@ -182,7 +182,7 @@ Queremos probar que $R \subseteq \hat{Q} \times P$, definida como $R = \{ \langl
 
 \end{proof}
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]
 \label{ex:Transformación}
 Consideremos los siguientes AFCA 

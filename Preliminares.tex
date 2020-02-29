@@ -44,8 +44,8 @@ Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si e
 
 A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} \cite[Def.2.2]{GMC} como un conjunto de CFSMs que cumplen determinadas propiedades.
 
-\begin{definition}[Communicating System] Dada una CFSM $\textit{M}_p = \langle Q_p, q_{0_p}, \mathcal{M}, \delta_p \rangle $ para cada participante $p \in \mathcal{P}$, la tupla $S= \langle M_p \rangle_{p \in \mathcal{P}} $ es un communicating system (CS).
-Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es $s_0 = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$
+\begin{definition}[Communicating System] Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
+
 % Un \emph{communicating system} es un mapa \textit{S} que asigna una CFSM $S(p)$ a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando $q$ es un estado de la máquina $S(p)$ y $t \in S(p)$ cuando $t$ es una transición de $S(p)$.\\
 
 \end{definition}
@@ -54,22 +54,24 @@ La semántica de los CSs está dada por un sistema de transición etiquetado cuy
 
 
 \begin{definition}[Estados y configuraciones alcanzables]
-\label{def:estadosyconf}
-  Una configuración $c' = \langle \overrightarrow{q'} ; \overrightarrow{\omega'} \rangle$ es \emph{alcanzable} desde otra
-  configuración $c = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
-	\begin{enumerate}
-		\item $l = sr!m$, $\langle q_s, l,  q'_s\rangle \in \delta_s$ y 
+\label{def:estadosyconf} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$ y $S=\langle M_p \rangle_{p \in \mathcal{P}}$ un CS, el sistema de transición etiquetado que determinala semántica de $S$ (denotado como $M_S = \langle Q_S, 
+{q_0}_S, \delta_S \rangle$ 
+
+una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es ${q_0}_S = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$.
+Dadas $c' = \langle \overrightarrow{q'},\overrightarrow{\omega'} \rangle$, $c = \langle \overrightarrow{q},\overrightarrow{\omega} \rangle$ y $l \in \mathcal{C}_s \times \{!,?\} \times \mathcal{M}$, decimos que $c'$ es alcanzable desde $c$ a través de la etiqueta $l$, denotado como $\langle c, l, c' \rangle \in \delta_S$, si y sólo si:
+    \begin{enumerate}
+		\item $l=sr!m$ y $\langle q_s,l,q'_s\rangle \in \delta_s$ y 
 			\begin{enumerate}
 				\item $q'_p = q_p$ para todo $\p \neq s$; y
 				\item $\omega'_{sr} = \omega_{sr} \cdot m$ y  $\omega'_{pq} = \omega_{pq}$ para todo $pq \neq sr$; o bien
 			\end{enumerate}
-		\item $l = sr?m$, $\langle q_r, l,  q'_r\rangle \in \delta_r$ y 
+		\item $l=sr?m$ y $\langle q_r,l,q'_r\rangle \in \delta_r$ y 
 			\begin{enumerate}
 			\item $q'_{p} = q_{p}$ para todo $p \neq r$; y
 				\item $\omega_{sr} = m \cdot \omega'_{pq}$ y $\omega'_{pq} = \omega_{pq}$ para todo $pq' \neq sr$
 			\end{enumerate}
 	\end{enumerate}
-Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
+El conjunto de configuraciones alcanzables de S es $RS(S) = \{q \in Q_S | \langle {q_0}_S,l_0 \ldots l_n,q \rangle \in \delta_S^* \}$ donde $\delta_S^*$ es la clausura reflexo-transitiva de $\delta_S$
 \end{definition}
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.

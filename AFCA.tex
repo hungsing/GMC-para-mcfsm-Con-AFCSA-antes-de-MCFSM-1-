@@ -306,11 +306,10 @@ Al principio de esta sección introdujimos los AFCA para modelar el comportamien
     Q$ es un conjunto finito de \emph{transiciones}.
   \end{itemize}
 
-Un communicating system es un mapa S que asigna un mCFSM S(p) a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando q es un estado de la máquina S(p) y $\tau$ es una transición de S(p).
-  
+Un communicating system es un mapa S que asigna un mCFSM S(p) a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando q es un estado de la máquina S(p) y $\tau$ es una transición de S(p).\end{definition}
+
 Al igual que antes la semántica de un communicating system se obtiene considerando configuraciones. Estas configuraciones son iguales a las de las CFSM puras con la salvedad que ahora los canales no están restringidos a un único par entre cada par de participantes.
 
- \end{definition}
  
 % * <ivissani@gmail.com> 2018-01-28T13:14:43.225Z:
 
@@ -319,46 +318,15 @@ Al igual que antes la semántica de un communicating system se obtiene considera
 % Notar que la cantidad de canales existentes entre cada par de participantes ahora es infinita (los naturales) PERO la cantidad de ellos que vas a usar siempre va a ser finita porque de acuerdo a la notación que tenemos hay que fijar qué canal se usa en cada envío/recepción de mensaje y, por lo tanto, el hecho de que EXISTAN infinitos canales no afecta a la semántica ni al poder expresivo de las CFSMs
 % 
 
-
-\begin{definition}[Semántica de una mCSFSM]
-\label{def:semanticamCFSM}
-La configuración de un multichannel communicating system  \cite[Def. 83]{mCFSM} se define en términos de transiciones entre configuraciones como se ve a continuación:
-
-  La configuración de un communicating system S es un par
-  $s = \sysconf{q}{w}$ donde
-  $\vectorize{q} = \left(q_\p\right)_{\p \in \mathcal{P}}$ donde
-  $q_\p \in S(p)$ para cada $p \in \mathcal{P}$ y
-  $\vectorize{w} = \left(w_{pq}\right)_{pq \in \C}$ con
-  $w_{pq} \in \mathcal{M} $.
-  
-  Una configuración $s' = \langle \overrightarrow{q'} ; \overrightarrow{w'} \rangle$ es \emph{alcanzable} desde otra
-  configuración $s = \langle \overrightarrow{q} ; \overrightarrow{w} \rangle$ a través de la \emph{ejecución de la transición} $l$ (escrito $s \overset{l}{\rightarrow} s'$) si existe un $m \in \mathcal{M}$ tal que ocurre una de las siguientes alternativas:
-	\begin{enumerate}
-		\item $l = \langle q_s, sr!m,  q'_s\rangle \in \delta_s$ y 
-			\begin{enumerate}
-				\item $q'_p = q_p$ para todo $\p \neq s$; y
-				\item $w'_{sr} = w_{sr} \cdot m$ y  $w'_{pq} = w_{pq}$ para todo $pq \neq sr$; o bien
-			\end{enumerate}
-		\item $l = \langle q_r, sr?m,  q'_r\rangle \in \delta_r$ y 
-			\begin{enumerate}
-			\item $q'_{p} = q_{p}$ para todo $p \neq r$; y
-				\item $w_{sr} = m \cdot w'_{pq}$ y $w'_{pq} = w_{pq}$ para todo $pq' \neq sr$
-			\end{enumerate}
-	\end{enumerate}
-Escribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
-\end{definition}
-
-\begin{prop}[La semántica de una mCFSM es igual a la de transiciones de comunicación interna de un AFCA]
-Si comparamos las reglas 2 y 3 de la \ref{def:reltransAFCA} con las reglas 1 y 2 de \ref{def:semanticamCFSM} vemos que hay mucha similitud.
-Una transición de comunicación interna de un AFCA tiene la siguiente semántica 
-\end{prop}
-
 Multichannel CFSMs  con un único canal para cada par ordenado de participantes son equivalentes a CFSMs puras.
 
-\begin{definition}[Interfaz de comunicación de un AFCA] Es la mCFSM que resulta de aplicarle el siguiente procedimiento a un AFCA.
+\begin{definition}[Interfaz de comunicación de un AFCA] Es la mCFSM que resulta de aplicarle el siguiente procedimiento:
 \begin{enumerate}
-    \item Transformamos toda acción interna y de buffer en una transición $\epsilon$. Esto resulta en una autómata no determinístico con transiciones $\epsilon$
-    \item Transformamos el autómata no determinístico rsultante del paso anterior en uno determinístico.
+    \item Transformamos toda acción interna y de buffer en una transición $\epsilon$. Esto resulta en una autómata no determinístico con transiciones $\epsilon$ al que llamamos $A'$
+    \item $\forall q \in Q_{A'}$ llamamos $[q]$ a la clase de equivalencia tal que $[q]=\{q' \in Q_{A'} \land q \xrightarrow{\epsilon^*} q'\}$. Decimos que dos clases $[q]$ y $[q']$ están relacionadas $[q] \xrightarrow{\sigma} [q'']$, con $\sigma \in \Sigma_{Ex}$, sii $\exists q^1 \in [q], q^2 \in [q'']$ tales que $q^1 \xrightarrow{\sigma} q^2 \in \delta$
+    \item $[Q]= \{[q] \ | \ q, q' \in Q \land [q] \xrightarrow{\sigma} [q'] \lor [q'] \xrightarrow{\sigma} [q] \}$ es el conjunto de clases de equivalencia de $Q$ que están relacionadas. 
+    \item $[q_0]=q_0$
+    \item $[\delta]= \{[q] \xrightarrow{\sigma} [q'] |[q], [q'] \in [Q] \land \sigma \in \Sigma_{EX}\}$, dos estados $[q],[q'] \in [Q]$ están relacionados en $[\delta]$ si son clases de equivalencia relaicionadas. 
 \end{enumerate}
 \end{definition}
 
@@ -371,7 +339,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
             \node[state] (q_5) [right= 1.8cm of q_3 ] {$q_5$};
             \node[state] (q_2) [below= 1.5cm of q_0 ] {$q_2$};
             \node[state] (q_4) [right= 1.8cm of q_2 ] {$q_4$};
-        
+    
             \draw[]        
             (q_0) edge[above] node{$out(pr_1,a)$} (q_1)
             (q_1) edge[above] node{$in(rp_2,d)$} (q_3)
@@ -381,13 +349,12 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
             (q_3) edge[bend right] node{$b_1 \ll m_1$} (q_5)
             (q_5) edge[bend right] node{$b_1 \gg m_1$} (q_3)
         ;
-        \end{tikzpicture} 
-
-        \begin{tikzpicture}[->, thick]
-            \node[state,initial] (q_0)   {$q_0$}; 
-            \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
-            \node[state] (q_2) [below= 1.5cm of q_0 ] {$q_2$};
-            \node[state] (q_3) [right= 1.5cm of q_2 ] {$q_3$};
+        \end{tikzpicture}
+    \begin{tikzpicture}[->, thick]
+            \node[state,initial] (q_0)   {$[q_0]$}; 
+            \node[state] (q_1) [right= 1.5cm of q_0 ] {$[q_1]$};
+            \node[state] (q_2) [below= 1.5cm of q_0 ] {$[q_2]$};
+            \node[state] (q_3) [right= 1.5cm of q_2 ] {$[q_3]$};
 
             \draw[]        
             (q_0) edge[above] node{$pr_1!a$} (q_1)
@@ -399,7 +366,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
     \caption{AFCA y su mCFSM}
     \label{fig:mCFSM}
 
-\end{example}{}
+\end{example}
 \end{figure}
 
 

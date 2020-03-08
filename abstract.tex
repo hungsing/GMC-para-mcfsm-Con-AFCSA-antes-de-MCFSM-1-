@@ -1,55 +1,51 @@
-% !TEX root = ./main.tex
+%!TEX root = ./main.tex
 
 
-% \title{Automata for partial binding of services
-% 	\thanks{Carlos G.\ Lopez Pombo's research is supported by Agencia Nacional de Promoción Científica y Tecnológica by grant PICT 2013-2129, and Consejo Nacional de Investigaciones Científicas y Técnicas by grant PIP 11220130100148CO.}
-% }
+ \title{Automata for partial binding of services
+	\thanks{Carlos G.\ Lopez Pombo's research is supported by Agencia Nacional de Promoción Científica y Tecnológica by grant PICT 2013-2129, and Consejo Nacional de Investigaciones Científicas y Técnicas by grant PIP 11220130100148CO.}
+}
 
-%  \author{Carlos G. Lopez Pombo\inst{1,2} \and Ignacio Vissani\inst{1} \and Ezequiel Davidovich Caballero\inst{1}}
-% % \author{C.G. Lopez Pombo et. al.}
-% % \institute{Universidad de Buenos Aires. School of science, Department of computing. \and CONICET--Universidad de Buenos Aires. Instituto de Investigación en Ciencias de la Computación (ICC).
-% % } %\\ \email{clpombo@dc.uba.edu.ar}}
-% % \index{Lopez Pombo, Carlos G.}
+\author{Carlos G. Lopez Pombo \inst{1,2} \and Ignacio Vissani \inst{1} \and Ezequiel Davidovich Caballero \inst{1}}
+\author{C.G. Lopez Pombo et. al.}
+% \institute{Universidad de Buenos Aires. School of science, Department of computing. \and CONICET--Universidad de Buenos Aires. Instituto de Investigación en Ciencias de la Computación (ICC).} %\\ \email{clpombo@dc.uba.edu.ar}}
+\index{Lopez Pombo, Carlos G.}
 % % \index{Vissani, Ignacio}
 % % \index{Davidovich Caballero, Ezequiel}
 
 
-% \maketitle
+\maketitle
 
-% Distributed software resulting from emerging paradigms such as \emph{service-oriented computing} (SOC), Cloud/Fog computing and the Internet of Things are transforming the world of software systems in order to support applications able to respond and adapt to the changes of their execution environment, giving impulse to what is called the API's economy. The underlying idea of the API's economy is that it is possible to construct software artifacts by composing services provided by third parties and previously registered in repositories. This envisages a generation of applications running over globally available computational resources and communication infrastructure, which, at run-time, are dynamically and transparently reconfigured by the intervention of a dedicated middleware% with the capability to discover and bind a running application with a certain requirement, to a service capable of fulfilling it
-% , subject to the negotiation of a \emph{Service Level Agreement -- SLA}%; in this way, services can collectively fulfill a certain business goal 
-% \cite{fiadeiro:fac_23-4}.
+Distributed software resulting from emerging paradigms such as \emph{service-oriented computing} (SOC), Cloud/Fog computing and the Internet of Things are transforming the world of software systems in order to support applications able to respond and adapt to the changes of their execution environment, giving impulse to what is called the API's economy. The underlying idea of the API's economy is that it is possible to construct software artifacts by composing services provided by third parties and previously registered in repositories. This envisages a generation of applications running over globally available computational resources and communication infrastructure, which, at run-time, are dynamically and transparently reconfigured by the intervention of a dedicated middleware with the capability to discover and bind a running application with a certain requirement, to a service capable of fulfilling it, subject to the negotiation of a \emph{Service Level Agreement -- SLA}; in this way, services can collectively fulfill a certain business goal 
+\cite{fiadeiro:fac_23-4}.
 
-% Under this paradigm %there is no control as to the nature of the components that an application can bind to because 
-% software services are accessed by their API. %In general APIs only describe the data type of the arguments needed to invoke the service while the most important aspects of its behaviour are documented informally resulting in a major drawback in the possibility of achieving SOC's utopia: automatic broking of services. In this quest, 
-% Thus, a key element is the existence of formal languages, together with associated analysis techniques, capable of fully expressing the API behavioral contract.
+Under this paradigm there is no control as to the nature of the components that an application can bind to because 
+software services are accessed by their API. In general APIs only describe the data type of the arguments needed to invoke the service while the most important aspects of its behaviour are documented informally resulting in a major drawback in the possibility of achieving SOC's utopia: automatic broking of services. In this quest, 
+Thus, a key element is the existence of formal languages, together with associated analysis techniques, capable of fully expressing the API behavioral contract.
 
-% \emph{Asynchronous Relational Nets} \cite{fiadeiro:fase2011} is a language for describing the orchestration of services, supporting the explicit dynamic reconfiguration of a system by declaring ports behaving either as provide points or as require points, depending on their role in the service binding and execution. In \cite{vissani:wadt14-f} it was given a formal operational semantics supporting the transparent run-time composition of services. In \cite{vissani:places15}, \emph{Communicating Finite State Machine} \cite{brand:jacm-30_2} were used to label provides points and \emph{Global Graphs} \cite{denielou:esop12} to label communication channels, in order to describe a procedure for automatically checking interoperability of services.
+\emph{Asynchronous Relational Nets} \cite{fiadeiro:fase2011} is a language for describing the orchestration of services, supporting the explicit dynamic reconfiguration of a system by declaring ports behaving either as provide points or as require points, depending on their role in the service binding and execution. In \cite{vissani:wadt14-f} it was given a formal operational semantics supporting the transparent run-time composition of services. In \cite{vissani:places15}, \emph{Communicating Finite State Machine} \cite{brand:jacm-30_2} were used to label provides points and \emph{Global Graphs} \cite{denielou:esop12} to label communication channels, in order to describe a procedure for automatically checking interoperability of services.
 
-% The way in which these formalisms are defined prescribe that correctness of the communication (usually reduced to the absence of certain configurations\cite{lange:popl15}:
-% \begin{inparaenum}[1)]
-% \item \emph{deadlock}: a participant is in a state in which it can only consume messages from participants whose corresponding message queues are empty,
-% \item \emph{unspecified reception}: a participant is in a state in which it can only consume messages from participants which are not in the corresponding message queues, and
-% \item \emph{orphan message}: all participants are in a state of no outgoing transition and there is a non-empty buffer.
-% \end{inparaenum}
-% ) can only be asserted in the presence of all the participants involved. Thus, when they are used for formalising an interoperability check% over a communication channel with more than two require points
-% , all participants must commit to be bound %even when they may not be required 
-% at the beginning of the communication.
+The way in which these formalisms are defined prescribe that correctness of the communication (usually reduced to the absence of certain configurations\cite{langle:popl15}:
+\begin{inparaenum}[1)]
+\item \emph{deadlock}: a participant is in a state in which it can only consume messages from participants whose corresponding message queues are empty,
+\item \emph{unspecified reception}: a participant is in a state in which it can only consume messages from participants which are not in the corresponding message queues, and
+\item \emph{orphan message}: all participants are in a state of no outgoing transition and there is a non-empty buffer.
+\end{inparaenum}
+) can only be asserted in the presence of all the participants involved. Thus, when they are used for formalising an interoperability check over a communication channel with more than two require points, all participants must commit to be bound even when they may not be required at the beginning of the communication.
 
-% \emph{Generalised Multi-party Compatibility} (GMC), defined in \cite{lange:popl15}, is a sufficient condition for the correctness condition detailed above, requiring the system to satisfy:
-% \begin{inparaenum}[1)]
-% \item \emph{representability}: each trace $t$ of each participant $P$ of the system is ``represented'' by a trace $t'$ in the global transition system in which the action taken by $P$ in $t$ appear in $t'$ in the exact same order, 
-% \item \emph{branching property}: each branching configuration of the global transition system either consists of independent transitions (that is they all interleave) or they represent a distributed choice with a unique participant making the choice, and any other participant involved in it has a different first action on each two different branches of the choice, and 
-% \item for each participant $P$ involved in a choice, there cannot be a race condition between the messages that $P$ can receive (only one input message gets to $P$ during the choice.
-% \end{inparaenum}
+\emph{Generalised Multi-party Compatibility} (GMC), defined in \cite{GMC}ufficient condition for the correctness condition detailed above, requiring the system to satisfy:
+\begin{inparaenum}[1)]
+\item \emph{representability}: each trace $t$ of each participant $P$ of the system is ``represented'' by a trace $t'$ in the global transition system in which the action taken by $P$ in $t$ appear in $t'$ in the exact same order, 
+\item \emph{branching property}: each branching configuration of the global transition system either consists of independent transitions (that is they all interleave) or they represent a distributed choice with a unique participant making the choice, and any other participant involved in it has a different first action on each two different branches of the choice, and 
+\item for each participant $P$ involved in a choice, there cannot be a race condition between the messages that $P$ can receive (only one input message gets to $P$ during the choice.
+\end{inparaenum}
 
-% In this work we study:
-% \begin{inparaenum}[1)]
-%  \item a new class of CFSMs, called \emph{Multichannel Communicating Finite State Machines -- mCFSMs}, with an explicit definition of the communication channels enabling, for a participant, the possibility of having more than one channel with the other participants
-%  \item a definition of the GMC property for systems of mCFSMs, 
-%  \item a class of \emph{Asynchronous Communicating Automatas -- ACAs} with the capability of internalising the communication as read / write operations on internal buffers, enabling partial composition of communicating automata, and
-%  \item a method for mapping an ACA to a mCFSM providing a checking mechanism of the GMC property for the class of ACA.
-%  \end{inparaenum}
+In this work we study:
+\begin{inparaenum}[1)]
+ \item a new class of CFSMs, called \emph{Multichannel Communicating Finite State Machines -- mCFSMs}, with an explicit definition of the communication channels enabling, for a participant, the possibility of having more than one channel with the other participants
+ \item a definition of the GMC property for systems of mCFSMs, 
+ \item a class of \emph{Asynchronous Communicating Automatas -- ACAs} with the capability of internalising the communication as read / write operations on internal buffers, enabling partial composition of communicating automata, and
+ \item a method for mapping an ACA to a mCFSM providing a checking mechanism of the GMC property for the class of ACA.
+ \end{inparaenum}
 
-% % \bibliographystyle{splncs}
-% % \bibliography{bibdatabase}
+% \bibliographystyle{splncs}
+% \bibliography{bibdatabase}

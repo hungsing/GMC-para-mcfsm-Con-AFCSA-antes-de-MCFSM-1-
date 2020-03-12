@@ -5,7 +5,7 @@
 
 
 \subsection{Autómatas finitos de comunicación asincrónica}
-Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otros comportamientos internos. Para esto primero recurrimos a los Input Output Automata \cite{IOautomata}. 
+Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otros comportamientos internos. Para esto primero recurrimos a los Input Output Automata \cite{lynch:cwiq-2_3}. 
 Un I/O automaton modela un componente de un sistema distribuido que puede interactuar con otros sistemas componentes. Es un tipo de máquina de estados en la cual las transiciones están asociadas con determinadas acciones específicas. Existen tres tipos de acciones: input, output, y acciones internas. El autómata usa sus acciones de input y output para comunicarse con el enotrno, mientras que las acciones internas son sólo visibles para el autómata. A diferencia de las acciones internas y las de output que son seleccionadas y resueltas por el autómata, las de entrada, que llegan del entorno, no están bajo control del autómata. Para componer estos autómatas se requiere que sincronicen las acciones compartidas. Es decir cuando un autómata ejecuta una transición con la etiqueta $\pi$, todo autómata que tenga esa acción $\pi$ la ejecuta en simultáneo.
 El problema es que los IO no representan bien la comunicación asincrónica. Las operaciones de comunicación externa sincronizan a todos los participantes del sistema. Es decir que si dos autómatas componentes tienen una misma transición, se ejecutan en simultáneo. Esto va en contra de la idea de asincronsidad que buscamos.
 
@@ -165,14 +165,15 @@ En el ejemplo podemos ver los tres tipos de transiciones que los AFCA pueden rea
 \end{itemize}
 \end{example}
 
-Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. Para que un par de autómatas $E$ y $R$ sean plausibles de ser compuestos se deben satisfacer las siguientes condiciones:
- \begin{enumerate}
-\item $\Sigma_{E Int} \cap \Sigma_{R Int} = \emptyset$ el conjunto de etiquetas internas debe ser disjunto. 
-\item $ B_E \cap B_R = \emptyset$ el conjunto de Buffers de ambos autómatas debe ser disjunto  
-\end{enumerate}
+Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. 
+
+\begin{definition}[Compatibilidad]
+Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $E_\mathcal{P} = \{E_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$, diremos que $E_\mathcal{P}$ es \emph{compatible} si se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$.
+\end{definition}
+
 \begin{definition}[Composición]\label{def:comp}
 \label{composicion}
-Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. Denominamos al conjunto de autómatas participantes como $E_\mathcal{P} = \{E_{p_i} \ | p_i \in \mathcal{P}\}$, dónde $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$. Dado un conjunto de autómatas se exige que todo par de integrantes sean compatibles (i.e. se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$). Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
+Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $E_\mathcal{P} = \{E_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$ compatible. Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
 \begin{itemize}
     \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
     \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes),    
@@ -295,7 +296,7 @@ Considere los siguientes AFCA:
 \subsection{Aspectos comunicacionales de los AFCA}
 
 Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. La idea de los AFCA es intentar reducir la distancia entre ambas naturalezas. Por lo tanto una de las tareas principales que queremos lograr con AFCAs es obtener, vía una proyección, la inferfaz de comunicación en la forma de una mCFSM.
-Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección abordamos dicha problemática introduciendo las Multichannel Communicating Finite State Machines \cite[Def. 82]{mCFSM}. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
+Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero los AFCA introducen con la composición la posibilidad de que haya múltiples canales de comunicación entre dos participantes. En esta sección abordamos dicha problemática introduciendo las Multichannel Communicating Finite State Machines \cite[Def.~82]{vissani:phdthesis}. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
 
 \begin{definition}[Multichannel Communicating Finite State Machine - mCFSM] Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
 \begin{itemize}
@@ -322,11 +323,11 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 
 \begin{definition}[Interfaz de comunicación de un AFCA] Es la mCFSM que resulta de aplicarle el siguiente procedimiento:
 \begin{enumerate}
-    \item Transformamos toda acción interna y de buffer en una transición $\epsilon$. Esto resulta en una autómata no determinístico con transiciones $\epsilon$ al que llamamos $A'$
-    \item $\forall q \in Q_{A'}$ llamamos $[q]$ a la clase de equivalencia tal que $[q]=\{q' \in Q_{A'} \land q \xrightarrow{\epsilon^*} q'\}$. Decimos que dos clases $[q]$ y $[q']$ están relacionadas $[q] \xrightarrow{\sigma} [q'']$, con $\sigma \in \Sigma_{Ex}$, sii $\exists q^1 \in [q], q^2 \in [q'']$ tales que $q^1 \xrightarrow{\sigma} q^2 \in \delta$
+    \item Transformamos toda acción interna y de buffer en una transición $\epsilon$. Esto resulta en un autómata no determinístico con transiciones $\epsilon$ al que llamamos $A'$
+    \item $\forall q \in Q_{A'}$ llamamos $[q]$ a la clase de equivalencia tal que $[q]=\{q' \in Q_{A'}\ |\ q \xrightarrow{\epsilon^*} q'\}$. Decimos que dos clases $[q]$ y $[q']$ están relacionadas $[q] \xrightarrow{\sigma} [q'']$, con $\sigma \in \Sigma_{Ex}$, sii $\exists q^1 \in [q], q^2 \in [q'']$ tales que $q^1 \xrightarrow{\sigma} q^2 \in \delta$
     \item $[Q]= \{[q] \ | \ q, q' \in Q \land [q] \xrightarrow{\sigma} [q'] \lor [q'] \xrightarrow{\sigma} [q] \}$ es el conjunto de clases de equivalencia de $Q$ que están relacionadas. 
     \item $[q_0]=q_0$
-    \item $[\delta]= \{[q] \xrightarrow{\sigma} [q'] |[q], [q'] \in [Q] \land \sigma \in \Sigma_{EX}\}$, dos estados $[q],[q'] \in [Q]$ están relacionados en $[\delta]$ si son clases de equivalencia relaicionadas. 
+    \item $[\delta]= \{[q] \xrightarrow{\sigma} [q']\ |\ [q], [q'] \in [Q] \land \sigma \in \Sigma_{EX}\}$, dos estados $[q],[q'] \in [Q]$ están relacionados en $[\delta]$ si son clases de equivalencia relaicionadas. 
 \end{enumerate}
 \end{definition}
 
@@ -372,7 +373,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 
 En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
-\begin{definition}[Sistema emulado] \cite[Def. 84]{mCFSM} Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
+\begin{definition}[Sistema emulado] \cite[Def.~84]{vissani:phdthesis} Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
 \begin{itemize}
 \item $Q_{p^{sr_n}} = \{q_0\} \cup \bigcup_{m \in \mathcal{M}} \{q_m\}$
 \item $\mathcal{C}_{p^{sr_n}} = \{sp_n^{sr_n}, p^{sr_n}r_n,  p^{sr_n}s_n, rp_n^{sr_n} \}$

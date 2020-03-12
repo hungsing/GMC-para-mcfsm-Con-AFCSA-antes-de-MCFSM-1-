@@ -67,7 +67,12 @@ domain=-2*pi:2*pi,
 title style={at={(1,0.5)}}}}
 \newtheorem{theorem}{Teorema}
 \newtheorem{lemma}{Lema}
+
+\usepackage{bbm}
+\def \nat{\mathbbm{N}}
+
 \begin{document}
+
 \input{abstract.tex}
 \input{introduccion.tex}
 \input{Preliminares.tex}
@@ -78,7 +83,7 @@ title style={at={(1,0.5)}}}}
 
 
 \bibliographystyle{alpha}
-\bibliography{refs}
+\bibliography{refs,bibdatabase}
 
 
 \end{document}

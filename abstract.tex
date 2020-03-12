@@ -24,7 +24,7 @@ Thus, a key element is the existence of formal languages, together with associat
 
 \emph{Asynchronous Relational Nets} \cite{fiadeiro:fase2011} is a language for describing the orchestration of services, supporting the explicit dynamic reconfiguration of a system by declaring ports behaving either as provide points or as require points, depending on their role in the service binding and execution. In \cite{vissani:wadt14-f} it was given a formal operational semantics supporting the transparent run-time composition of services. In \cite{vissani:places15}, \emph{Communicating Finite State Machine} \cite{brand:jacm-30_2} were used to label provides points and \emph{Global Graphs} \cite{denielou:esop12} to label communication channels, in order to describe a procedure for automatically checking interoperability of services.
 
-The way in which these formalisms are defined prescribe that correctness of the communication (usually reduced to the absence of certain configurations\cite{langle:popl15}:
+The way in which these formalisms are defined prescribe that correctness of the communication (usually reduced to the absence of certain configurations\cite{lange:popl15}:
 \begin{inparaenum}[1)]
 \item \emph{deadlock}: a participant is in a state in which it can only consume messages from participants whose corresponding message queues are empty,
 \item \emph{unspecified reception}: a participant is in a state in which it can only consume messages from participants which are not in the corresponding message queues, and
@@ -32,7 +32,7 @@ The way in which these formalisms are defined prescribe that correctness of the 
 \end{inparaenum}
 ) can only be asserted in the presence of all the participants involved. Thus, when they are used for formalising an interoperability check over a communication channel with more than two require points, all participants must commit to be bound even when they may not be required at the beginning of the communication.
 
-\emph{Generalised Multi-party Compatibility} (GMC), defined in \cite{GMC}ufficient condition for the correctness condition detailed above, requiring the system to satisfy:
+\emph{Generalised Multi-party Compatibility} (GMC), defined in \cite{lange:popl15}, is a sufficient condition for the correctness condition detailed above, requiring the system to satisfy:
 \begin{inparaenum}[1)]
 \item \emph{representability}: each trace $t$ of each participant $P$ of the system is ``represented'' by a trace $t'$ in the global transition system in which the action taken by $P$ in $t$ appear in $t'$ in the exact same order, 
 \item \emph{branching property}: each branching configuration of the global transition system either consists of independent transitions (that is they all interleave) or they represent a distributed choice with a unique participant making the choice, and any other participant involved in it has a different first action on each two different branches of the choice, and 

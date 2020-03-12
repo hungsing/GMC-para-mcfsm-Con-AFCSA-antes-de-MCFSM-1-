@@ -3,22 +3,63 @@
 \label{preliminares}
 A continuación presentaremos algunas definiciones y resultados preliminares que serán de utilidad en las restantes secciones de esta tesis.
 
-\subsection{Definiciones básicas}
-\begin{definition}[Clausura reflexo-transitiva] Sea $\rightarrow$ una relación sobre un conjunto S. La clausura reflexo-transitiva de $\rightarrow$, denotada  $\rightarrow^*$, se define como la relación reflexiva y transitiva más pequeña sobre S que contiene a $\rightarrow$. 
-\end{definition} 
-\begin{definition}[Relación de equivalencia] Es una relación binaria reflexiva, simétrica y transitiva. La relación ``es igual a''  es el ejemplo canónico donde para todo trío de objetos a, b y c, vale: 
+%\subsection{Definiciones básicas}
 
-\begin{enumerate}
-    \item a= a (propiedad reflexiva)
-    \item Si a = b entonces b = a (propiedad de simetría)
-    \item Si a = b y b = c entonces a = c (propiedad transitiva)
-\end{enumerate}
+\begin{definition}[Sistema de transición etiquetado, \cite{keller:cacm-19_7}]
+Una estructura $S = \langle Q, \Sigma, \longrightarrow \rangle$ se dice que es un \emph{sistema de transición etiquetado} si satisface las siguientes propiedades:
+\begin{itemize}
+\item $Q$ es un conjunto finito llamado \emph{conjunto de estados},
+\item $\Sigma$ es un conjunto finito llamado \emph{conjunto de etiquetas}, y
+\item $\longrightarrow \subseteq Q \times \Sigma \times Q$.
+\end{itemize}
+Sean $q, q' \in Q$, $a \in \Sigma$, cuando $\langle q, a, q' \rangle \in \longrightarrow$ lo denotaremos como $q \xrightarrow{a} q'$. Denotaremos $\Sigma^*$ al conjunto de secuencias (finitas o infinitas) $\sigma_0, \sigma_1, \sigma_2, \ldots, \sigma_n, \ldots$ tal que para todo $i \in \nat$, $\sigma_i \in \Sigma$. A su vez, dado $q \in Q$, definiremos $\Sigma^* [q]$, llamado el lenguaje de $q$, como $\{ \sigma_0, \sigma_1, \ldots, \sigma_n, \ldots \in \Sigma^*\ |\ \text{existe } \{q_i\}_{i \in \nat} \text{ tal que } q = q_0 \text{ y para todo } i \in \nat \text{, } q_i \xrightarrow{\sigma_i} q_{i+1}\}$. Dados $q, q' \in Q$ y $\sigma \in \Sigma^*$, $q \xrightarrow{\sigma} q'$ si y solo si $\sigma = \sigma_0, \sigma_1, \ldots, \sigma_n$ y existen $\{q_i\}_{0 \leq i \leq n} \subseteq Q$ tal que:
+\begin{inparaenum}[1-]
+\item $q_0 = q$,
+\item $q_n = q'$, y
+\item para todo $0 \leq i < n$, $q_i \xrightarrow{\sigma_i} q_{i+1}$.
+\end{inparaenum}
 \end{definition}
 
-\subsection{Comunicación Asincrónica}
-Como se dijo en la primera sección, buscamos una implementación del paradigma de SOC donde la comunicación entre distintos componentes se realiza en forma asincrónica. Esto no es un requerimiento del paradigma propiamente dicho pero resulta una implementación más eficiente. El intercambio de mensajes en forma asincrónica permite a los componentes maximizar su uso de la cpaacidad de cómputo.  El intercambio de mensajes con cada componente es independiente entre sí, salvo que exista alguna necesidad de lo contrario. Para representar este comportamiento utilizamos un tipo de autómata finito denominado \emph{Communicating Finite State Machines} (llamado a partir de ahora CFSM). El concepto de CFSM fue introducido en \cite{CFSM} con el objetivo modelar y estudiar el comportamiento de sistemas distribuidos constituidos por un conjunto de procesos secuenciales que ejecutan concurrentemente y se comunican a partir de intercambiar mensajes a través de canales de comunicación previamente declarados. Las CFSMs son autómatas que modelan únicamente la comunicación externa entre participantes. De este modo cada CFSM representa los distintos componentes del sistema distribuido, pero solo el comportamiento que es relevante a la interacción entre los mismos. Una CFSM se puede ver como la proyección de este comportamiento específico de un autómata más complejo que tenga otro tipo de transiciones adicionales.
+%\begin{definition}[Relación de equivalencia] Es una relación binaria reflexiva, simétrica y transitiva. La relación ``es igual a''  es el ejemplo canónico donde para todo trío de objetos a, b y c, vale: 
+%\begin{enumerate}
+%    \item a = a (propiedad reflexiva)
+%    \item Si a = b entonces b = a (propiedad de simetría)
+%    \item Si a = b y b = c entonces a = c (propiedad transitiva)
+%\end{enumerate}
+%\end{definition}
+%
 
-La naturaleza dinámica no pre programada de los sistemas SOC hace que se requiera algún mecanismo para verificar que todos los componentes puedan funcionar entre sí en forma correcta. Para esto en esta sección detallamos el concepto de \emph{Generalised multiparty compatibility} (GMC), definido originalmente en \cite{GMC}. GMC se define a partir de una serie de condiciones que debe cumplir el conjunto de CFSMs participantes del sistema. Esto condiciona al sistema (o a quienes lo diseñen) a tener un conocimiento previo de los posibles sistemas que vayan a interactuar entre sí. Esto no necesariamente rompe con la idea del descubrimiento y binding en tiempo de ejecución dado que se pueden generar métodos para hacer estas comprobaciones a medida que el sistema va conectándose con los distintos participantes. %(existen ya?)%
+En lo subsiguiente introduciremos la noción de equivalencia entre estados que usaremos a lo largo del presente trabajo. Intuitivamente, solo deseamos que dos estados sean distinguibles si tienen la capacidad ser diferenciados por alguna continuación a partir de ellos. A continuación daremos una primera aproximación a esta noción de equivalencia.
+
+\begin{definition}[Bisimulación \cite{milner89}, Chap.~4, Def.~1] Dado un sistema de transición etiquetado $ S = \langle Q, \Sigma, \delta \rangle $, una \emph{bisimulación} es una relación binaria $R \subseteq Q \times Q$, tal que: para cada par de elementos $p, q \in Q$ tal que $\langle p, q \rangle \in R$ vale:
+\begin{itemize}
+    \item $(\forall \sigma \in \Sigma)(p \xrightarrow{\sigma} p' \implies (\exists q' \in Q)(q \xrightarrow{\sigma} q' \land \langle p', q' \rangle \in R))$ y, simétricamente, vale 
+    \item $(\forall \sigma \in \Sigma)(q \xrightarrow{\sigma} q' \implies (\exists p' \in Q)(p \xrightarrow{\sigma} p' \land \langle p', q' \rangle \in R))$
+\end{itemize}
+Dados dos estados $p, q \in Q $, $p$ es bisimilar a $q$, si existe una bisimulación $R$ tal que $\langle p, q \rangle \in R$.
+\end{definition}
+
+Si observamos la definición anterior, dos estados que pertenecen a la relación de bisimulación no tienen posibilidad de ser distinguidos bajo ninguna posible sucesión de transciones comenzando en ellos. Si bien esta definición caracteriza una relación de equivalencia muy útil para razonar sobre sistemas de software, en nuestro caso no será suficiente dado que el tipo de autómatas con los que trabajaremos poseen etiquetas de diferente naturaleza. Para poder razonar sobre ellos se introducen las siguientes definiciones.
+
+En \cite[Sec.~5.1, Def.~5]{milner89} Milner nos da una definición de \emph{bisimulación débil} basada en la eliminación de las transiciones silenciosas, o transiciones $\epsilon$ (ver \cite[Defs.~1 a~4]{milner89}). En nuestro caso, adaptaremos dicha definición para hacerla paramétrica en el conjunto de transiciones que deseamos silenciar a los efectos de determinar bisimilaridad débil.
+
+\begin{definition}
+Sea $\Sigma$ un conjunto de etiquetas, $\Sigma' \subseteq \Sigma$ y $\sigma \in \Sigma^*$, se define $\widehat{\sigma}_{\Sigma'}$ como la secuencia de etiquetas obtenida a partir de eliminar de $\sigma$ toda ocurrencia de etiquetas en $\Sigma'$.
+\end{definition}
+
+\begin{definition}[Bisimulación débil] Dado un sistema de transición etiquetado $ S = \langle Q, \Sigma, \delta \rangle $ y $\Sigma' \subseteq \Sigma$ el conjunto de etiquetas a silenciar, una \emph{bisimulación débil sobre $\Sigma'$} es una relación binaria $R \subseteq Q \times Q$, tal que: para cada par de elementos $p, q \in Q$ tal que $\langle p, q \rangle \in R$ vale:
+\begin{itemize}
+    \item $(\forall \sigma \in \Sigma \setminus \Sigma')(p \xrightarrow{\sigma} p' \implies (\exists q' \in Q)(\exists \sigma^* \in \Sigma^*)(q \xrightarrow{\sigma^*} q' \land \widehat{\sigma^*}_{\Sigma'} = \sigma \land \langle p', q' \rangle \in R))$ y, simétricamente, vale 
+    \item $(\forall \sigma \in \Sigma \setminus \Sigma')(q \xrightarrow{\sigma} q' \implies (\exists p' \in Q)(\exists \sigma^* \in \Sigma^*)(p \xrightarrow{\sigma^*} p' \land \widehat{\sigma^*}_{\Sigma'} = \sigma \land \langle p', q' \rangle \in R))$
+\end{itemize}
+Dados dos estados $p, q \in Q $, $p$ es debilmente bisimilar sobre $\Sigma'$ a $q$, denotado como $p \sim_{\Sigma'} q$, si existe una bisimulación débil $R$ tal que $\langle p, q \rangle \in R$.
+\end{definition}
+
+
+\subsection{Comunicación Asincrónica}
+Como se dijo en la primera sección, buscamos una implementación del paradigma de SOC donde la comunicación entre distintos componentes se realiza en forma asincrónica. Esto no es un requerimiento del paradigma propiamente dicho pero resulta una implementación más eficiente. El intercambio de mensajes en forma asincrónica permite a los componentes maximizar su uso de la cpaacidad de cómputo.  El intercambio de mensajes con cada componente es independiente entre sí, salvo que exista alguna necesidad de lo contrario. Para representar este comportamiento utilizamos un tipo de autómata finito denominado \emph{Communicating Finite State Machines} (llamado a partir de ahora CFSM). El concepto de CFSM fue introducido en \cite{brand:jacm-30_2} con el objetivo modelar y estudiar el comportamiento de sistemas distribuidos constituidos por un conjunto de procesos secuenciales que ejecutan concurrentemente y se comunican a partir de intercambiar mensajes a través de canales de comunicación previamente declarados. Las CFSMs son autómatas que modelan únicamente la comunicación externa entre participantes. De este modo cada CFSM representa los distintos componentes del sistema distribuido, pero solo el comportamiento que es relevante a la interacción entre los mismos. Una CFSM se puede ver como la proyección de este comportamiento específico de un autómata más complejo que tenga otro tipo de transiciones adicionales.
+
+La naturaleza dinámica no pre programada de los sistemas SOC hace que se requiera algún mecanismo para verificar que todos los componentes puedan funcionar entre sí en forma correcta. Para esto en esta sección detallamos el concepto de \emph{Generalised multiparty compatibility} (GMC), definido originalmente en \cite{lange:popl15}. GMC se define a partir de una serie de condiciones que debe cumplir el conjunto de CFSMs participantes del sistema. Esto condiciona al sistema (o a quienes lo diseñen) a tener un conocimiento previo de los posibles sistemas que vayan a interactuar entre sí. Esto no necesariamente rompe con la idea del descubrimiento y binding en tiempo de ejecución dado que se pueden generar métodos para hacer estas comprobaciones a medida que el sistema va conectándose con los distintos participantes. %(existen ya?)%
 
 \begin{definition}[Communicating Finite State Machines] Sea $\mathcal{M}$ un conjunto finito de mensajes y $\mathcal{P}$ un conjunto finito de participantes, definimos una CFSM sobre $\mathcal{M}$ como un sistema de transición finito $\langle Q, C, q_0, \mathcal{M}, \delta \rangle$ donde
 \begin{itemize}
@@ -27,37 +68,19 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
   \item $q_0 \in Q$ es el estado inicial;
   \item $\delta \subseteq Q \times (C \times \{!,?\} \times \mathcal{M}) \times Q$ es un conjunto finito de \emph{transiciones}.
   \end{itemize}
-  
 \end{definition} 
 
-A continuación introducimos una noción de equivalencia entre participantes basada intuitivamente en la idea de que solo queremos distinguir entre dos particpantes $P$ y $Q$ si la diferencia puede ser detectada por un participante externo interactuando con ambos. Esta equivalencia, denominada bisimulación \cite{comm} es la noción de equivalencia comportamental standard para este tipo de formalismos y por lo tanto, la técnica de demostración más utilizada.
+A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} como un conjunto de CFSMs que cumplen determinadas propiedades.
 
-\begin{definition}[Bisimulación] Dado un sistema de transición etiquetado $ S =\langle Q, \Sigma, \delta \rangle $, una bisimulación es una relación binaria $R \subseteq Q \times Q$, tal que tanto $R$ como su transpuesta $R^T$ son simulaciones. Equivalentemente $R$ es una bisimulación si para cada par de elementos $p, q \in Q$ vale $\langle p, q \rangle \in R$ y para todo $\sigma \in \Sigma $ vale:
-\begin{itemize}
-    \item $(\forall \sigma \in \Sigma \  | \  p \ \overset{\sigma}{\rightarrow} p' \implies \exists q'\in Q \ \mbox{tal que} \ q \overset{\sigma}{\rightarrow} q' \land \langle p', q' \rangle \in R )$ y, simétricamente vale 
-    \item $(\forall \sigma \in \Sigma \  | \  q \overset{\sigma}{\rightarrow} q' \implies \exists p'\in Q \ \mbox{tal que} \ p \overset{\sigma}{\rightarrow} p' \land \langle p', q' \rangle \in R ) $
-\end{itemize}
-
-Dados dos estados $p, q \in Q $, p es bisimilar a q, se denota $p \sim q $, si existe una bisimulación R tal que $\langle p,q \rangle \in R$. La relación de bisimilaridad $\sim$ es una relación de equivalencia. Además es la relación de bisimulación más grande sobre un sistema dado.
-
-\end{definition}
-
-A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{Communicating System} \cite[Def.2.2]{GMC} como un conjunto de CFSMs que cumplen determinadas propiedades.
-
-\begin{definition}[Communicating System] Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
-
-% Un \emph{communicating system} es un mapa \textit{S} que asigna una CFSM $S(p)$ a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando $q$ es un estado de la máquina $S(p)$ y $t \in S(p)$ cuando $t$ es una transición de $S(p)$.\\
-
+\begin{definition}[Communicating System, \cite{lange:popl15}, Def.~2.2] Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
 \end{definition}
 
 La semántica de los CSs está dada por un sistema de transición etiquetado cuyos estados y transiciones determinan las posibles ejecuciones del conjunto de procesos sobre el que está definido el sistema.
 
-
 \begin{definition}[Estados y configuraciones alcanzables]
 \label{def:estadosyconf} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$ y $S=\langle M_p \rangle_{p \in \mathcal{P}}$ un CS, el sistema de transición etiquetado que determinala semántica de $S$ (denotado como $M_S = \langle Q_S, 
-{q_0}_S, \delta_S \rangle$ 
+{q_0}_S, \delta_S \rangle$ una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es ${q_0}_S = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$.
 
-una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es ${q_0}_S = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon_p)_{p \in \mathcal{P}}$.
 Dadas $c' = \langle \overrightarrow{q'},\overrightarrow{\omega'} \rangle$, $c = \langle \overrightarrow{q},\overrightarrow{\omega} \rangle$ y $l \in \mathcal{C}_s \times \{!,?\} \times \mathcal{M}$, decimos que $c'$ es alcanzable desde $c$ a través de la etiqueta $l$, denotado como $\langle c, l, c' \rangle \in \delta_S$, si y sólo si:
     \begin{enumerate}
 		\item $l=sr!m$ y $\langle q_s,l,q'_s\rangle \in \delta_s$ y 
@@ -75,7 +98,6 @@ El conjunto de configuraciones alcanzables de S es $RS(S) = \{q \in Q_S | \langl
 \end{definition}
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
-
 
 \begin{definition}[Deadlock]Sea $S$ un communicating system, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
 \end{definition}
@@ -139,7 +161,7 @@ Las relaciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond1}--~\ref{ex:relaciones}.\
 \begin{definition}[Eventos] Dados un conjunto de participantes $\mathcal{P}$ y un conjunto de mensajes $\mathcal{M}$ definimos un evento $e$ como es una tupla $\langle q_s, q_r, s, r, a \rangle)$ (también escrita como $\langle q_s, q_r, s \rightarrow r:a \rangle$), tal que $s,r \in \mathcal{P}$, indicando que $s$ y $r$ pueden intercambiar el mensaje a, cuando están en el estado $q_s$ y $q_r$, respectivamente.
 \end{definition}
 
-\marginpar{REvisar} Tomando en consideración la definición anterior, para distinguir el paralelsimo a nivel máquina introducimos una relación de equivalencia sobre eventos que identifica eventos cuyas transiciones son $\blacklozenge$-equivalentes.
+Tomando en consideración la definición anterior, para distinguir el paralelsimo a nivel máquina introducimos una relación de equivalencia sobre eventos que identifica eventos cuyas transiciones son $\blacklozenge$-equivalentes.
 
 \begin{definition}[Equivalencia entre eventos] Definimos la equivalencia entre eventos como $\bowtie = \bowtie_s \cap \bowtie_r \subseteq \mathcal{E} \times \mathcal{E}$ donde $\mathcal{E}$ es el conjunto de eventos del sistema y se cumplen las siguientes condiciones:
 
@@ -233,7 +255,6 @@ Tenemos $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightar
 \end{example}
 
 \begin{definition}[Proyecciones] La proyección de un evento e sobre un participante p, denotado por $e \downharpoonright_p$ se define de la siguiente manera:
-
 \begin{equation}
 (q_s,q_r,s \rightarrow r:a) \downharpoonright_p = \begin{cases} 
 pr!a & \mathit{if} s=p \\
@@ -243,7 +264,6 @@ sp?a & \mathit{if} r=p \\
 \end{equation}
 
 La proyección se define sobre secuencias de eventos en el modo evidente. La proyección $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$ sobre el participante p, notada $ TS(S) \downharpoonright_p $, es el autómata $(Q, q_0, \Sigma, \delta)$ donde $Q=N, \ q_0 = n_0$, $\Sigma$ es el conjunto de etiquetas y $\delta \subseteq Q \times \Sigma \cup \{ \epsilon \} \times Q $ es el conjunto de transiciones, tal que $(n_1, e \downharpoonright_p, n_2) \in \delta \iff n_1 \overset{e}{\rightrightharpoons} n_2 $
-
 \end{definition}
 
 Introducimos el concepto de generalized multiparty compatibility (GMC) como una condición completa y sólida para construir CFSMs. 
@@ -252,14 +272,17 @@ A partir de este punto, fijamos un sistema $S =(M_p)_{p \in \mathcal{P}} $ con $
 
 La propiedad de representabilidad determina que cada máquina, traza y elección estén representadas en el sistema de transición.
 
-\begin{definition}Para un lenguaje $\mathcal{L}$, $hd(\mathcal{L})$ devuelve las primeras acciones de $\mathcal{L}$ si las tiene: 
+\begin{definition}
+Para un lenguaje $\mathcal{L}$, $hd(\mathcal{L})$ devuelve las primeras acciones de $\mathcal{L}$ si las tiene: 
 \begin{center}
 $hd(\mathcal{L})= \{\ell \ | \ \exists q \in Act*: \ell \cdot q \in \mathcal{L} \}$	\ \	 $hd(\{ \epsilon \}) = \{ \epsilon \}$
 \end{center}
 Dado $n \in N$, sea $ TS(S)\langle n \rangle$ el sistema de transición TS(S) donde se reemplaza al estado inicial $n_0$ por $n$. Escribimos LT(S,n,p) para $\mathcal{L}(TS(S)\langle n \rangle)\downharpoonright_p $, es decir LT(S,n,p) es el lenguaje que se obtiene estableciendo a n como nodo inicial de TS(S) y proyectando el nuevo sistema de transición sobre p.
 \end{definition}
 
-\begin{definition}[Representabilidad]Un sistema S es representable si
+\begin{definition}[Representabilidad]
+\label{def:representabilidad}
+Un sistema S es representable si
 \begin{enumerate}
 \item $\mathcal{L}(M_p) = LT(S,n_0,p) $ y
 \item $\forall q \in Q_p \ \exists n \in N: n[p] = q \land  \cup_{(q,\ell, q') \in \delta_p} \{ \ell \} \subseteq hd (LT(S,n,p))$
@@ -300,5 +323,5 @@ Con esto definimos que toda ramificación es o bien (1) la ejecución concurrent
 \begin{theorem}[Solvencia]Si S es GMC entonces es seguro (no tiene configuraciones de deadlock, recepción no especificada o mensaje huérfano)
 \end{theorem}
 
-El teorema dice que ninguna ejecución asincrónica de S va a resultar en una configuración de mensaje huérfano, deadlock o recepción no especificada. Basándose en la propiedad de representabilidad (toda transición y ramificación de cada máquina está representada en TS(S)), la demostración \cite{GMC} muestra que todo mensaje enviado es recibido eventualmente y que una máquina en un estado receptor eventualmente recibe el mensaje que espera, según la Definición 16.
+El teorema dice que ninguna ejecución asincrónica de S va a resultar en una configuración de mensaje huérfano, deadlock o recepción no especificada. Basándose en la propiedad de representabilidad (toda transición y ramificación de cada máquina está representada en TS(S)), la demostración \cite{lange:popl15} muestra que todo mensaje enviado es recibido eventualmente y que una máquina en un estado receptor eventualmente recibe el mensaje que espera, según la Def.~\ref{def:representabilidad}.
 

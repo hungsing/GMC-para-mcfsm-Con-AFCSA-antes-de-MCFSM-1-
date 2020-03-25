@@ -307,9 +307,9 @@ Al principio de esta sección introdujimos los AFCA para modelar el comportamien
     Q$ es un conjunto finito de \emph{transiciones}.
   \end{itemize}
 
-Un communicating system es un mapa S que asigna un mCFSM S(p) a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando q es un estado de la máquina S(p) y $\tau$ es una transición de S(p).\end{definition}
+Un CS es un mapa S que asigna un mCFSM S(p) a cada $p \in \mathcal{P}$. Escribimos $q \in S(p)$ cuando q es un estado de la máquina S(p) y $\tau$ es una transición de S(p).\end{definition}
 
-Al igual que antes la semántica de un communicating system se obtiene considerando configuraciones. Estas configuraciones son iguales a las de las CFSM puras con la salvedad que ahora los canales no están restringidos a un único par entre cada par de participantes.
+Al igual que antes la semántica de un CS se obtiene considerando configuraciones. Estas configuraciones son iguales a las de las CFSM puras con la salvedad que ahora los canales no están restringidos a un único par entre cada par de participantes.
 
  
 % * <ivissani@gmail.com> 2018-01-28T13:14:43.225Z:
@@ -371,9 +371,9 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{figure}
 
 
-En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel communicating system es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
+En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel CS es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
-\begin{definition}[Sistema emulado] \cite[Def.~84]{vissani:phdthesis} Dado un multichannel communicating system $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
+\begin{definition}[Sistema emulado, \cite{vissani:phdthesis}, Def.~84] Dado un multichannel CS $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
 \begin{itemize}
 \item $Q_{p^{sr_n}} = \{q_0\} \cup \bigcup_{m \in \mathcal{M}} \{q_m\}$
 \item $\mathcal{C}_{p^{sr_n}} = \{sp_n^{sr_n}, p^{sr_n}r_n,  p^{sr_n}s_n, rp_n^{sr_n} \}$

@@ -20,14 +20,26 @@ Sean $q, q' \in Q$, $a \in \Sigma$, cuando $\langle q, a, q' \rangle \in \longri
 \end{inparaenum}
 \end{definition}
 
-%\begin{definition}[Relación de equivalencia] Es una relación binaria reflexiva, simétrica y transitiva. La relación ``es igual a''  es el ejemplo canónico donde para todo trío de objetos a, b y c, vale: 
-%\begin{enumerate}
-%    \item a = a (propiedad reflexiva)
-%    \item Si a = b entonces b = a (propiedad de simetría)
-%    \item Si a = b y b = c entonces a = c (propiedad transitiva)
-%\end{enumerate}
-%\end{definition}
-%
+\begin{definition}[Relacionres y clausuras] 
+Sea $Q$ un conjunto y $R, S \subseteq Q \times Q$:
+\begin{itemize}
+\item $R^0 = \{\langle q, q \rangle \in Q \times Q\}$ (denominada \emph{relación identidad}),
+\item $R^{-1} = \{\langle q', q \rangle \in Q \times Q\ |\ \langle q, q' \in R\}$ (denominada \emph{relación inversa}), 
+\item $R \circ S = \{\langle q, q'' \rangle \in Q \times Q\ |\ \text{existe} q' \in Q \text{ tal que } \langle q, q' \rangle \in R \text{ y } \langle q', q'' \rangle \in S\}$ (denominada \emph{relación composición}), y
+\item dado $i \in \nat$, $R^{i+1} = R^{i} \circ R$ (denominada \emph{$i$-ésima iteración}).
+\end{itemize}
+\begin{itemize}
+    \item $S$ es la \emph{clausura reflexiva} de $R$ si $S = R^0 \cup R$,
+    \item $S$ es la \emph{clausura simétrica} de $R$ si $S = R \cup R^{-1}$, y
+    \item $S$ es la \emph{clausura transitiva} de $R$ si $S = \bigcup_{i \in \nat \text{ e } i > 0} R^i$ (denotada $R^+$).
+\end{itemize}
+$S$ se dice que es la \emph{clausura reflexiva y transitiva} si $S = R^0 \cup R^*$ y se dice que es la \emph{clausura reflexiva, simétrica y transitiva} si $S = R^0 \cup R^{-1} \cup R^*$. Cuando una relación es reflexiva, simétrica y transitiva se dice que es una \emph{equivalencia}.
+\end{definition}
+
+\begin{definition}[Clases de equivalencia y cociente]
+Sea $Q$ un conjunto y $R \subseteq Q \times Q$ una relación de equivalencia:
+$Q|_R = \{s \in \wp(Q)\ |\ \text{para todo } q, q' \in s \text{, } \langle q, q' \rangle \in R \text{ y no existe } q'' \in \overline{s} \text{ tal que } \langle q, q'' \rangle \in R\}$. Dado $q \in Q$, denotaremos $[q] \in Q|_R$ al conjunto $s \in Q|_R$ tal que $q \in s$. 
+\end{definition}
 
 En lo subsiguiente introduciremos la noción de equivalencia entre estados que usaremos a lo largo del presente trabajo. Intuitivamente, solo deseamos que dos estados sean distinguibles si tienen la capacidad ser diferenciados por alguna continuación a partir de ellos. A continuación daremos una primera aproximación a esta noción de equivalencia.
 

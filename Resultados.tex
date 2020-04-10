@@ -1,4 +1,5 @@
 %!TEX root = ./main.tex
+\cnote{Este texto parece muy introductorio, habla de la motivación para introducir AFCAs y mCFSM pero eso ya pasó en las secciones anteriores. Pasar este texto como introducción del capítulo 3 diciendo para cada cosa dónde lo presentás.}
 
 Como ya hemos mencionado, en SOC los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
  
@@ -14,23 +15,25 @@ Para modelar este comportamiento introducimos los Autómatas Finitos de Comunica
 \item de buffer, que representan comunicación asincrónica interna entre elementos de la componente, y que permiten representar la comunicación entre dos participantes luego de una composición; y por último 
 \item de entrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
 \end{inparaenum} \\
+
+\cnote{Abrir una sección sobre equivalencia del comportamiento de la composición de los AFCAs y el del communicating systems formado por sus interfaces de comunicación.}
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak deterministic sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
 \begin{figure}[ht]
-%\begin{center}
+$$
 \xymatrix{   
 	\{\mathcal{A}_i\}_{i \in I} \ar[rrr]_{\Pi} \ar[d]_{||} & & & \{C_i\}_{i \in I}  \ar[d]_{semantica}  \\
 	  {A} \ar[r]_{\Pi'} \ar[d]_{\Pi} & \mathcal{L}' & = & {\mathcal{L}}  \\
 	  \emptyset
-}     
-%\end{center}
+}
+$$
 \caption{La composición de componentes asincrónicas preserva la semántica asincrónica de su interfaz de comunicación.}
 \label{fig:preservacion}
 \end{figure}
 
-
 En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. A continuación se muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
 
+\cnote{Armar una sola figura y usar subfloats para esta figura. El ejemplo no está bien, te mando una foto.}
 \begin{figure}[ht]
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 

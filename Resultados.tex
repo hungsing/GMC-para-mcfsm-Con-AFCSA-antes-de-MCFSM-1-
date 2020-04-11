@@ -1,20 +1,4 @@
 %!TEX root = ./main.tex
-\cnote{Este texto parece muy introductorio, habla de la motivación para introducir AFCAs y mCFSM pero eso ya pasó en las secciones anteriores. Pasar este texto como introducción del capítulo 3 diciendo para cada cosa dónde lo presentás.}
-
-Como ya hemos mencionado, en SOC los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
- 
-Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado a priori de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, ausencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no se encuentra a la espera de un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.
-
-Ahora bien, que la aplicación arribe a un estado en el que un servicio se hace necesario sobre un canal particular, no implica que todos los participantes también lo sean en ese mismo instante y por ello, con el objeto de profundizar esta concepción incremental, a demanda, que se tiene sobre los sistemas de software surge, más o menos naturalmente, la idea de poder dotar al \emph{middleware} de la capacidad de realizar un \emph{binding} parcial sobre los canales. A esta práctica la llamaremos \emph{binding incremental}.
- 
-Esta percepción parcial del \emph{binding} sobre un canal requiere la utilización de un un lenguaje de descripción que soporten dichos mecanismos de composición. Por ejemplo, al componer dos CFSMs puede ocurrir que cada máquina se comunique a través de un canal con un tercer participante, estos dos canales son independientes y, además, una vez que se ha realizado la composición, deben ser percibidos por este tercer participante como canales de comunicación separados. Por lo tanto, para preservar la semántica de la comunicación, es necesario que el CFSM resultante de la composición tenga dos canales con este tercer participante. Este fenómeno será el eje rector de las modificaciones que introduciremos en esta sección. Esta característica no solo será necesario a nivel de CFSM (interfaz de comunicación de un servicio) sino también de los autómatas que caracterizan el cómputo, cuya interfaz de comunicación es expresada a través de una CFSM.
-
-Para modelar este comportamiento introducimos los Autómatas Finitos de Comunicación Asincrónica (AFCA). Estos autómatas tienen tres tipos de transiciones: 
-\begin{inparaenum}[1)]
-\item internas, que sirven el propósito de representar cómputo realizado por la componente; 
-\item de buffer, que representan comunicación asincrónica interna entre elementos de la componente, y que permiten representar la comunicación entre dos participantes luego de una composición; y por último 
-\item de entrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
-\end{inparaenum} \\
 
 \section{Equivalencia de comportamiento comunicacional}
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak determinate sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
@@ -33,9 +17,11 @@ $$
 
 En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. A continuación se muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
 
-\cnote{Armar una sola figura y usar subfloats para esta figura. El ejemplo no está bien, te mando una foto.}
-\begin{figure}[ht]
-\label{fig:no-preservacion}
+
+\begin{figure}[H]
+\text{Consideremos los siguientes AFCA, con sus correspondientes mCFSMs.}
+\subfloat[1][Los AFCA S y P, donde S no es Weak determinate]{
+\label{fig:weak determinacy afca}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [below = of q_0 ] {$q_1$};
@@ -59,18 +45,14 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
         (q_0) edge[right] node{out(sp,b)} (q_2)
         ; 
 \end{tikzpicture}
+}
 
-\caption{Los AFCA P y S, donde P no es Weak determinate}
-\label{fig:weak determinacy afca}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    
+\subfloat[2][Las mCFSM $M_S$ y $M_P$, correspondientes a los autómatas $S$ y $P$, respectivamente]{
+\label{fig:weak determinacy mCFSM}
 \begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
-  \node[state] (q_1) [below = of q_0 ] {$q_1$};
- \node[state] (q_2) [right = of q_1 ] {$q_2$};
+ \node[state,initial] (q_0)   {$[q_0]$}; 
+  \node[state] (q_1) [below = of q_0 ] {$[q_1]$};
+ \node[state] (q_2) [right = of q_1 ] {$[q_2]$};
  \draw[]        
         (q_0) edge[left] node{sp?a} (q_1)
         (q_0) edge[right] node{sp?b} (q_2)
@@ -78,20 +60,18 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
 \end{tikzpicture}
 \qquad
 \begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below = of q_0 ] {$q_1$};
-  \node[state] (q_2) [right = of q_1 ] {$q_2$};
+ \node[state,initial] (q_0)   {$[q_0]$}; 
+ \node[state] (q_1) [below = of q_0 ] {$[q_1]$};
+  \node[state] (q_2) [right = of q_1 ] {$[q_2]$};
  \draw[]        
         (q_0) edge[left] node{sp!a} (q_1)
         (q_0) edge[right] node{sp!b} (q_2)
         ; 
 \end{tikzpicture}
-
-   \caption{Las mcfsm correspondientes a los autómatas S y P}
-    \label{fig:weak determinacy mcfsm}
+}
 \end{figure}
 
-\cnote{Explicar acorde al nuevo ejemplo.} En la Fig. \ref{fig:no-preservacion} podemos ver al sistema compuesto de los AFCA $S$ y $P$. En la misma podemos observar como $S$ tiene un único camino lineal donde envía los mensajes $a$ y $b$ al autómata $P$. Por su lado $P$ puede tomar dos caminos, ejecutando una de sus dos transiciones internas. Esas transiciones no afectan directamente el comportamiento del autómata $S$. Pero cual de ellas elija ejecutar $P$, sí lo afecta. Al tomar el primer camino el sistema se ejecuta de manera correcta, pero si ejecuta la transición interna $int2$, no puede recibir el mensaje $a$ y por lo tanto el sistema entra en deadlock. El autómata $P$ es un autómata determinístico, pero esa noción no alcanza para que el sistema funciones correctamente. En la figura 3.5 se ve como la mCFSM proyectada preserva los errores comunicacionales.  
+En la Fig.~\ref{fig:weak determinacy afca} podemos ver al sistema compuesto de los AFCA $S$ y $P$. En su estado inicial $P$ puede enviar tanto $a$ como $b$, indistintamente, pero observando $S$ podemos ver que puede haber deadlock. Esto se debe a que $S$ tiene que ejecutar una transición interna para llegar a un estado donde pueda recibir un mensaje. El problema radica en que dependiendo de qué transición ejecute, es un mensaje u otro. Si ejecuta $int1$, solo puede recibir $a$ y si $P$ envía $b$ el sistema entra en deadlock. Del mismo modo si toma el camino de $int2$ y recibe $a$, no puede seguir ejecutando dado que espera el mensaje $b$. Pero en la Fig.~\ref{fig:weak determinacy mCFSM} se ve como las mCFSM proyectadas funcionan como un sistema, ya que en su estado incial ambas máquinas están en la misma posición. Es decir, $M_P$ en $[q_0]$ puede enviar tanto $a$ como $b$, y $M_S$ puede ejecutar correctamente al recibir el mensaje.\\
 
 Para prevenir este tipo de problemas surgen la noción de determinismo débil o \emph{weak determinacy} \cite[Chap.~11, Def.~3]{milner89}. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. La idea de \emph{Weak Determinacy} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicación interna como observacionalmente bisimilares para un participante externo.  
 

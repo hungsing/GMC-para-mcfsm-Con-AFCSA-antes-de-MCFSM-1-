@@ -2,12 +2,25 @@
 
 
 \section{Componentes Asincrónicas}
+Como ya hemos mencionado, en SOC los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
+ 
+Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado a priori de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, ausencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no se encuentra a la espera de un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.
 
+Ahora bien, que la aplicación arribe a un estado en el que un servicio se hace necesario sobre un canal particular, no implica que todos los participantes también lo sean en ese mismo instante y por ello, con el objeto de profundizar esta concepción incremental, a demanda, que se tiene sobre los sistemas de software surge, más o menos naturalmente, la idea de poder dotar al \emph{middleware} de la capacidad de realizar un \emph{binding} parcial sobre los canales. A esta práctica la llamaremos \emph{binding incremental}.
+ 
+Esta percepción parcial del \emph{binding} sobre un canal requiere la utilización de un un lenguaje de descripción que soporten dichos mecanismos de composición. Por ejemplo, al componer dos CFSMs puede ocurrir que cada máquina se comunique a través de un canal con un tercer participante, estos dos canales son independientes y, además, una vez que se ha realizado la composición, deben ser percibidos por este tercer participante como canales de comunicación separados. Por lo tanto, para preservar la semántica de la comunicación, es necesario que el CFSM resultante de la composición tenga dos canales con este tercer participante. Este fenómeno será el eje rector de las modificaciones que introduciremos en esta sección. Esta característica no solo será necesario a nivel de CFSM (interfaz de comunicación de un servicio) sino también de los autómatas que caracterizan el cómputo, cuya interfaz de comunicación es expresada a través de una CFSM.
 
 \subsection{Autómatas finitos de comunicación asincrónica}
 Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otros comportamientos internos. Para esto primero recurrimos a los Input Output Automata \cite{lynch:cwiq-2_3}. 
 Un I/O automaton modela un componente de un sistema distribuido que puede interactuar con otros sistemas componentes. Es un tipo de máquina de estados en la cual las transiciones están asociadas con determinadas acciones específicas. Existen tres tipos de acciones: input, output, y acciones internas. El autómata usa sus acciones de input y output para comunicarse con el enotrno, mientras que las acciones internas son sólo visibles para el autómata. A diferencia de las acciones internas y las de output que son seleccionadas y resueltas por el autómata, las de entrada, que llegan del entorno, no están bajo control del autómata. Para componer estos autómatas se requiere que sincronicen las acciones compartidas. Es decir cuando un autómata ejecuta una transición con la etiqueta $\pi$, todo autómata que tenga esa acción $\pi$ la ejecuta en simultáneo.
 El problema es que los IO no representan bien la comunicación asincrónica. Las operaciones de comunicación externa sincronizan a todos los participantes del sistema. Es decir que si dos autómatas componentes tienen una misma transición, se ejecutan en simultáneo. Esto va en contra de la idea de asincronsidad que buscamos.
+Para modelar este comportamiento asincrónico introducimos los Autómatas Finitos de Comunicación Asincrónica (AFCA) (ver Def.~\ref{def:afca}). Estos autómatas tienen tres tipos de transiciones: 
+\begin{inparaenum}[1)]
+\item internas, que sirven el propósito de representar cómputo realizado por la componente; 
+\item de buffer, que representan comunicación asincrónica interna entre elementos de la componente, y que permiten representar la comunicación entre dos participantes luego de una composición; y por último 
+\item de entrada / salida, que modelan acciones de comunicación con otras componentes del sistema.
+\end{inparaenum} \\
+Como lo que queremos es modelar sistemas distribuidos con comunicación asincrónica, necesitamos una noción de composición. Para esto introducimos una definición de composición para los AFCA (ver Def.~\ref{def:composicion}). 
 
 \begin{definition}[Cola]
 \label{def:cola}
@@ -171,7 +184,7 @@ Como la idea es que los autómatas con comunicación asincrónica representen pr
 Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $E_\mathcal{P} = \{E_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$, diremos que $E_\mathcal{P}$ es \emph{compatible} si se satisface que para todos $p_i, p_j \in \mathcal{P}$, $\Sigma_{p_i} \cap \Sigma_{p_j}= \emptyset$ y $B_{p_i} \cap B_{p_j} = \emptyset$.
 \end{definition}
 
-\begin{definition}[Composición]\label{def:comp}
+\begin{definition}[Composición]
 \label{def:composicion}
 Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $E_\mathcal{P} = \{E_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica $E_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$ compatible. Luego, definimos la composición $E_\mathcal{P} = ||_{1..n} E_{p_i}$ como sigue:
 \begin{itemize}

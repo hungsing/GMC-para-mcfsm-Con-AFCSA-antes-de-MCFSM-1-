@@ -84,7 +84,7 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
 
 A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{CS} como un conjunto de CFSMs que cumplen determinadas propiedades.
 
-\begin{definition}[Communicating System, \cite{lange:popl15}, Def.~2.2] Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
+\begin{definition}[Communicating System, \cite{lange:popl15}, Def.~2.2]\label{def:CS} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
 \end{definition}
 
 La semántica de los CSs está dada por un sistema de transición etiquetado cuyos estados y transiciones determinan las posibles ejecuciones del conjunto de procesos sobre el que está definido el sistema.

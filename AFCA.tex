@@ -318,8 +318,7 @@ Al igual que antes la semántica de un CS se obtiene considerando configuracione
 
 Multichannel CFSMs  con un único canal para cada par ordenado de participantes son equivalentes a CFSMs puras.
 
-\begin{definition}[Interfaz de comunicación de un AFCA] Es la mCFSM que resulta de aplicarle el siguiente procedimiento:
-\label{def:interfazAFCA}
+\begin{definition}[Interfaz de comunicación de un AFCA]\label{def:interfazAFCA} Es la mCFSM que resulta de aplicarle el siguiente procedimiento:
 \begin{enumerate}
     \item Transformamos toda acción interna y de buffer en una transición $\epsilon$. Esto resulta en un autómata no determinístico con transiciones $\epsilon$ al que llamamos $A'$
     \item $\forall q \in Q_{A'}$ llamamos $[q]$ a la clase de equivalencia tal que $[q]=\{q' \in Q_{A'}\ |\ q \xrightarrow{\epsilon^*} q'\}$. Decimos que dos clases $[q]$ y $[q']$ están relacionadas $[q] \xrightarrow{\sigma} [q'']$, con $\sigma \in \Sigma_{Ex}$, sii $\exists q^1 \in [q], q^2 \in [q'']$ tales que $q^1 \xrightarrow{\sigma} q^2 \in \delta$

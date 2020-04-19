@@ -110,7 +110,7 @@ Dado un AFCA $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \r
 
 Antes de pasar a la demostración de equivalencia entre la semánticas de un conjunto compatible de AFCAs
 
-\begin{lemma}[Equivalencia de estados discretos] Sea $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle [Q], \mathcal{C}, [q_0], [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}\}_{1 \leq i \leq n}$. Para todo $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$, existe $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$ tal que $q_i \in \overrightarrow{q} \iff q_i \in \overrightarrow{p}$ y viceversa. 
+\begin{lemma}[Equivalencia de estados discretos]\label{lema1} Sea $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle [Q], \mathcal{C}, [q_0], [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}\}_{1 \leq i \leq n}$. Para todo $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$, existe $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$ tal que $q_i \in \overrightarrow{q} \iff q_i \in \overrightarrow{p}$ y viceversa. 
 \end{lemma}
 \begin{proof} 
 \begin{itemize}
@@ -120,7 +120,7 @@ Antes de pasar a la demostración de equivalencia entre la semánticas de un con
 \end{itemize}
 \end{proof}
 
-\begin{lemma}[Equivalencia entre buffers y canales]\label{lemma2} Sean $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle P, \mathcal{C}, p_0, [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}_i\}_{1 \leq i \leq n}$. Dados $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$ y $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$. Queremos ver que el conjunto de buffers $B$ de $\mathcal{A}$ es el conjunto de canales internalizados de $\mathcal{C}$ de $M$. Es decir que para todo canal $\omega$ vale que $\omega \in \mathcal{C}$ si y solo si $\omega \in B$.
+\begin{lemma}[Equivalencia entre buffers y canales]\label{lema2} Sean $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle P, \mathcal{C}, p_0, [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}_i\}_{1 \leq i \leq n}$. Dados $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$ y $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$. Queremos ver que el conjunto de buffers $B$ de $\mathcal{A}$ es el conjunto de canales internalizados de $\mathcal{C}$ de $M$. Es decir que para todo canal $\omega$ vale que $\omega \in \mathcal{C}$ si y solo si $\omega \in B$.
 \end{lemma}
 \begin{proof} Sea $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle$ un estado del LTS $M$. Por definición de CS (ver Def.~\ref{def:CS}), $\overrightarrow{\Omega_{\mathcal{C}}}$ es el conjunto de buffers asociados a los canales $\mathcal{C}$, con su contenido en el estado discreto $\overrightarrow{p}$. Estos canales corresponden a las mCFSM $\{M_i\}_{1 \leq i \leq n}$ que componen el CS. Entonces vale $\omega \in \overrightarrow{\Omega_{\mathcal{C}}}$ si y solo si $\omega \in \mathcal{C}_i$ con $1 \leq i \leq n$. Sea $\mathcal{A}_i$ el AFCA tal que $M_i$ es su interfaz de comunicación. Por definición de interfaz de comunicación de AFCA (ver Def.~\ref{def:interfazAFCA}), $\omega \in \mathcal{C}_i$ si y solo si $\omega \in {\mathcal{C}}_{\mathcal{A}_i}$. Por definición de composición de AFCA (ver Def.~\ref{def:composicion}), la comunicación externa se internaliza. Entonces como $\mathcal{A}_i$ no tienen buffers ni comunicación interna, vale $\omega \in {\mathcal{C}}_{\mathcal{A}_i}$ si y solo si $\omega \in B$ donde $B$ es el conjunto de buffers de comunicación interna de $\mathcal{A}$. Luego, por definición de proyección de comunicación interna (ver Def.~\ref{def:pci}), el conjunto de buffers de $\mathcal{A}$ es el mismo que en $\widehat{\mathcal{A}}$. Por lo tanto $\omega \in B$ si y solo si $\exists \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$ tal que $\omega \in \overrightarrow{\Omega}$.
 \end{proof}
@@ -145,39 +145,37 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
  
 \begin{itemize}
     
-    \item Dado el par $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$ tal que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Sean $(a_ka_j)_l \gg m \in \widehat{\Sigma}$ y $\langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{Q}$ tales que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{\Delta}$.  Esto vale si y solo si la clase de equivalencia por comunicación interna $[\overrightarrow{q}']_m$ es alcanzable desde $[\overrightarrow{q}]_m$ vía $(a_ka_j)_l \gg m$. Es decir $[\overrightarrow{q}]_m \xrightarrow{(a_ka_j)_l \gg m} [\overrightarrow{q}']_m$. Entonces $\overrightarrow{\Omega} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$.
+    \item Dado el par $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$ tal que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Sean $(a_ka_j)_l \gg m \in \widehat{\Sigma}$ y $\langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{Q}$ tales que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{\Delta}$.  Esto vale si y solo si la clase de equivalencia por comunicación interna $[\overrightarrow{q}']_m$ está relacionada con $[\overrightarrow{q}]_m$ vía $(a_ka_j)_l \gg m$ (ver Def.~\ref{def:eci}), o sea $[\overrightarrow{q}]_m \xrightarrow{(a_ka_j)_l \gg m} [\overrightarrow{q}']_m$. Entonces $\overrightarrow{\Omega} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$.
     
-    \item Sean $\overrightarrow{q_{\sigma}} \in [\overrightarrow{q}]_m, \overrightarrow{q_{\sigma}}' \in [\overrightarrow{q}']_m$, por definición de proyección de comunicación interna vale $\overrightarrow{q_{\sigma}} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q_{\sigma}}' \in \delta$. Por definición de composición sabemos que vale $\overrightarrow{q_{\sigma}} =\langle q_0, q_1, \ldots, q_j, \ldots,q_n \rangle$ y $\overrightarrow{q_{\sigma}}' =\langle q_0, q_1, \ldots, q'_j, \ldots,q_n \rangle$ donde $q_j,q'_j$ son estados de $\mathcal{A}_j$, componente de $\mathcal{A}$. Por definición de AFCA, $(a_ka_j)_l \gg m$ es una operación de desencolamiento del mensaje $m$ sobre el buffer $(a_ka_j)_l$. Como los AFCA del conjunto no tienen accionesde comunicación interna esta acción proviene de una recepción de un mensaje por parte de $\mathcal{A}_j$ vía el canal $(a_ka_j)_l$. Entonces podemos afirmar que se cumple $\overrightarrow{q_{\sigma}} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q_{\sigma}}'\in \delta$ si y solo si $q_j,q'_j \in Q_j \land q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$.
+    \item Sean $\overrightarrow{q_{\sigma}} \in [\overrightarrow{q}]_m, \overrightarrow{q_{\sigma}}' \in [\overrightarrow{q}']_m$, por definición de proyección de comunicación interna (ver Def.~\ref{def:pci}) vale $\overrightarrow{q_{\sigma}} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q_{\sigma}}' \in \delta$. Por definición de composición sabemos que vale $\overrightarrow{q_{\sigma}} =\langle q_0, q_1, \ldots, q_j, \ldots,q_n \rangle$ y $\overrightarrow{q_{\sigma}}' =\langle q_0, q_1, \ldots, q'_j, \ldots,q_n \rangle$ donde $q_j,q'_j$ son estados de $\mathcal{A}_j$, componente de $\mathcal{A}$. Por definición de AFCA (ver Def.~\ref{def:afca}), $(a_ka_j)_l \gg m$ es una operación de desencolamiento del mensaje $m$ sobre el buffer $(a_ka_j)_l$. Por definición de composición de AFCA (ver Def.~\ref{def:composicion}), como los AFCA del conjunto no tienen acciones de comunicación interna, esta acción proviene de una recepción de un mensaje por parte de $\mathcal{A}_j$ vía el canal $(a_ka_j)_l$. Entonces podemos afirmar que se cumple $\overrightarrow{q_{\sigma}} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q_{\sigma}}'\in \delta$ si y solo si $q_j,q'_j \in Q_j \land q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$.
     
-    \item Por la interfaz de comunicación de AFCA podemos obtener $M_j$, la mCFSM correspondiente a $\mathcal{A}_j$, y sabemos que $q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$ si y solo si se cumple que $[q_j], [q'_j] \in [Q_j] \land [q_j] \xrightarrow{(a_ka_j)_l?m} [q'_j] \in [\delta_j]$. 
+    \item Por interfaz de comunicación de AFCA (ver Def.~\ref{def:interfazAFCA}) podemos obtener $M_j$, la mCFSM correspondiente a $\mathcal{A}_j$, y sabemos que $q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$ si y solo si se cumple que $[q_j], [q'_j] \in [Q_j] $, y $[q_j] \xrightarrow{(a_ka_j)_l?m} [q'_j] \in [\delta_j]$. 
     
-    \item Entonces, por definición del LTS M, existen $p'=\langle \overrightarrow{p'}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P, (a_ka_j)_l?m \in \Sigma_M$ tal que $\overrightarrow{p'}=\langle [q_1], [q_2], \ldots, [q'_j], \ldots [q_n] \rangle$, $\overrightarrow{\Omega'_\mathcal{C}}=[\ldots, (a_ka_j)_l, \ldots]$, y $p \xrightarrow{(a_ka_j)_l?m} p'$. Donde $\overrightarrow{\Omega_\mathcal{C}}$ y $\overrightarrow{\Omega_\mathcal{C}}'$ son los canales de comunicación externa para los estados $\overrightarrow{p}$ y $\overrightarrow{p'}$, y vale $\overrightarrow{\Omega_\mathcal{C}} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega_\mathcal{C}}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$. Por lo tanto vale $\langle \widehat{q'}, p' \rangle \in R$.
+    \item Entonces, por definición del LTS M (ver Def.~\ref{def:CS}), existen $p'=\langle \overrightarrow{p'}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P, (a_ka_j)_l?m \in \Sigma_M$ tal que $\overrightarrow{p'}=\langle [q_1], [q_2], \ldots, [q'_j], \ldots [q_n] \rangle$, $\overrightarrow{\Omega'_\mathcal{C}}=[\ldots, (a_ka_j)_l, \ldots]$, y $p \xrightarrow{(a_ka_j)_l?m} p'$. Donde $\overrightarrow{\Omega_\mathcal{C}}$ y $\overrightarrow{\Omega_\mathcal{C}}'$ son los canales de comunicación externa para los estados $\overrightarrow{p}$ y $\overrightarrow{p'}$, y vale $\overrightarrow{\Omega_\mathcal{C}} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega_\mathcal{C}}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$. Por lo tanto vale $\langle \widehat{q'}, p' \rangle \in R$.
     
     \item Por lo tanto vale que $\forall (a_ka_j)_l \gg m \in \widehat{\Sigma} | \widehat{q} \xrightarrow{(a_ka_j)_l \gg m} \widehat{q}' \implies \exists p' \in P$ tal que $p' \xrightarrow{(a_ka_j)_l?m} p' \land \langle \widehat{q}', p', \rangle \in R$ donde $\widehat{\Sigma} \subseteq B \times \{\gg,\ll\} \times \mathcal{M}$
   \end{itemize}
   
-  Demostraremos ahora la condición simétrica $\forall (a_ka_j)_l?m \in \Sigma_M | p \xrightarrow{(a_ka_j)_l?m} p' \implies \exists \widehat{q}' \in \widehat{Q}, (a_ka_j)_l \gg m \in \widehat{\Sigma}$ tal que $\widehat{q} \xrightarrow{(a_ka_j)_l \gg m} \widehat{q}' \land \langle \widehat{q}', p'\rangle \in R$ 
+  Demostraremos ahora la condición simétrica $\forall (a_ka_j)_l?m \in \Sigma_M | p \xrightarrow{(a_ka_j)_l?m} p' \implies \exists \widehat{q}' \in \widehat{Q}$ tal que $\widehat{q} \xrightarrow{(a_ka_j)_l \gg m} \widehat{q}' \land \langle \widehat{q}', p'\rangle \in R$ 
   \begin{itemize}
 
-     \item Dado el par $\langle q, p \rangle = [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$ tal que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Sean $(a_ka_j)_l?m$ y $p' = \langle \overrightarrow{p}', \overrightarrow{\Omega_\mathcal{C}}' \rangle \in P$ tales que $\langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \xrightarrow{(a_ka_j)_l?m} \langle \overrightarrow{p}', \overrightarrow{\Omega_\mathcal{C}}' \rangle \in \delta_P$. Por definición del LTS $M$, $(a_ka_j)_l?m$ es una operación sobre el canal $(a_ka_j)_t$ de la mCFSM $M_j$, componente del CS. Como el LTS $M$ representa la semántica del CS compuesto por el conjunto de mCFSMs, vale que $\overrightarrow{p}=\langle [q_1], [q_2], \ldots [q_j], \ldots [q_n] \rangle$, $\overrightarrow{p}'= \langle [q_1], [q_2], \ldots, [q'_j], \ldots [q_n] \rangle$, donde $[q_j]$ y $[q'_j]$ son estados de la mCFSM $M_j$, y vale $[q_j] \xrightarrow{(a_ka_j)_l?m} [q'_j] \in [\delta]_j$
+     \item Dado el par $\langle q, p \rangle = [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$ tal que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Sean $(a_ka_j)_l?m$ y $p' = \langle \overrightarrow{p}', \overrightarrow{\Omega_\mathcal{C}}' \rangle \in P$ tales que $\langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \xrightarrow{(a_ka_j)_l?m} \langle \overrightarrow{p}', \overrightarrow{\Omega_\mathcal{C}}' \rangle \in \delta_P$. Por definición del LTS $M$ (ver Def.~\ref{def:CS}), $(a_ka_j)_l?m$ es una operación sobre el canal $(a_ka_j)_t$ de la mCFSM $M_j$, componente del CS. Dado que el LTS $M$ representa la semántica del CS compuesto por el conjunto de mCFSMs, vale que $\overrightarrow{p}=\langle [q_1], [q_2], \ldots [q_j], \ldots [q_n] \rangle$, $\overrightarrow{p}'= \langle [q_1], [q_2], \ldots, [q'_j], \ldots [q_n] \rangle$, donde $[q_j]$ y $[q'_j]$ son estados de la mCFSM $M_j$, y vale $[q_j] \xrightarrow{(a_ka_j)_l?m} [q'_j] \in [\delta]_j$
     
-    \item Por definición de intefaz de comunicación de AFCA sabemos que $M_J$ es la mCFSM correspondiente a $\mathcal{A}_j$, componente de $\mathcal{A}$. Por lema 1, como $[q_j] \xrightarrow{(a_ka_j)_l?m} [q'_j] \in [\delta_j]$ entonces $q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$.
+    \item Por definición de intefaz de comunicación de AFCA (ver Def.\ref{def:interfazAFCA}) sabemos que $M_J$ es la mCFSM correspondiente a $\mathcal{A}_j$, componente de $\mathcal{A}$. Por el Lema \ref{lema1}, como $[q_j] \xrightarrow{(a_ka_j)_l?m} [q'_j] \in [\delta_j]$ entonces $q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$.
     
-    \item Por definición de composición $q_j$ y $q'_j$ son componentes de dos estados compuestos que llamamos $\overrightarrow{q}_{\sigma}$ y $\overrightarrow{q}_{\sigma}'$, respectivamente. De modo tal que $\overrightarrow{q}_{\sigma} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q}_{\sigma}' \in \delta$. Donde $(a_ka_j)_l$ es el canal internalizado en forma de buffer.
+    \item Por definición de composición de AFCA (ver Def.~\ref{def:composicion}) $q_j$ y $q'_j$ son componentes de dos estados compuestos que llamamos $\overrightarrow{q}_{\sigma}$ y $\overrightarrow{q}_{\sigma}'$, respectivamente. De modo tal que $\overrightarrow{q}_{\sigma} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q}_{\sigma}' \in \delta$. Donde $(a_ka_j)_l$ es el canal internalizado en forma de buffer.
     
-    \item Por definición de equivalencia por comunicación interna como $\overrightarrow{q}_{\sigma} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q}_{\sigma}' \in \delta$ entonces existen las clases de equivalencia $[\overrightarrow{q}]_m$, $[\overrightarrow{q}']_m$, tales que $\overrightarrow{q}_{\sigma} \in [\overrightarrow{q}]_m \land \overrightarrow{q}_{\sigma}' \in [\overrightarrow{q}']_m$ y vale $[\overrightarrow{q}]_m \xrightarrow{(a_ka_j)_l \gg m} [\overrightarrow{q}']_m$. Por proyección de comunicación entonces existen $\widehat{q}' = \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{Q}, (a_ka_j)_l \gg m \in \widehat{\Sigma}$, tales que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle$. Donde, $\overrightarrow{\Omega}$, y $\overrightarrow{\Omega}'$ son los buffers de $\mathcal{A}$ para los estados $\overrightarrow{q}_{\sigma}$ y  $\overrightarrow{q}_{\sigma}'$, respectivamente, y valen $\overrightarrow{\Omega} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$. Por lo tanto $\langle \widehat{q}', p' \rangle \in R$ 
+    \item Por definición de equivalencia por comunicación interna (ver Def.~\ref{def:eci}) como vale $\overrightarrow{q}_{\sigma} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q}_{\sigma}' \in \delta$, entonces existen las clases de equivalencia $[\overrightarrow{q}]_m$, $[\overrightarrow{q}']_m$, tales que $\overrightarrow{q}_{\sigma} \in [\overrightarrow{q}]_m $, $\overrightarrow{q}_{\sigma}' \in [\overrightarrow{q}']_m$, y $[\overrightarrow{q}]_m \xrightarrow{(a_ka_j)_l \gg m} [\overrightarrow{q}']_m$. Por proyección de comunicación interna (ver Def.~\ref{def:pci}), existen $\widehat{q}' = \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{Q}, (a_ka_j)_l \gg m \in \widehat{\Sigma}$, tales que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle$. Donde, $\overrightarrow{\Omega}$, y $\overrightarrow{\Omega}'$ son los buffers de $\mathcal{A}$ para los estados $\overrightarrow{q}_{\sigma}$ y  $\overrightarrow{q}_{\sigma}'$, respectivamente, y se cumple que $\overrightarrow{\Omega} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$. Por lo tanto $\langle \widehat{q}', p' \rangle \in R$ 
     
-    % \item Por lo tanto vale en forma simétrica que $\forall (a_ka_j)_l?m \in \Sigma_M | p \xrightarrow{(a_ka_j)_l?m} p \implies \exists \widehat{q}' \in \widehat{Q}, (a_ka_j)_l \gg m \in \widehat{\Sigma}$ tal que $\widehat{q} \xrightarrow{(a_ka_j)_l \gg m} \widehat{q}' \land \langle \widehat{q}', p'\rangle \in R$ donde $\Sigma_M \subseteq \mathcal{C} \times \{!,?\} \times \mathcal{M}$
+    \item Por lo tanto vale que $\forall (a_ka_j)_l?m \in \Sigma_M | p \xrightarrow{(a_ka_j)_l?m} p \implies \exists \widehat{q}' \in \widehat{Q}$ tal que $\widehat{q} \xrightarrow{(a_ka_j)_l \gg m} \widehat{q}' \land \langle \widehat{q}', p'\rangle \in R$ donde $\Sigma_M \subseteq \mathcal{C} \times \{!,?\} \times \mathcal{M}$
     
 \end{itemize}
 \end{proof}
 
-
 \begin{figure}[h]
-\begin{example}[Transformación de Autómatas Finitos de Comunicación Asincrónica]
-\label{ex:Transformación}
-Consideremos los siguientes AFCA 
-\begin{center}
+\begin{example}[\text{Proyección de Comunicación Interna de AFCA}]
+\label{ex:pci}
+\subfloat[a][AFCAs $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$]{
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
@@ -215,10 +213,8 @@ Consideremos los siguientes AFCA
         
         ;
 \end{tikzpicture} 
-
-\end{center}
-
-El autómata compuesto resultante es el AFCA $\mathcal{A}$  \\  
+} \\
+\subfloat[b][$\mathcal{A}$, composición de los AFCAs $\mathcal{A}_i$]{
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
@@ -245,17 +241,36 @@ El autómata compuesto resultante es el AFCA $\mathcal{A}$  \\
         (q_9) edge[below] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
-    \caption{Transformación}
-    \label{fig:transformacion}
+}\\
+\subfloat[c][Proyección de comunicación interna de $\mathcal{A}$]{
+\begin{tikzpicture}[->, thick]
+    \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
+     \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
+     \node[state] (q_2) [right = 3.5cm of q_1 ] {$[q_{120}],\epsilon,\epsilon$};
+     \node[state] (q_3) [below= of q_2 ] {$[q_{121}],\epsilon, b$};
+     \node[state] (q_4) [below=  of q_0] {$[q_{001}],\epsilon, b$};
+     \node[state] (q_5) [below = of q_4] {$[q_{201}],\epsilon, \epsilon$};
+     \node[state] (q_6) [right = 3.5cm of q_5 ] {$[q_{301}], a, \epsilon$};
+     \node[state,accepting] (q_7) [below = of q_3 ] {$[q_{321}],\epsilon, \epsilon$};
+\draw[]        
+     (q_0) edge[above] node{$\langle q_{000}, PR \ll a, q_{100} \rangle$} (q_1)
+	 (q_1) edge[above] node{$\langle q_{110}, PR \gg a, q_{120} \rangle$} (q_2)
+     (q_2) edge[right] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
+     (q_3) edge[right] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
+     (q_0) edge[left] node{$\langle q_{000}, SP \ll b, q_{001} \rangle$} (q_4)
+     (q_4) edge[left] node{$\langle q_{001}, SP \gg b, q_{201} \rangle$} (q_5)
+     (q_5) edge[below] node{$\langle q_{201}, SP \gg b, q_{301} \rangle$} (q_6)
+     (q_6) edge[below] node{$\langle q_{311}, PR \ll a, q_{321} \rangle$} (q_7)
+      ;
+\end{tikzpicture}
+}
 \end{example}
 \end{figure}
 
-
 \begin{figure}[h]
-\begin{example}[CS de transformación]
-\label{ex:cmst} El CS correspondiente al conjunto de autómatas es el siguiente
-\centering
-
+\begin{example}[Semántica de un CS de mCFSMs]
+\label{ex:CS}
+\subfloat[1][Las mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Ejemplo \ref{ex:pci}]{
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= of q_0 ] {$q_1$};
@@ -275,25 +290,20 @@ El autómata compuesto resultante es el AFCA $\mathcal{A}$  \\
  \node[state] (q_1) [below= of q_0 ] {$q_2$};
 
  \draw[]        
-        
         (q_0) edge[right] node{pr?a} (q_1)
-        
         ;
 \end{tikzpicture} 
 \qquad
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [below= of q_0 ] {$q_1$};
-
+ 
  \draw[]        
-        
         (q_0) edge[right] node{sp!b} (q_1)
-        
         ;
 \end{tikzpicture} 
-
-La semántica del CS es el sistema de transición etiquetado $\mathcal{L}$
-\\
+}\\
+\subfloat[2][El LTS $M$ representa la semántica del CS de las mCFSM]{
 \begin{tikzpicture}[->, thick][scale=0.20]
  \node[state,initial] (q_0)   {$q_{000},\epsilon,\epsilon$}; 
  \node[state] (q_1) [right= 3cm of q_0 ] {$q_{100},a, \epsilon$};
@@ -314,38 +324,7 @@ La semántica del CS es el sistema de transición etiquetado $\mathcal{L}$
         (q_7) edge[below] node{$\langle q_{0r},PR?a,q_{1r} \rangle$} (q_4)
         ;
 \end{tikzpicture}
-    \caption{Transformación}
-    \label{fig:semántica mcfsm}
+}
 \end{example}
 \end{figure}
-
-\begin{figure}[ht]
-    \begin{centering}
-      \begin{tikzpicture}[->, thick]
-         \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
-         \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
-         \node[state] (q_2) [right = 3.5cm of q_1 ] {$[q_{120}],\epsilon,\epsilon$};
-         \node[state] (q_3) [below= of q_2 ] {$[q_{121}],\epsilon, b$};
-         \node[state] (q_4) [below=  of q_0] {$[q_{001}],\epsilon, b$};
-         \node[state] (q_5) [below = of q_4] {$[q_{201}],\epsilon, \epsilon$};
-         \node[state] (q_6) [right = 3.5cm of q_5 ] {$[q_{301}], a, \epsilon$};
-         \node[state,accepting] (q_7) [below = of q_3 ] {$[q_{321}],\epsilon, \epsilon$};
-    \draw[]        
-         (q_0) edge[above] node{$\langle q_{000}, PR \ll a, q_{100} \rangle$} (q_1)
-    	 (q_1) edge[above] node{$\langle q_{110}, PR \gg a, q_{120} \rangle$} (q_2)
-         (q_2) edge[right] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
-         (q_3) edge[right] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
-         (q_0) edge[left] node{$\langle q_{000}, SP \ll b, q_{001} \rangle$} (q_4)
-         (q_4) edge[left] node{$\langle q_{001}, SP \gg b, q_{201} \rangle$} (q_5)
-         (q_5) edge[below] node{$\langle q_{201}, SP \gg b, q_{301} \rangle$} (q_6)
-        (q_6) edge[below] node{$\langle q_{311}, PR \ll a, q_{321} \rangle$} (q_7)
-         ;
-        \end{tikzpicture}
-    \caption{Caption}
-    \label{fig: transformación loca}
- \end{centering}
-\end{figure}
-
-\newpage
-
 

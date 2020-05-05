@@ -17,9 +17,8 @@ $$
 
 En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. A continuación se muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
 
-
 \begin{figure}[H]
-\text{Consideremos los siguientes AFCA, con sus correspondientes mCFSMs.}
+\begin{center}
 \subfloat[1][Los AFCA S y P, donde S no es Weak determinate]{
 \label{fig:weak determinacy afca}
 \begin{tikzpicture}[->, thick]
@@ -69,6 +68,8 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
         ; 
 \end{tikzpicture}
 }
+\end{center}
+\caption{AFCAs y CFSMs de $S$ y $P$.}\label{fig:weak determinacy}
 \end{figure}
 
 En la Fig.~\ref{fig:weak determinacy afca} podemos ver al sistema compuesto de los AFCA $S$ y $P$. En su estado inicial $P$ puede enviar tanto $a$ como $b$, indistintamente, pero observando $S$ podemos ver que puede haber deadlock. Esto se debe a que $S$ tiene que ejecutar una transición interna para llegar a un estado donde pueda recibir un mensaje. El problema radica en que dependiendo de qué transición ejecute, es un mensaje u otro. Si ejecuta $int1$, solo puede recibir $a$ y si $P$ envía $b$ el sistema entra en deadlock. Del mismo modo si toma el camino de $int2$ y recibe $a$, no puede seguir ejecutando dado que espera el mensaje $b$. Pero en la Fig.~\ref{fig:weak determinacy mCFSM} se ve como las mCFSM proyectadas funcionan como un sistema, ya que en su estado incial ambas máquinas están en la misma posición. Es decir, $M_P$ en $[q_0]$ puede enviar tanto $a$ como $b$, y $M_S$ puede ejecutar correctamente al recibir el mensaje.\\
@@ -145,7 +146,7 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
  
 \begin{itemize}
     
-    \item Dado el par $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$ tal que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Sean $(a_ka_j)_l \gg m \in \widehat{\Sigma}$ y $\langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{Q}$ tales que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{\Delta}$.  Esto vale si y solo si la clase de equivalencia por comunicación interna $[\overrightarrow{q}']_m$ está relacionada con $[\overrightarrow{q}]_m$ vía $(a_ka_j)_l \gg m$ (ver Def.~\ref{def:eci}), o sea $[\overrightarrow{q}]_m \xrightarrow{(a_ka_j)_l \gg m} [\overrightarrow{q}']_m$. Entonces $\overrightarrow{\Omega} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)] \rangle$.
+    \item Dado el par $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \in P$ tal que $\langle \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle, \langle \overrightarrow{p}, \overrightarrow{\Omega_\mathcal{C}} \rangle \rangle \in R$. Sean $(a_ka_j)_l \gg m \in \widehat{\Sigma}$ y $\langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{Q}$ tales que $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \xrightarrow{(a_ka_j)_l \gg m} \langle [\overrightarrow{q}']_m, \overrightarrow{\Omega}' \rangle \in \widehat{\Delta}$. Luego, por la forma de la etiqueta elegida, sabemos que $\overrightarrow{\Omega} = [(a_1a_2), \ldots, (a_ka_j)_l \cdot m \ldots (a_na_m)]$ y $\overrightarrow{\Omega}' = [(a_1a_2), \ldots, (a_ka_j)_l \ldots (a_na_m)]$ y, adicionalmente, la clase de equivalencia por comunicación interna $[\overrightarrow{q}']_m$ está relacionada con $[\overrightarrow{q}]_m$ vía $(a_ka_j)_l \gg m$ (ver Def.~\ref{def:eci}).
     
     \item Sean $\overrightarrow{q_{\sigma}} \in [\overrightarrow{q}]_m, \overrightarrow{q_{\sigma}}' \in [\overrightarrow{q}']_m$, por definición de proyección de comunicación interna (ver Def.~\ref{def:pci}) vale $\overrightarrow{q_{\sigma}} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q_{\sigma}}' \in \delta$. Por definición de composición sabemos que vale $\overrightarrow{q_{\sigma}} =\langle q_0, q_1, \ldots, q_j, \ldots,q_n \rangle$ y $\overrightarrow{q_{\sigma}}' =\langle q_0, q_1, \ldots, q'_j, \ldots,q_n \rangle$ donde $q_j,q'_j$ son estados de $\mathcal{A}_j$, componente de $\mathcal{A}$. Por definición de AFCA (ver Def.~\ref{def:afca}), $(a_ka_j)_l \gg m$ es una operación de desencolamiento del mensaje $m$ sobre el buffer $(a_ka_j)_l$. Por definición de composición de AFCA (ver Def.~\ref{def:composicion}), como los AFCA del conjunto no tienen acciones de comunicación interna, esta acción proviene de una recepción de un mensaje por parte de $\mathcal{A}_j$ vía el canal $(a_ka_j)_l$. Entonces podemos afirmar que se cumple $\overrightarrow{q_{\sigma}} \xrightarrow{(a_ka_j)_l \gg m} \overrightarrow{q_{\sigma}}'\in \delta$ si y solo si $q_j,q'_j \in Q_j \land q_j \xrightarrow{(a_ka_j)_l?m} q'_j \in \delta_j$.
     

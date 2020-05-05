@@ -5,7 +5,7 @@ A continuación presentaremos algunas definiciones y resultados preliminares que
 
 %\subsection{Definiciones básicas}
 
-\begin{definition}[Sistema de transición etiquetado, \cite{keller:cacm-19_7}]
+\begin{definition}[Sistema de transición etiquetado, \cite{keller:cacm-19_7}] \label{def:LTS}
 Una estructura $S = \langle Q, \Sigma, \longrightarrow \rangle$ se dice que es un \emph{sistema de transición etiquetado} si satisface las siguientes propiedades:
 \begin{itemize}
 \item $Q$ es un conjunto finito llamado \emph{conjunto de estados},
@@ -20,7 +20,7 @@ Sean $q, q' \in Q$, $a \in \Sigma$, cuando $\langle q, a, q' \rangle \in \longri
 \end{inparaenum}
 \end{definition}
 
-\begin{definition}[Relacionres y clausuras] 
+\begin{definition}[Relaciones y clausuras] 
 Sea $Q$ un conjunto y $R, S \subseteq Q \times Q$:
 \begin{itemize}
 \item $R^0 = \{\langle q, q \rangle \in Q \times Q\}$ (denominada \emph{relación identidad}),
@@ -43,7 +43,7 @@ $Q|_R = \{s \in \wp(Q)\ |\ \text{para todo } q, q' \in s \text{, } \langle q, q'
 
 En lo subsiguiente introduciremos la noción de equivalencia entre estados que usaremos a lo largo del presente trabajo. Intuitivamente, solo deseamos que dos estados sean distinguibles si tienen la capacidad ser diferenciados por alguna continuación a partir de ellos. A continuación daremos una primera aproximación a esta noción de equivalencia.
 
-\begin{definition}[Bisimulación \cite{milner89}, Chap.~4, Def.~1] Dado un sistema de transición etiquetado $ S = \langle Q, \Sigma, \delta \rangle $, una \emph{bisimulación} es una relación binaria $R \subseteq Q \times Q$, tal que: para cada par de elementos $p, q \in Q$ tal que $\langle p, q \rangle \in R$ vale:
+\begin{definition}[Bisimulación \cite{milner89}, Chap.~4, Def.~1] \label{def:bisimulación} Dado un sistema de transición etiquetado $ S = \langle Q, \Sigma, \delta \rangle $, una \emph{bisimulación} es una relación binaria $R \subseteq Q \times Q$, tal que: para cada par de elementos $p, q \in Q$ tal que $\langle p, q \rangle \in R$ vale:
 \begin{itemize}
     \item $(\forall \sigma \in \Sigma)(p \xrightarrow{\sigma} p' \implies (\exists q' \in Q)(q \xrightarrow{\sigma} q' \land \langle p', q' \rangle \in R))$ y, simétricamente, vale 
     \item $(\forall \sigma \in \Sigma)(q \xrightarrow{\sigma} q' \implies (\exists p' \in Q)(p \xrightarrow{\sigma} p' \land \langle p', q' \rangle \in R))$

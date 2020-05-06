@@ -1,9 +1,11 @@
-\documentclass[paper=a4, fontsize=11pt, spanish]{scrartcl} % A4 paper and 11pt font size
+\documentclass[11pt,a4paper,twoside]{tesis}
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
-%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
-\usepackage[spanish]{babel} % English language/hyphenation
-\selectlanguage{spanish}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[left=3cm,right=3cm,bottom=3.5cm,top=3.5cm]{geometry}
+
 \usepackage{amssymb}
 \usepackage{amsfonts,amsmath,amsthm} % Math packages
 \usepackage{mathabx}
@@ -24,8 +26,8 @@
 % \usepackage{txfonts}
 % \usepackage{todonotes}
 \newcommand*{\corner}{\mbox{\LARGE{$\mathrlap{\cdot}\lrcorner$}}}
-\usepackage{sectsty} % Allows customizing section commands
-\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+% \usepackage{sectsty} % Allows customizing section commands
+% \allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
 
 \usepackage{xspace}
 \usepackage{xcolor}
@@ -47,9 +49,7 @@
 \numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
-\newtheorem{example}{Example}
-\newtheorem{definition}{Definición}
-\newtheorem{prop}{Proposición}
+
 \input{macros}
 \newcommand{\defname}[1]{\textbf{\emph{[#1]}}}
 \newcommand{\theoname}[1]{\textbf{\emph{[#1]}}}
@@ -73,8 +73,32 @@ title style={at={(1,0.5)}}}}
 \def \nat{\mathbbm{N}}
 
 \begin{document}
+\def\autor{Ezequiel Davidovich Caballero}
+\def\tituloTesis{Automata for Partial Binding of Services}
+\def\runtitulo{La Guerra de las Galaxias: Rebelión e Imperio}
+\def\runtitle{Automata for Partial Binding of Services}
+\def\director{Carlos G. Lopez Pombo}
+\def\codirector{Ignacio Vissani}
+\def\lugar{Buenos Aires, 2020}
+\input{caratula}
+\frontmatter
+\pagestyle{empty}
+\input{abs_esp.tex}
 
-\input{abstract.tex}
+\cleardoublepage
+\input{abs_en.tex} % OPCIONAL: comentar si no se quiere
+
+\cleardoublepage
+\input{agradecimientos.tex} % OPCIONAL: comentar si no se quiere
+
+\cleardoublepage
+\input{dedicatoria.tex}  % OPCIONAL: comentar si no se quiere
+
+\cleardoublepage
+\tableofcontents
+\mainmatter
+\pagestyle{headings}
+
 \input{introduccion.tex}
 \input{Preliminares.tex}
 \input{AFCA.tex}

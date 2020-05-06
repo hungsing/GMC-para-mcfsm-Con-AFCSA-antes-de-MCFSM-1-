@@ -1,5 +1,4 @@
 %!TEX root = ./main.tex
-
 \section{Equivalencia de comportamiento comunicacional}
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak determinate sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
@@ -19,7 +18,7 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
 
 
 \begin{figure}[H]
-\text{Consideremos los siguientes AFCA, con sus correspondientes mCFSMs.}
+% \text{Consideremos los siguientes AFCA, con sus correspondientes mCFSMs.}
 \subfloat[1][Los AFCA S y P, donde S no es Weak determinate]{
 \label{fig:weak determinacy afca}
 \begin{tikzpicture}[->, thick]
@@ -70,10 +69,9 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
 \end{tikzpicture}
 }
 \end{figure}
+En la Fig.~\ref{fig:weak determinacy afca} podemos ver al sistema compuesto de los AFCA $S$ y $P$. En su estado inicial $P$ puede enviar tanto $a$ como $b$, indistintamente, pero observando $S$ podemos ver que puede haber deadlock. Esto se debe a que $S$ tiene que ejecutar una transición interna para llegar a un estado donde pueda recibir un mensaje. El problema radica en que dependiendo de qué transición ejecute, es un mensaje u otro. Si ejecuta $int1$, solo puede recibir $a$ y si $P$ envía $b$ el sistema entra en deadlock. Del mismo modo si toma el camino de $int2$ y recibe $a$, no puede seguir ejecutando porque espera el mensaje $b$. Pero en la Fig.~\ref{fig:weak determinacy mCFSM} se ve como las mCFSM proyectadas funcionan como un sistema, ya que en su estado incial ambas máquinas están en la misma posición. Es decir, $M_P$ en $[q_0]$ puede enviar tanto $a$ como $b$, y $M_S$ puede ejecutar correctamente al recibir el mensaje.\\
 
-En la Fig.~\ref{fig:weak determinacy afca} podemos ver al sistema compuesto de los AFCA $S$ y $P$. En su estado inicial $P$ puede enviar tanto $a$ como $b$, indistintamente, pero observando $S$ podemos ver que puede haber deadlock. Esto se debe a que $S$ tiene que ejecutar una transición interna para llegar a un estado donde pueda recibir un mensaje. El problema radica en que dependiendo de qué transición ejecute, es un mensaje u otro. Si ejecuta $int1$, solo puede recibir $a$ y si $P$ envía $b$ el sistema entra en deadlock. Del mismo modo si toma el camino de $int2$ y recibe $a$, no puede seguir ejecutando dado que espera el mensaje $b$. Pero en la Fig.~\ref{fig:weak determinacy mCFSM} se ve como las mCFSM proyectadas funcionan como un sistema, ya que en su estado incial ambas máquinas están en la misma posición. Es decir, $M_P$ en $[q_0]$ puede enviar tanto $a$ como $b$, y $M_S$ puede ejecutar correctamente al recibir el mensaje.\\
-
-Para prevenir este tipo de problemas surgen la noción de determinismo débil o \emph{weak determinacy} \cite[Chap.~11, Def.~3]{milner89}. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. La idea de \emph{Weak Determinacy} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicación interna como observacionalmente bisimilares para un participante externo.  
+Para prevenir este tipo de problemas surge la noción de determinismo débil o \emph{weak determinacy} \cite[Chap.~11, Def.~3]{milner89}. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. \emph{Weak Determinacy} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicación interna como observacionalmente bisimilares para un participante externo.  
 
 %\begin{definition}[Determinacy] 
 %Dado un autómata $ \Lambda = \langle Q, \Sigma, \delta, q_0, F \rangle$ decimos que es \emph{determinate} si vale que $(\forall q, q', q'' \in Q)(\nexists t \in \Sigma)(q \xrightarrow{t} q' \land q \xrightarrow{t} q''$.
@@ -125,7 +123,7 @@ Antes de pasar a la demostración de equivalencia entre la semánticas de un con
 \begin{proof} Sea $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle$ un estado del LTS $M$. Por definición de CS (ver Def.~\ref{def:CS}), $\overrightarrow{\Omega_{\mathcal{C}}}$ es el conjunto de buffers asociados a los canales $\mathcal{C}$, con su contenido en el estado discreto $\overrightarrow{p}$. Estos canales corresponden a las mCFSM $\{M_i\}_{1 \leq i \leq n}$ que componen el CS. Entonces vale $\omega \in \overrightarrow{\Omega_{\mathcal{C}}}$ si y solo si $\omega \in \mathcal{C}_i$ con $1 \leq i \leq n$. Sea $\mathcal{A}_i$ el AFCA tal que $M_i$ es su interfaz de comunicación. Por definición de interfaz de comunicación de AFCA (ver Def.~\ref{def:interfazAFCA}), $\omega \in \mathcal{C}_i$ si y solo si $\omega \in {\mathcal{C}}_{\mathcal{A}_i}$. Por definición de composición de AFCA (ver Def.~\ref{def:composicion}), la comunicación externa se internaliza. Entonces como $\mathcal{A}_i$ no tienen buffers ni comunicación interna, vale $\omega \in {\mathcal{C}}_{\mathcal{A}_i}$ si y solo si $\omega \in B$ donde $B$ es el conjunto de buffers de comunicación interna de $\mathcal{A}$. Luego, por definición de proyección de comunicación interna (ver Def.~\ref{def:pci}), el conjunto de buffers de $\mathcal{A}$ es el mismo que en $\widehat{\mathcal{A}}$. Por lo tanto $\omega \in B$ si y solo si $\exists \langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$ tal que $\omega \in \overrightarrow{\Omega}$.
 \end{proof}
 
-
+\newpage
 \begin{theorem}[Equivalencia de las semánticas de las mFCSMs y los AFCAs] Sea $\{\mathcal{A}\}_{1 \leq i \leq n}$ un conjunto de weak determinate AFCA sin transiciones de comunicación interna, tal que su composición $\mathcal{A} = \langle Q, B, \mathcal{C},\Sigma, \delta, q_0, F \rangle$, también lo es. Llamamos $\widehat{\mathcal{A}} = \langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$ al sistema de transición etiquetado (LTS) que resulta de la proyección $\Tau(\mathcal{A})$. Sea el conjunto $\{M_i\}_{1 \leq i \leq n}$ de mCFSM correspondientes a cada uno de los AFCAs en $\{\mathcal{A}\}_{1 \leq i \leq n}$ tal que $M_i = \langle [Q_i], \mathcal{C}, [{q_0}_i], [\delta_i] \rangle$. Llamamos $M = \langle P, \mathcal{C}, {p_0}, [\delta] \rangle$ al LTS que representa la semántica del CS. Luego $\widehat{\mathcal{A}}$ y $M$ son bisimilares. 
 \end{theorem}
 
@@ -173,9 +171,10 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
 \end{proof}
 
 \begin{figure}[h]
-\begin{example}[\text{Proyección de Comunicación Interna de AFCA}]
-\label{ex:pci}
-\subfloat[a][AFCAs $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$]{
+\begin{example}
+\label{ex: pci}
+\begin{center}
+\subfloat[AFCAs $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$]{
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
@@ -213,8 +212,10 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
         
         ;
 \end{tikzpicture} 
-} \\
-\subfloat[b][$\mathcal{A}$, composición de los AFCAs $\mathcal{A}_i$]{
+}\\
+\end{center}
+
+\subfloat[$\mathcal{A}$, composición de los AFCAs $\mathcal{A}_i$]{
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
@@ -242,7 +243,9 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
         ;
 \end{tikzpicture}
 }\\
-\subfloat[c][Proyección de comunicación interna de $\mathcal{A}$]{
+
+\subfloat[Proyección de comunicación interna de $\mathcal{A}$]{
+\centering
 \begin{tikzpicture}[->, thick]
     \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
      \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
@@ -255,8 +258,8 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
 \draw[]        
      (q_0) edge[above] node{$\langle q_{000}, PR \ll a, q_{100} \rangle$} (q_1)
 	 (q_1) edge[above] node{$\langle q_{110}, PR \gg a, q_{120} \rangle$} (q_2)
-     (q_2) edge[right] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
-     (q_3) edge[right] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
+     (q_2) edge[left] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
+     (q_3) edge[left] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
      (q_0) edge[left] node{$\langle q_{000}, SP \ll b, q_{001} \rangle$} (q_4)
      (q_4) edge[left] node{$\langle q_{001}, SP \gg b, q_{201} \rangle$} (q_5)
      (q_5) edge[below] node{$\langle q_{201}, SP \gg b, q_{301} \rangle$} (q_6)
@@ -267,10 +270,11 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
 \end{example}
 \end{figure}
 
-\begin{figure}[h]
-\begin{example}[Semántica de un CS de mCFSMs]
+\begin{figure}[ht]
+\begin{example}
 \label{ex:CS}
-\subfloat[1][Las mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Ejemplo \ref{ex:pci}]{
+\centering
+\subfloat[1][Las mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Ejemplo \ref{ex: pci}]{
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= of q_0 ] {$q_1$};

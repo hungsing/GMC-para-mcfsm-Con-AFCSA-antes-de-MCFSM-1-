@@ -1,5 +1,5 @@
 %!TEX root = ./main.tex
-\section{Preliminares}
+\chapter{Preliminares}
 \label{preliminares}
 A continuación presentaremos algunas definiciones y resultados preliminares que serán de utilidad en las restantes secciones de esta tesis.
 
@@ -68,7 +68,7 @@ Dados dos estados $p, q \in Q $, $p$ es debilmente bisimilar sobre $\Sigma'$ a $
 \end{definition}
 
 
-\subsection{Comunicación Asincrónica}
+\section{Comunicación Asincrónica}
 Como se dijo en la primera sección, buscamos una implementación del paradigma de SOC donde la comunicación entre distintos componentes se realiza en forma asincrónica. Esto no es un requerimiento del paradigma propiamente dicho pero resulta una implementación más eficiente. El intercambio de mensajes en forma asincrónica permite a los componentes maximizar su uso de la cpaacidad de cómputo.  El intercambio de mensajes con cada componente es independiente entre sí, salvo que exista alguna necesidad de lo contrario. Para representar este comportamiento utilizamos un tipo de autómata finito denominado \emph{Communicating Finite State Machines} (llamado a partir de ahora CFSM). El concepto de CFSM fue introducido en \cite{brand:jacm-30_2} con el objetivo modelar y estudiar el comportamiento de sistemas distribuidos constituidos por un conjunto de procesos secuenciales que ejecutan concurrentemente y se comunican a partir de intercambiar mensajes a través de canales de comunicación previamente declarados. Las CFSMs son autómatas que modelan únicamente la comunicación externa entre participantes. De este modo cada CFSM representa los distintos componentes del sistema distribuido, pero solo el comportamiento que es relevante a la interacción entre los mismos. Una CFSM se puede ver como la proyección de este comportamiento específico de un autómata más complejo que tenga otro tipo de transiciones adicionales.
 
 La naturaleza dinámica no pre programada de los sistemas SOC hace que se requiera algún mecanismo para verificar que todos los componentes puedan funcionar entre sí en forma correcta. Para esto en esta sección detallamos el concepto de \emph{Generalised multiparty compatibility} (GMC), definido originalmente en \cite{lange:popl15}. GMC se define a partir de una serie de condiciones que debe cumplir el conjunto de CFSMs participantes del sistema. Esto condiciona al sistema (o a quienes lo diseñen) a tener un conocimiento previo de los posibles sistemas que vayan a interactuar entre sí. Esto no necesariamente rompe con la idea del descubrimiento y binding en tiempo de ejecución dado que se pueden generar métodos para hacer estas comprobaciones a medida que el sistema va conectándose con los distintos participantes. %(existen ya?)%

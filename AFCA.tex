@@ -2,6 +2,7 @@
 
 
 \chapter{Componentes Asincrónicas}
+\label{AFCA}
 Como ya hemos mencionado, en SOC los sistemas son concebidos como objetos dinámicos construidos en \emph{run-time} en la medida que su ejecución llega a un estado en el que la intervención de servicios externos se hace necesaria. Es decir un sistema de este tipo utilizará distintos servicios según las necesidades que se manifiesten a lo largo de una ejecución particular. 
  
 Una aplicación que se encuentra ejecutando se conecta con los servicios que le son necesarios a través de canales de comunicación por los cuales se envían o reciben mensajes. Estos canales pueden establecer una comunicación entre un número fijo (para cada canal particular) pero no acotado a priori de servicios. En la sección anterior hemos detallado un conjunto de propiedades que garantizan una comunicación sin errores a través de estos canales (i.e. ausencia de deadlock, ausencia de mensajes huérfanos y ausencia de situaciones en las que el receptor no se encuentra a la espera de un mensaje que le fue enviado) y un procedimiento para garantizarlas. Estas condiciones y su procedimiento de análisis parten de la hipótesis de que las CFSMs correspondientes a todos y cada uno de los participantes de la comunicación sobre dicho canal se encuentran disponibles.

@@ -1,8 +1,10 @@
 %!TEX root = ./main.tex
 \chapter{Equivalencia de comportamiento comunicacional}
+\label{resultados}
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak determinate sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
 \begin{figure}[ht]
+\label{fig:equivalencia}
 $$
 \xymatrix{   
 	\{\mathcal{A}_i\}_{i \in I} \ar[rrr]_{\Pi} \ar[d]_{||} & & & \{C_i\}_{i \in I}  \ar[d]_{semantica}  \\

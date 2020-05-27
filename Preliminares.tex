@@ -120,7 +120,7 @@ En adelante presentaremos definiciones y resultados que permiten expresar propie
 \begin{definition}[Mensaje Huérfano] Sea $S$ un CS, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de mensaje huérfano} si todos los $q_p \in \overrightarrow{q}$ son finales pero $\overrightarrow{\omega} \neq \overrightarrow{\epsilon}$. Es decir quedó un mensaje en algún canal pero no hay ninguna transición que lo reciba.
 \end{definition}
 
-\begin{definition}[CS seguro] Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
+\begin{definition}[CS seguro] \label{def:safeCS} Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
 \begin{enumerate}
 \item $s$ no es una configuración de deadlock 
 \item $s$ no posee recepciones no especificadas, y
@@ -322,17 +322,17 @@ $L_p^i = hd (\{e_i \downharpoonright_p \cdot \phi \  | \ \phi \in LT(S,n'_i,p) \
 \item no race: $\forall r \in \mathcal{P}: L_r^1\cap L_r^2 = \emptyset \Rightarrow \forall s_1r?a_1 \in L_r^1, \forall s_2r?a_1 \in L_r^2:\forall i \neq j \in \{1,2\}: n'_i \overset{\pi_i}\rightrightharpoons  $ \\
 $\Rightarrow dep (s_i \rightarrow r: a_i, e_i \cdot \pi_i, s_j \rightarrow r: a_j) $
 \end{enumerate}
-\end{enumerate} 	
+\end{enumerate} 
 \end{definition}
 
-Representabilidad garantiza que TS(S) contiene suficiente información para decdir propiedades seguras de cualquier ejecución asincrónica de S. La propiedad de ramificación asegura que si una rama en TS(S) representa una elección esta está "bien formada".\\
+Representabilidad garantiza que TS(S) contiene suficiente información para decdir propiedades seguras de cualquier ejecución asincrónica de S. La propiedad de ramificación asegura que si una rama en TS(S) representa una elección esta está "bien formada".
  
 Con esto definimos que toda ramificación es o bien (1) la ejecución concurrente de dos eventos; o, para cada participante p (2(a)I) si p no termina antes de n entonces las primeras dos acciones de p en dos ramas distintas son disjuntas; o (2(a)II) p no está involucrado en la elección, o sea la ramas se juntan antes de que p realice ninguna acción; (2(b)) hay un único participante s tomando la decisión; y (2(c)) para cada participante r involucrado en la elección, no puede haber race condition entre los mensajes que puede recibir r. La no race condition asegura que en ninguna ejecución (asincrónica) de S si una máquina tiene más de un buffer no vacío, entonces puede leerlos en cualquier orden (interleaving es posible). Notar que si una máquina r recibe todos sus mensajes de un mismo emisor, entonces hay una $\triangleleft$-relación entre todas sus acciones.
 
 \begin{definition}[Generalised Multiparty Compatibilty] Un CS S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
 \end{definition}
 
-\begin{theorem}[Solvencia]Si S es GMC entonces es seguro (no tiene configuraciones de deadlock, recepción no especificada o mensaje huérfano)
+\begin{theorem}[Solvencia]comSi S es GMC entonces es seguro (no tiene configuraciones de deadlock, recepción no especificada o mensaje huérfano)
 \end{theorem}
 
 El teorema dice que ninguna ejecución asincrónica de S va a resultar en una configuración de mensaje huérfano, deadlock o recepción no especificada. Basándose en la propiedad de representabilidad (toda transición y ramificación de cada máquina está representada en TS(S)), la demostración \cite{lange:popl15} muestra que todo mensaje enviado es recibido eventualmente y que una máquina en un estado receptor eventualmente recibe el mensaje que espera, según la Def.~\ref{def:representabilidad}.

@@ -7,22 +7,7 @@ En esta sección resumimos las contribuciones de esta tesis junto con conclusion
 
 
 \section{Conclusiones}
-En esta tesis exploramos y contribuimos a construir un modelo formal para software orientado a servicios. Partimos de la hipótesis que esto es un paso necesario para lograr la implementación de la infraestructura necesaria para llevar a cabo el paradigma de SOC. Existiendo modelos previos de autómatas como las CFSM, y los IO Automata quisimos hacer un modelo nuevo que tenga en cuenta no solo la comunicación asincrónica entre componentes sino también acciones internas, incluyendo comunicac
+El ideal del paradigma SOC es un contexto que permita biniding en tiempo de ejecución. La idea de este trabajo es construir un formalismo que soporte binding parcial. Con este objetivo en mente desarrollamos los AFCA que permiten absorber el envío de mensajes como comportamiento interno cuando algunas de las componentes que participan de una comunicación se ecuentran conectadas. Las mCFSMs cumplen el rol de expresar la interfaz externa de comunicación de ese tipo de autómatas para expresar componentes.
 
-\section{Trabajo futuro: Composición parcial vs composición total}
 
-En esta sección definimos los Autómatas Finitos de Comunicación Asincrónica para modelar la composición parcial de CFSMs. Ahora necesitamos demostrar que esta composición parcial es equivalente a una composición total.
 
-Como sabemos que todas las CFSMs a componer se encuentran en $\mathcal{P}$ podemos decir que conocemos a priori todos los componentes de la composición final. Dado un conjunto finito $\mathcal{P}$ de CFSMs denominamos $ p_1, p_2, p_3, \ldots, p_n$. 
-
-Si componemos $p_1$ y $p_2$ nos quedaría el conjunto $\mathcal{P}_1 =\{ p_{12} \}, p_3, \ldots, p_n \} $, podemos hacer un paso siguiente componiendo $p_{n-1}$ y $p_n$. De esto obtenemos $\mathcal{P_2}_2= \{ p_{12}, p_3, \ldots, p_n-1 \} $. Podemos continuar este proceso hasta llegar a tener un único autómata. %Esto de acá capaz vuela cuando lo dibuje
-
-Decimos que en cada paso de la composición parcial tengo una función suryectiva, pero no inyectiva que garantiza que cada punto del codominio es la composición de al menos dos puntos de la preimagen.
-
-Llamemos TM1 y TM2 a los autómatas resultantes de la composición de todos los elementos de $\mathcal{P}$ por sucesión de composiciones parciales y por composición total respectivamente. Queremos ver que $ q \in Q_{TM1} \iff q \in Q_{TM2} $ y en ambos casos está entre los estados alcanzables. 
-
-Queremos demostrar que
-\begin{enumerate}
-\item Las configuraciones alcanzables entre tm1 y tm2 son las mismas
-\item tm1 es bisimilar a tm2, es decir que para cada configuración las acciones realizables son las mismas
-\end{enumerate}

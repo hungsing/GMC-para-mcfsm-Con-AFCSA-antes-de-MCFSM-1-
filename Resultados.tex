@@ -16,12 +16,12 @@ $$
 \label{fig:preservacion}
 \end{figure}
 
-En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. A continuación se muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la \ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
+En general, cuando se trata de formalismos que modelan simultáneamente aspectos del comportamiento interno de una componente y elementos de interfaz observable por otras componentes, la proyección de dicha interfaz no resulta bisimilar con el comportamiento real de la componente. A continuación se muestra un ejemplo de este fenómeno recurriendo a la clase de autómatas presentada en la Def.~\ref{def:afca}, tomando como comportamiento interno las transiciones internas y de buffer y como comportamiento observable las acciones de comunicación, tanto de entrada como de salida, con otras componentes.
 
 
 \begin{figure}[H]
-% \text{Consideremos los siguientes AFCA, con sus correspondientes mCFSMs.}
-\subfloat[1][Los AFCA S y P, donde S no es Weak determinate]{
+\begin{center}
+\subfloat[1][Automatas Finitos de Comunicación asincrónica S y P]{
 \label{fig:weak determinacy afca}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
@@ -70,7 +70,12 @@ En general, cuando se trata de formalismos que modelan simultáneamente aspectos
         ; 
 \end{tikzpicture}
 }
+\end{center}
+\caption{Sistema distribuido de dos componentes.}
+\label{fig:weakdeterminacyviolation}
 \end{figure}
+
+\cnote{Reescribir el párrafo hablando de la figura y mencionando las subfiguras cuando es necesario.}
 En la Fig.~\ref{fig:weak determinacy afca} podemos ver al sistema compuesto de los AFCA $S$ y $P$. En su estado inicial $P$ puede enviar tanto $a$ como $b$, indistintamente, pero observando $S$ podemos ver que puede haber deadlock. Esto se debe a que $S$ tiene que ejecutar una transición interna para llegar a un estado donde pueda recibir un mensaje. El problema radica en que dependiendo de qué transición ejecute, es un mensaje u otro. Si ejecuta $int1$, solo puede recibir $a$ y si $P$ envía $b$ el sistema entra en deadlock. Del mismo modo si toma el camino de $int2$ y recibe $a$, no puede seguir ejecutando porque espera el mensaje $b$. Pero en la Fig.~\ref{fig:weak determinacy mCFSM} se ve como las mCFSM proyectadas funcionan como un sistema, ya que en su estado incial ambas máquinas están en la misma posición. Es decir, $M_P$ en $[q_0]$ puede enviar tanto $a$ como $b$, y $M_S$ puede ejecutar correctamente al recibir el mensaje.\\
 
 Para prevenir este tipo de problemas surge la noción de determinismo débil o \emph{weak determinacy} \cite[Chap.~11, Def.~3]{milner89}. La noción de determinismo es importante dado que está relacionada con la predecibilidad del sistema. Si realizamos el mismo experimento dos veces sobre un sistema determinista, comenzando ambas veces del estado inicial, esperamos obtener el mismo resultado o comportamiento cada vez. Además, la predecibilidad es algo que frecuentemente requerimos de sistemas. Por ende si elegimos especificar un sistema $S$ dándole un participante abstracto $Spec$ al que $S$ debería ser equivalente, entonces $Spec$ va a ser determinista. \emph{Weak Determinacy} es una forma más amplia de determinismo que nos permite contemplar una equivalencia observacional entre participantes. Esta equivalencia basada en la definición de bisimulación tiene en cuenta que para un participante externo, las transiciones $\epsilon$ son invisibles y por lo tanto una serie de estados conectados por transiciones consecutivas de este tipo serían bisimilares. En este caso tomamos las transiciones internas o de comunicación interna como observacionalmente bisimilares para un participante externo.  
@@ -90,7 +95,9 @@ Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ wea
 Supongamos que $A$ es weak determinate sobre $\Sigma_\mathit{Int}$ y existen $q, q' \in Q$ tales que $q \xrightarrow{\sigma} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ y no vale que $q \sim_{\Sigma_\mathit{Int}} q'$. Si $q \sim_{\Sigma_\mathit{Int}} q'$ no vale, entonces no existen $q'' \in Q$,  $s, s' \in \Sigma^*$ tal que $\widehat{s}_{\Sigma'} = \widehat{s'}_{\Sigma'}$, $q \xrightarrow{s} q'$ y $q \xrightarrow{s'} q''$, lo que es absurdo pues se puede tomar $q'' = q$, $s = \epsilon$ y $s' = s\sigma$ satisfaciendo que $\widehat{s}_{\Sigma_\mathit{Int}} = \widehat{s'}_{\Sigma_\mathit{Int}}$
 \end{proof}
 
-\begin{definition}[Equivalencia por comunicación interna] \label{def:eci}
+\cnote{Parrafito introductorio.}
+
+\begin{definition}[Equivalencia de estados por transición interna] \label{def:eci}
 Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ weak determinate tal que $\Sigma_\mathit{Int} \subseteq \Sigma$ denota el conjunto de transiciones internas, definimos $q \Rightarrow q'$ si y solo si existe $\sigma \in \Sigma_\mathit{Int}$ tal que $q \xrightarrow{\sigma} q'$. Luego, $[q]_m$, \emph{la clase de equivalencia por comunicación interna} de $q$, se define como $[q]_m = \{q'\ |\ q \Rightarrow^\bullet q'\}$. 
 \end{definition}
 
@@ -98,13 +105,13 @@ Intuitivamente, la clase de equivalencia por comunicación interna de un estado 
 
 Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, $\Sigma = \Sigma_\mathit{Int} \cup \Sigma_\mathit{Buff}$ y $q \in Q$, . Decimos que dos clases de equivalencia están relacionadas $[q]_m \xrightarrow{\sigma} [q']_m$ sii $\exists q_i \in [q]_m, q'_i \in [q']_m$ tales que $q_i \xrightarrow{\sigma} q'_i \in \delta_{\text{Buff}}$.
 
-\begin{definition}[Proyección de comunicación interna]\label{def:pci}\ \\
-Dado un AFCA $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\widehat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \widehat{Q}, B, \widehat{q_0}, \widehat{\Delta} \rangle$ tal que:
+\begin{definition}[Proyección de la comunicación de un AFCA]\label{def:pci}\ \\
+Dado un AFCA $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación interna de $\mathcal{A}$. Llamamos $\widehat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \widehat{Q}, B, \widehat{q_0}, \widehat{\Delta} \rangle$\cnote{Agregar conjunto de canales.} tal que:
 \begin{itemize}
     \item $ \widehat{Q} = \{ \langle [q]_m, \overrightarrow{\Omega} \rangle | q \in Q \land \overrightarrow{\Omega} = (\Omega_b)_{b \in B}$ con $\Omega_b \in \mathcal{M}^* \}$ Cada estado del sistema de transición resultante es una configuración de $\mathcal{A}$ para una clase de equivalencia por comunicación interna,
     \item $B$ es el conjunto de buffers del LTS, que son los mismos de comunicación interna de $\mathcal{A}$,
     \item $\widehat{q_0}= \langle q_0, \Omega \rangle$ es el estado inicial de  donde $q_0$ es el estado inicial de $\mathcal{A}$ y $\Omega = \langle [], \ldots, [] \rangle$ es el conjunto de buffers en su estado inicial sin mensajes, y
-    \item $\widehat{\Delta}= \{\langle \langle q_i, \Omega \rangle, \widehat{\sigma},\langle q_j, \Omega' \rangle \rangle | q_i, q_j \in Q, \widehat{\sigma} \in \{B \times \{\gg, \ll\} \times \mathcal{M}\} \land \exists \sigma \in \Sigma$ tal que  $[q_i]_m \xrightarrow{\sigma} [q_j]_m \}$. Definimos $\widehat{\Delta}$ como la relación de transición de $\widehat{\mathcal{A}}$. Un estado de $\widehat{q_j}$ es alcanzable desde otro $\widehat{q_i}$ si la clase de equivalencia $[q_j]_m$ es alcanzable desde $[q_i]_\mathcal{M}$.
+    \item $\widehat{\Delta}= \{\langle \langle q_i, \Omega \rangle, \widehat{\sigma},\langle q_j, \Omega' \rangle \rangle | q_i, q_j \in Q, \widehat{\sigma} \in \{B \times \{\gg, \ll\} \times \mathcal{M}\} \land \exists \sigma \in \Sigma$ tal que  $[q_i]_m \xrightarrow{\sigma} [q_j]_m \}$\cnote{Agregar aristas de comunicación externa.}. Definimos $\widehat{\Delta}$ como la relación de transición de $\widehat{\mathcal{A}}$. Un estado de $\widehat{q_j}$ es alcanzable desde otro $\widehat{q_i}$ si la clase de equivalencia $[q_j]_m$ es alcanzable desde $[q_i]_\mathcal{M}$.
 \end{itemize}
 \end{definition}
 

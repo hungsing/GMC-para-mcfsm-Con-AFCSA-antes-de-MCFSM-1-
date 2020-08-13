@@ -113,9 +113,8 @@ Dado un AFCA $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \r
 \end{itemize}
 \end{definition}
 
-<<<<<<< HEAD
 \cnote{Parrafo explicando qué se demuestra y qué no. Usar figuras para ejemplificar.}
-=======
+
 Antes de pasar a la demostración de equivalencia entre la semánticas de un conjunto compatible de AFCAs
 
 \begin{lemma}[Equivalencia de estados discretos]\label{lema1} Sea $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle [Q], \mathcal{C}, [q_0], [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}\}_{1 \leq i \leq n}$. Para todo $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$, existe $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$ tal que $q_i \in \overrightarrow{q} \iff q_i \in \overrightarrow{p}$ y viceversa. 
@@ -178,11 +177,11 @@ Primero demostraremos la condición $\forall (a_ka_j)_l \gg m \in \widehat{\Sigm
     
 \end{itemize}
 \end{proof}
->>>>>>> c22622c0a8f9200f5ca5054e0aec76049fb08852
 
-A continuación dePara esto primero establecemos una propiedad de equivalencia sobre estados de un autómata que permite abstraerse de las acciones internas sin alterar la comunicación. Luego definimos un LTS que resulta de proyectar la semántica de comunicación de un AFCA utilizando la propiedad anterior sobre las transiciones internas. Por último definimos y demostramos.
+Para esto primero establecemos una propiedad de equivalencia sobre estados de un autómata que permite abstraerse de las acciones internas sin alterar la comunicación. Luego definimos un LTS que resulta de proyectar la semántica de comunicación de un AFCA utilizando la propiedad anterior sobre las transiciones internas. Por último definimos y demostramos.
+
 \begin{figure}[H]
-\begin{example}
+\begin{ejemplo}
 \label{ex:pci}
 \begin{center}
 \subfloat[AFCAs $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$]{
@@ -278,11 +277,11 @@ A continuación dePara esto primero establecemos una propiedad de equivalencia s
       ;
 \end{tikzpicture}
 }
-\end{example}
+\end{ejemplo}
 \end{figure}
 
 \begin{figure}[H]
-\begin{example}
+\begin{ejemplo}
 \label{ex:CS}
 \centering
 \subfloat[1][Las mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Ejemplo \ref{ex: pci}]{
@@ -340,13 +339,14 @@ A continuación dePara esto primero establecemos una propiedad de equivalencia s
         ;
 \end{tikzpicture}
 }
-\end{example}
+\end{ejemplo}
 \end{figure}
-
 
 Antes de pasar a la demostración de equivalencia entre la semánticas de un conjunto compatible de AFCAs
 
-\begin{lemma}[Equivalencia de estados discretos]\label{lema1} Sea $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle [Q], \mathcal{C}, [q_0], [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}\}_{1 \leq i \leq n}$. Para todo $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$, existe $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$ tal que $q_i \in \overrightarrow{q} \iff q_i \in \overrightarrow{p}$ y viceversa. 
+\begin{lemma}[Equivalencia de estados discretos]
+\label{lema1} 
+Sea $\widehat{\mathcal{A}}=\langle \widehat{Q}, B, \widehat{q_0}, \widehat{\delta} \rangle$, la proyección de comunicación interna del AFCA $\mathcal{A}$ que surge de la composición del conjunto de autómatas  $\{\mathcal{A}_i\}_{1 \leq i \leq n}$  y $M= \langle [Q], \mathcal{C}, [q_0], [\delta] \rangle$, el LTS que representa la semántica del CS correspondiente a $\{M_i\}_{1 \leq i \leq n}$, el conjunto de mCFSM de $\{\mathcal{A}\}_{1 \leq i \leq n}$. Para todo $\langle [\overrightarrow{q}]_m, \overrightarrow{\Omega} \rangle \in \widehat{Q}$, existe $\langle \overrightarrow{p}, \overrightarrow{\Omega_{\mathcal{C}}} \rangle \in P$ tal que $q_i \in \overrightarrow{q} \iff q_i \in \overrightarrow{p}$ y viceversa. 
 \end{lemma}
 \begin{proof} 
 \begin{itemize}

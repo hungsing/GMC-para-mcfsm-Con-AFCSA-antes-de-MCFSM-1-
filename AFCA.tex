@@ -148,7 +148,7 @@ El comportamiento de un AFCA es el conjunto de todas las trazas posibles.
 \begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración válida. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
 \end{definition}
 
-\begin{example}[Ejemplo de un Autómata Finito de Comunicación Asincrónica]
+\begin{ejemplo}[Ejemplo de un Autómata Finito de Comunicación Asincrónica]
 \label{ex:AFCA}
 Considere el AFCA $S= \langle \{q_0,..,q_5\},[b_0],\{sr_1,sr_2,rs_1\}, \Sigma_A, \delta_A, q_0, \{q_4\} \rangle$. Donde $\Sigma =\{wait, b_0 \ll m_1,b_0 \gg m_1, Out(sr_1,a),Out(sr_2,c), In(rs_1,b),In(rs_2,d) \}$
 \begin{center}
@@ -177,7 +177,7 @@ En el ejemplo podemos ver los tres tipos de transiciones que los AFCA pueden rea
     \item Transiciones de comunicación externa: $Out(sr_1,a),Out(sr_2,c), In(rs_1,b)$ y $In(rs_2,d) $
     \item Transiciones internas: $wait$
 \end{itemize}
-\end{example}
+\end{ejemplo}
 
 Como la idea es que los autómatas con comunicación asincrónica representen procesos, o servicios, que pueden formar parte de un sistema más grande, necesitamos definir la operación de composición. 
 
@@ -247,7 +247,7 @@ Como los conjuntos de acciones son disjuntos podemos decir que las acciones inte
 
 Al componer autómatas la comunicación que antes era externa y ahora es de buffer puede generar problemas. Puntualmente pueden aparecer transiciones de consumo de un buffer (que antes eran envío de mensajes) donde antes no había. De este modo pueden aparecer secuencias de estados y transiciones donde se consume un mensaje antes de que este sea depositado en el buffer correspondiente. Para esto pedimos que $\delta_\mathit{\mathcal{P}Buff}$ cumpla con una condición especial. Solo pueden haber transiciones de consumo saliendo de un estado si en alguna secuencia de acciones que termina en ese estado, hay transiciones de producción (es decir se encola un mensaje en el buffer).
 
-\begin{example}[Composición de Autómatas Finitos de Comunicación Asincrónica]
+\begin{ejemplo}[Composición de Autómatas Finitos de Comunicación Asincrónica]
 \label{ex:Composicion}
 Considere los siguientes AFCA:
 \begin{itemize}
@@ -302,7 +302,7 @@ Considere los siguientes AFCA:
 \end{tikzpicture}
 \end{center}
 \end{itemize} 
-\end{example}
+\end{ejemplo}
 
 \newpage
 \section{Aspectos comunicacionales de los AFCA}
@@ -342,7 +342,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{enumerate}
 \end{definition}
 
-\begin{example}[Interfaz de comunicación de un AFCA]
+\begin{ejemplo}[Interfaz de comunicación de un AFCA]
 Consiere el siguiente autómata finito de comunicación asincrónica:
 \begin{center}
         \begin{tikzpicture}[->, thick]
@@ -380,7 +380,7 @@ A continuación, presentamos su interfaz de comunicación formalizada como una m
         ; 
         \end{tikzpicture}     
 \end{center}
-\end{example}
+\end{ejemplo}
 
 
 En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel CS es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.

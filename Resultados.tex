@@ -114,13 +114,14 @@ Dado un AFCA weak determinate $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, 
 \end{itemize}
 \end{definition}
 
-Partimos de la hipótesis que para poder extraer el LTS de semántica de comunicación interna es necesario que el autómata no tenga transiciones de comunicación externa. Esto es debido a que la comunicación asincrónica externa introduce otra complejidad a tener en cuenta a la hora de abstraernos correctamente de las transiciones internas. Para los propósitos de lo que queremos demostrar estas condiciones son suficientes dado que trabajamos sobre AFCA que resultan de la composición total de un conjunto de autómatas. A continuación vemos un ejemplo de est
+Partimos de la hipótesis que para poder extraer el LTS de semántica de comunicación interna es necesario que el autómata no tenga transiciones de comunicación externa. Esto es debido a que la comunicación asincrónica externa introduce otra complejidad a tener en cuenta a la hora de abstraernos correctamente de las transiciones internas. Para los propósitos de lo que queremos demostrar estas condiciones son suficientes dado que trabajamos sobre AFCA que resultan de la composición total de un conjunto de autómatas. A continuación vemos un ejemplo de la Proyección de Comunicación según la Def.~\ref{def:pci}. En la primera figura se puede ver los tres autómatas originales (Fig.~\ref{a_i}), su composición $\mathcal{A}$ (Fig.~\ref{A}) y el LTS resultante $\hat{\mathcal{A}}$ (Fig.~\ref{hatA}). Luego vemos el conjunto de mCFSMs correspondientes según Def.~\ref{def:interfazcom} (Fig.~\ref{m_i}) y su CS representado por el LTS $M$ (Fig.~\ref{M}). Comparando ambos sistemas de transición $M$ y $\hat{\mathcal{A}}$, se puede ver que son muy similares. Los nodos de cada LTS muestran distintos estados de la comunicación, incluyendo el contenido de los canales de comunicación, externos en el caso de $M$ e internalizados en forma de buffers para $\hat{\mathcal{A}}$, que en ambos casos es el mismo en cada paso. Las aristas de $M$ y $\hat{\mathcal{A}}$ denotan las mismas acciones comunicación también como esterna e interna, respectivamente. Este ejemplo es una intuición de que el mecanismo de composición preserva la semántica de comunicación externa al internalizarla.
 
 \begin{figure}[H]
 \begin{ejemplo}
 \label{ex:pci}
 \begin{center}
 \subfloat[AFCAs $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$]{
+\label{a_i}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
@@ -162,6 +163,7 @@ Partimos de la hipótesis que para poder extraer el LTS de semántica de comunic
 \end{center}
 
 \subfloat[$\mathcal{A}$, composición de los AFCAs $\mathcal{A}_i$]{
+\label{A}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
@@ -191,6 +193,7 @@ Partimos de la hipótesis que para poder extraer el LTS de semántica de comunic
 }\\
 
 \subfloat[Proyección de comunicación interna de $\mathcal{A}$]{
+\label{hatA}
 \centering
 \begin{tikzpicture}[->, thick]
     \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
@@ -220,7 +223,8 @@ Partimos de la hipótesis que para poder extraer el LTS de semántica de comunic
 \begin{example}
 \label{ex:CS}
 \centering
-\subfloat[1][Las mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Ejemplo \ref{ex: pci}]{
+\subfloat[1][Las mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Ejemplo \ref{ex:pci}]{
+\label{m_i}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= of q_0 ] {$q_1$};
@@ -254,6 +258,7 @@ Partimos de la hipótesis que para poder extraer el LTS de semántica de comunic
 \end{tikzpicture} 
 }\\
 \subfloat[2][El LTS $M$ representa la semántica del CS de las mCFSM]{
+\label{M}
 \begin{tikzpicture}[->, thick][scale=0.20]
  \node[state,initial] (q_0)   {$q_{000},\epsilon,\epsilon$}; 
  \node[state] (q_1) [right= 3cm of q_0 ] {$q_{100},a, \epsilon$};

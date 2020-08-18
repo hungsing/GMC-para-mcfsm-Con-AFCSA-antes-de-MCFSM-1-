@@ -4,7 +4,6 @@
 Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak determinate sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
 \begin{figure}[ht]
-\label{fig:equivalencia}
 $$
 \xymatrix{   
 	\{\mathcal{A}_i\}_{i \in I} \ar[rrr]_{\Pi} \ar[d]_{||} & & & \{C_i\}_{i \in I}  \ar[d]_{semantica}  \\
@@ -114,7 +113,8 @@ Dado un AFCA weak determinate $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, 
 \end{itemize}
 \end{definition}
 
-Partimos de la hipótesis que para poder extraer el LTS de semántica de comunicación interna es necesario que el autómata no tenga transiciones de comunicación externa. Esto es debido a que la comunicación asincrónica externa introduce otra complejidad a tener en cuenta a la hora de abstraernos correctamente de las transiciones internas. Para los propósitos de lo que queremos demostrar estas condiciones son suficientes dado que trabajamos sobre AFCA que resultan de la composición total de un conjunto de autómatas. A continuación vemos un ejemplo de la Proyección de Comunicación según la Def.~\ref{def:pci}. En la primera figura se puede ver los tres autómatas originales (Fig.~\ref{a_i}), su composición $\mathcal{A}$ (Fig.~\ref{A}) y el LTS resultante $\hat{\mathcal{A}}$ (Fig.~\ref{hatA}). Luego vemos el conjunto de mCFSMs correspondientes según Def.~\ref{def:interfazcom} (Fig.~\ref{m_i}) y su CS representado por el LTS $M$ (Fig.~\ref{M}). Comparando ambos sistemas de transición $M$ y $\hat{\mathcal{A}}$, se puede ver que son muy similares. Los nodos de cada LTS muestran distintos estados de la comunicación, incluyendo el contenido de los canales de comunicación, externos en el caso de $M$ e internalizados en forma de buffers para $\hat{\mathcal{A}}$, que en ambos casos es el mismo en cada paso. Las aristas de $M$ y $\hat{\mathcal{A}}$ denotan las mismas acciones comunicación también como esterna e interna, respectivamente. Este ejemplo es una intuición de que el mecanismo de composición preserva la semántica de comunicación externa al internalizarla.
+Partimos de la hipótesis que para poder extraer el LTS de semántica de comunicación interna es necesario que el autómata no tenga transiciones de comunicación externa. Esto es debido a que la comunicación asincrónica externa introduce otra complejidad a tener en cuenta a la hora de abstraernos correctamente de las transiciones internas. Para los propósitos de lo que queremos demostrar estas condiciones son suficientes dado que trabajamos sobre AFCA que resultan de la composición total de un conjunto de autómatas. \\ 
+A continuación vemos un ejemplo de la Proyección de Comunicación según la Def.~\ref{def:pci}. En la primera figura se puede ver los tres autómatas originales (Fig.~\ref{a_i}), su composición $\mathcal{A}$ (Fig.~\ref{A}) y el LTS resultante de la proyección $\hat{\mathcal{A}}$ (Fig.~\ref{hatA}). Luego vemos el conjunto de mCFSMs correspondientes según Def.~\ref{def:interfazcom} (Fig.~\ref{m_i}) y su CS representado por el LTS $M$ (Fig.~\ref{M}). Comparando ambos sistemas de transición $M$ y $\hat{\mathcal{A}}$, se puede ver que son muy similares. Los nodos de cada LTS muestran distintos estados de la comunicación, incluyendo el contenido de los canales de comunicación, externos en el caso de $M$ e internalizados en forma de buffers para $\hat{\mathcal{A}}$, que en ambos casos es el mismo en cada paso. Las aristas de $M$ y $\hat{\mathcal{A}}$ denotan las mismas acciones comunicación también como esterna e interna, respectivamente. Este ejemplo es una intuición de que el mecanismo de composición preserva la semántica de comunicación externa al internalizarla.
 
 \begin{figure}[H]
 \begin{ejemplo}
@@ -283,7 +283,7 @@ Partimos de la hipótesis que para poder extraer el LTS de semántica de comunic
 \end{example}
 \end{figure}
 
-Antes de pasar a la demostración de equivalencia entre la semánticas de un conjunto compatible de AFCAs
+Para demostrar la equivalencia semántica de comunicación entre un conjunto de AFCAs compatibles y sus mCFSMs queremos probar que los LTS que representan las respectivas semánticas son bisimilares. Antes de demostrar esto necesitamos demostrar que los estados son equivalentes. Los estados de ambos LTS contienen un estado discreto compuesto y el conjunto de buffers/canales con su contenido en cada estado. En el Lema~$\ref{lema1}$ demostramos que los estados discretos contenidos en los estados de la proyección de comunicación interna son equivalentes a los del LTS que representa el CS, mientras que en el Lema~$\ref{lema2}$ probamos que el comportamiento y el contenido de los buffers es equivalente al de los canales. 
 
 \begin{lemma}[Equivalencia de estados discretos]
 \label{lema1} 

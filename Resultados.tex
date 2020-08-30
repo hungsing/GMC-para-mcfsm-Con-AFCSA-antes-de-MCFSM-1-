@@ -113,6 +113,7 @@ Partimos de la hipótesis que para poder extraer el LTS de semántica de comunic
 A continuación vemos un ejemplo de la Proyección de Comunicación según la Def.~\ref{def:pci}. En la primera figura se puede ver los tres autómatas originales (Fig.~\ref{a_i}), su composición $\mathcal{A}$ (Fig.~\ref{A}) y el LTS resultante de la proyección $\hat{\mathcal{A}}$ (Fig.~\ref{hatA}). Luego vemos el conjunto de mCFSMs correspondientes según Def.~\ref{def:interfazcom} (Fig.~\ref{m_i}) y su CS representado por el LTS $M$ (Fig.~\ref{M}). Comparando ambos sistemas de transición $M$ y $\hat{\mathcal{A}}$, se puede ver que son muy similares. Los nodos de cada LTS muestran distintos estados de la comunicación, incluyendo el contenido de los canales de comunicación, externos en el caso de $M$ e internalizados en forma de buffers para $\hat{\mathcal{A}}$, que en ambos casos es el mismo en cada paso. Las aristas de $M$ y $\hat{\mathcal{A}}$ denotan las mismas acciones comunicación también como esterna e interna, respectivamente. Este ejemplo es una intuición de que el mecanismo de composición preserva la semántica de comunicación externa al internalizarla.
 
 \begin{figure}[H]
+\begin{center}
 \begin{tikzpicture}[->, thick]
     \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
      \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
@@ -133,11 +134,13 @@ A continuación vemos un ejemplo de la Proyección de Comunicación según la De
      (q_6) edge[below] node{$\langle q_{311}, PR \ll a, q_{321} \rangle$} (q_7)
       ;
 \end{tikzpicture}
+\end{center}
 \caption{Proyección de comunicación interna del AFCA de la Fig.~\ref{A}.}
 \label{ex:pci}
 \end{figure}
 
 \begin{figure}[H]
+\begin{center}
 \begin{tikzpicture}[->, thick][scale=0.20]
  \node[state,initial] (q_0)   {$q_{000},\epsilon,\epsilon$}; 
  \node[state] (q_1) [right= 3cm of q_0 ] {$q_{100},a, \epsilon$};
@@ -158,6 +161,7 @@ A continuación vemos un ejemplo de la Proyección de Comunicación según la De
         (q_7) edge[below] node{$\langle q_{0r},PR?a,q_{1r} \rangle$} (q_4)
         ;
 \end{tikzpicture}
+\end{center}
 \caption{LTS del CS formado por las mCFSMs de la Fig.~\ref{m_i}.}
 \label{ex:CS}
 \end{figure}

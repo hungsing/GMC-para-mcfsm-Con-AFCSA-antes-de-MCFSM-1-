@@ -356,7 +356,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 \end{figure}
 
 \begin{figure}[H]
-\label{A}
+\begin{center}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
@@ -383,6 +383,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
         (q_9) edge[below] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
+\end{center}
 \caption{Composición de los AFCAs de la Fig.~\ref{a_i}.}
 \label{A}
 \end{figure}
@@ -397,7 +398,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 \cnote{Componer $\mathcal{A}_1$ y $\mathcal{A}_2$ y dejar $\mathcal{A}_3$ como está.}
 
 \begin{figure}[H]
-\label{A}
+\begin{center}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
@@ -424,6 +425,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
         (q_9) edge[below] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
+\end{center}
 \caption{Composición parcial de los AFCAs de la Fig.~\ref{a_i}.}
 \label{A-parcial}
 \end{figure}
@@ -516,6 +518,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \cnote{Explicar el ejemplo referenciando la Fig.~\ref{m_i}.}
 
 \begin{figure}[H]
+\begin{center}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= of q_0 ] {$q_1$};
@@ -547,6 +550,7 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
         (q_0) edge[right] node{sp!b} (q_1)
         ;
 \end{tikzpicture} 
+\end{center}
 \caption{mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Subfig.~\ref{a_i}.}
 \label{m_i}
 \end{figure}

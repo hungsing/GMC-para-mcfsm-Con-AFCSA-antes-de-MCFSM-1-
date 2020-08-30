@@ -249,68 +249,70 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 
 \begin{ejemplo}[Composición de Autómatas Finitos de Comunicación Asincrónica]
 \label{ex:Composicion}
-Considere los siguientes AFCA:
-\begin{itemize}
-    \item $S= \langle \{q_0,..,q_4\},[b_0],\{sr_1,rs_1\}, \Sigma_S, \delta_S, q_0, \{q_4\} \rangle$, con $\Sigma_S =\{wait, b_0 \ll m_1,b_0 \gg m_1, In(rs_1,b), Out(sr_1,c) \}$
-\begin{center}
-\begin{tikzpicture}[->, thick][scale=0.33]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
- \node[state] (q_2) [right = 1.5 of q_1 ] {$q_2$};
- \node[state] (q_3) [below=  of q_1 ] {$q_3$};
- \node[state,accepting] (q_4) [left= 2cm of q_3 ] {$q_4$};
- \draw[]        
-        (q_0) edge[above] node{$In(rs_1,b)$} (q_1)
-        (q_1) edge[above] node{$b_0 \ll m_1$} (q_2)
-        (q_1) edge[left] node{$wait$} (q_3)
-        (q_2) edge[right] node{$\ b_0 \gg m_1$} (q_3)
-        (q_3) edge[above] node{$Out(sr_1,c)$} (q_4)
-        ;
-\end{tikzpicture}
-\end{center}
-        \item $R=\langle \{q_0,q_1,q_2\},[],\{sr_1,rs_1\}, \Sigma_R, \delta_R, q_0, \{q_4\} \rangle$, con $\Sigma_R = \{Out(rs_1,b), In(sr_1,c)\}$, y su composición
-\begin{center}
-\begin{tikzpicture}[->, thick][scale=0.33]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below= of q_0 ] {$q_1$};
-  \node[state,accepting] (q_2) [below= of q_1] {$q_2$};
- \draw[]        
-        (q_0) edge[right] node{$Out(rs_1,b)$} (q_1)
-        (q_1) edge[right] node{$In(sr_1,c)$} (q_2)
-        ;
-\end{tikzpicture} 
-\end{center}
-    \item $\RS =\langle Q_{RS}, [b_0, sr_1, rs_1], \Sigma_{RS}, \delta_{RS}, q_{00}, \{q_{42}\} \rangle$, con $\Sigma_{RS} =\{wait, b_0 \ll m_1,b_0 \gg m_1, rs_1 \ll b, rs_1 \gg b, sr_1 \ll c, sr_1 \gg c) \}$
-\begin{center}
-\begin{tikzpicture}[->, thick][scale=0.33]
- \node[state,initial] (q_00)   {$q_{00}$}; 
-  \node[state] (q_01) [right= 1.8cm of q_00 ] {$q_{01}$};
-  \node[state] (q_11) [right= 1.8cm of q_01 ] {$q_{11}$};
-  \node[state] (q_21) [right= 1.8cm of q_11 ] {$q_{21}$};
-  \node[state] (q_31) [below= of q_21 ] {$q_{31}$};
-  \node[state] (q_41) [left= 1.8cm of q_31 ] {$q_{41}$};
-  \node[state,accepting] (q_42) [left= 1.8cm of q_41] {$q_{42}$};
-  \draw[]        
-         (q_00) edge[above] node{$rs_1 \ll b$} (q_01)
-         (q_01) edge[above] node{$rs_1 \gg b$} (q_11)
-         (q_11) edge[above] node{$b_0 \ll m$} (q_21)
-         (q_11) edge[right] node{$wait$} (q_31)
-         (q_21) edge[right] node{$b_0 \gg m$} (q_31)
-         (q_31) edge[above] node{$sr \ll c$} (q_41)
-         (q_41) edge[above] node{$sr \gg c$} (q_42)
-       ;
-\end{tikzpicture}
-\end{center}
-\end{itemize} 
-\end{ejemplo}
+%%%%%%%%%%
+% Ejemplo viejo
+%%%%%%%%%%
+%
+%Considere los siguientes AFCA:
+%\begin{itemize}
+%    \item $S= \langle \{q_0,..,q_4\},[b_0],\{sr_1,rs_1\}, \Sigma_S, \delta_S, q_0, \{q_4\} \rangle$, con $\Sigma_S =\{wait, b_0 \ll m_1,b_0 \gg m_1, In(rs_1,b), Out(sr_1,c) \}$
+%\begin{center}
+%\begin{tikzpicture}[->, thick][scale=0.33]
+% \node[state,initial] (q_0)   {$q_0$}; 
+% \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
+% \node[state] (q_2) [right = 1.5 of q_1 ] {$q_2$};
+% \node[state] (q_3) [below=  of q_1 ] {$q_3$};
+% \node[state,accepting] (q_4) [left= 2cm of q_3 ] {$q_4$};
+% \draw[]        
+%        (q_0) edge[above] node{$In(rs_1,b)$} (q_1)
+%        (q_1) edge[above] node{$b_0 \ll m_1$} (q_2)
+%        (q_1) edge[left] node{$wait$} (q_3)
+%        (q_2) edge[right] node{$\ b_0 \gg m_1$} (q_3)
+%        (q_3) edge[above] node{$Out(sr_1,c)$} (q_4)
+%        ;
+%\end{tikzpicture}
+%\end{center}
+%        \item $R=\langle \{q_0,q_1,q_2\},[],\{sr_1,rs_1\}, \Sigma_R, \delta_R, q_0, \{q_4\} \rangle$, con $\Sigma_R = \{Out(rs_1,b), In(sr_1,c)\}$, y su composición
+%\begin{center}
+%\begin{tikzpicture}[->, thick][scale=0.33]
+% \node[state,initial] (q_0)   {$q_0$}; 
+% \node[state] (q_1) [below= of q_0 ] {$q_1$};
+%  \node[state,accepting] (q_2) [below= of q_1] {$q_2$};
+% \draw[]        
+%        (q_0) edge[right] node{$Out(rs_1,b)$} (q_1)
+%        (q_1) edge[right] node{$In(sr_1,c)$} (q_2)
+%        ;
+%\end{tikzpicture} 
+%\end{center}
+%    \item $\RS =\langle Q_{RS}, [b_0, sr_1, rs_1], \Sigma_{RS}, \delta_{RS}, q_{00}, \{q_{42}\} \rangle$, con $\Sigma_{RS} =\{wait, b_0 \ll m_1,b_0 \gg m_1, rs_1 \ll b, rs_1 \gg b, sr_1 \ll c, sr_1 \gg c) \}$
+%\begin{center}
+%\begin{tikzpicture}[->, thick][scale=0.33]
+% \node[state,initial] (q_00)   {$q_{00}$}; 
+%  \node[state] (q_01) [right= 1.8cm of q_00 ] {$q_{01}$};
+%  \node[state] (q_11) [right= 1.8cm of q_01 ] {$q_{11}$};
+%  \node[state] (q_21) [right= 1.8cm of q_11 ] {$q_{21}$};
+%  \node[state] (q_31) [below= of q_21 ] {$q_{31}$};
+%  \node[state] (q_41) [left= 1.8cm of q_31 ] {$q_{41}$};
+%  \node[state,accepting] (q_42) [left= 1.8cm of q_41] {$q_{42}$};
+%  \draw[]        
+%         (q_00) edge[above] node{$rs_1 \ll b$} (q_01)
+%         (q_01) edge[above] node{$rs_1 \gg b$} (q_11)
+%         (q_11) edge[above] node{$b_0 \ll m$} (q_21)
+%         (q_11) edge[right] node{$wait$} (q_31)
+%         (q_21) edge[right] node{$b_0 \gg m$} (q_31)
+%         (q_31) edge[above] node{$sr \ll c$} (q_41)
+%         (q_41) edge[above] node{$sr \gg c$} (q_42)
+%       ;
+%\end{tikzpicture}
+%\end{center}
+%\end{itemize} 
+%
+%%%%%%%%%%
 
-\subsection*{AFCAs y composición parcial}
-\cnote{Escribir cómo los AFCAs posibilitan composición parcial.}
+\cnote{Explicar cómo los autómatas ejemplofocan la comunicación.}
 
 \begin{figure}[H]
-
-\subfloat[AFCAs $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$]{
-\label{a_i}
+\begin{center}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_1$};
@@ -326,7 +328,7 @@ Considere los siguientes AFCA:
         (q_3) edge[right] node{$int_p$} (q_4)
         ; 
 \end{tikzpicture} 
-\qquad
+\ 
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [below= of q_0 ] {$q_1$};
@@ -337,7 +339,7 @@ Considere los siguientes AFCA:
         (q_1) edge[right] node{in(pr,a)} (q_2)
         ;
 \end{tikzpicture} 
-\qquad
+\ 
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [below= of q_0 ] {$q_1$};
@@ -348,9 +350,12 @@ Considere los siguientes AFCA:
         
         ;
 \end{tikzpicture} 
-}
+\end{center}
+\caption{Autómatas finitos de comunicación asincrónica $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$.}
+\label{a_i}
+\end{figure}
 
-\subfloat[$\mathcal{A}$, composición parcial de los AFCAs $\mathcal{A}_i$]{
+\begin{figure}[H]
 \label{A}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_{000}$}; 
@@ -378,10 +383,18 @@ Considere los siguientes AFCA:
         (q_9) edge[below] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
-}
-\caption{Composición parcial de AFCAs de la Subfig.~\ref{a_i}.}
-\label{ex:compo-parcial}
+\caption{Composición de los AFCAs de la Fig.~\ref{a_i}.}
+\label{A}
 \end{figure}
+
+
+
+\end{ejemplo}
+
+\subsection*{AFCAs y composición parcial}
+\cnote{Escribir cómo los AFCAs posibilitan composición parcial.}
+
+\cnote{Componer $\mathcal{A}_1$ y $\mathcal{A}_2$ y dejar $\mathcal{A}_3$ como está.}
 
 
 \section{Aspectos comunicacionales de los AFCA}

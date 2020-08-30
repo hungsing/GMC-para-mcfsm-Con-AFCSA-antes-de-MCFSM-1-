@@ -5,12 +5,15 @@
 \chapter*{\runtitulo}
 
 Los sistemas distribuidos resultantes de paradigmas emergentes como \emph{service-oriented computing}(SOC) y Cloud/Fog computing están transformando al mundo del software, impulsando lo que se denomina economía de API. La idea subyacente de economía de API es la posibilidad de construir software componiendo servicios externos y registrados previamente en repositorios. Aplicaciones que corren sobre recursos disponibles a nivel global con una infraestructura de comunicación que se reconfiguran en forma dinámica y transparente, a través de un middleware dedicado capaz de descubrir y conectarlas a servicios que puedan cumplir determinados requisitos. 
-En general los aspectos principales del comportamiento de una API son documentados informalmente limitando la posibilidad de lograr la utopía de SOC: la negociación de servicios en forma automática. Un elemento clave para esto es la existencia de lenguajes formales, junto con técnicas asociadas de análisis, capaces de expresar por completo el contrato de comportamiento de una API. Estos formalismos usualmente están definidos de forma que la correctitud se reduce a la ausencia de ciertas configuraciones (\emph{deadlock}, \emph{receptor no especificado}, \emph{mensajes huérfanos}), que sólo puede ser comprobada con la presencia de todos los participantes. Entonces a la hora de formalizar el proceso de asegurar la interoperabilidad entre más de dos require points, todos los componentes deben comprometerse a conectarse aún cuando no se requiera su participación al principio de la comunicación. Generalized Multi-party Compatibility (GMC) es una condición suficientepara la condición de correctitud arriba detallada. En este trabajo estudiamos: 
+
+En general los aspectos principales del comportamiento de una API son documentados informalmente limitando la posibilidad de lograr la utopía de SOC: la negociación de servicios en forma automática. Un elemento clave para esto es la existencia de lenguajes formales, junto con técnicas asociadas de análisis, capaces de expresar por completo el contrato de comportamiento de una API. Estos formalismos usualmente están definidos de forma que la correctitud se reduce a la ausencia de ciertas configuraciones consideradas erróneas (i.e., \emph{deadlock}, \emph{receptor no especificado}, y \emph{mensajes huérfanos}), que sólo puede ser comprobada con la presencia de todos los participantes a través de propiedades como \emph{Generalized Multiparty Ccompatibility} (GMC).
+
+En este trabajo nos abocaremos al estudio de: 
 \begin{inparaenum}[1)] 
-\item una nueva clase de CFSM, llamada Multichannel Communicating Finite State Machines (mCFSMs), con la posibilidad de tener más de un canal de comunicación con los otros participantes, 
+\item una nueva clase de \emph{Communicating Finite State Machines} (CFSMs), llamada Multichannel Communicating Finite State Machines (mCFSMs), que cuenta con la posibilidad de tener más de un canal de comunicación con los otros participantes, 
 \item una definición de la propiedad de GMC para sistemas de mCFSMs,
-\item una clase de Autómatas de Comunicación Asincrónica (ACAs) con la capacidad de internalizar la comuniación como operaciones de lectura/escritura en canales internos, ermitiendo la composición parcial de autómatas de comunicación y
-\item un método para mapear un ACA a una mCFSM con un mecanismo para comprobar la propiedad de GMC para la clase de ACA.
+\item una clase de Autómatas Finitos de Comunicación Asincrónica (AFCAs) con la capacidad de internalizar la comunicación entre participantes como operaciones de lectura/escritura en buffers internos, permitiendo la composición parcial de AFCAs, y
+\item una forma de relacionar un AFCA con su correspondiente mCFSM, facilitando un mecanismo para comprobar la propiedad de GMC para la clase de AFCAs.
 \end{inparaenum}
 
 \bigskip

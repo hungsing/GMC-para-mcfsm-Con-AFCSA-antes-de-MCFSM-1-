@@ -309,7 +309,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 %
 %%%%%%%%%%
 
-\cnote{Explicar cómo los autómatas ejemplofocan la comunicación.}
+\cnote{Explicar cómo los autómatas ejemplifican la comunicación referenciando la Fig.~\ref{a_i}.}
 
 \begin{figure}[H]
 \begin{center}
@@ -392,9 +392,42 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 \end{ejemplo}
 
 \subsection*{AFCAs y composición parcial}
-\cnote{Escribir cómo los AFCAs posibilitan composición parcial.}
+\cnote{Escribir cómo los AFCAs posibilitan composición parcial y explicar referenciando la Fig.~\ref{A-parcial}.}
 
 \cnote{Componer $\mathcal{A}_1$ y $\mathcal{A}_2$ y dejar $\mathcal{A}_3$ como está.}
+
+\begin{figure}[H]
+\label{A}
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_{000}$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
+ \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110}$};
+ \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{120}$};
+  \node[state] (q_4) [right = 1.5 of q_3 ] {$q_{121}$};
+  \node[state] (q_5) [below=  of q_0] {$q_{001}$};
+  \node[state] (q_6) [right = 1.5cm of q_5] {$q_{201}$};
+  \node[state] (q_7) [right = 1.5 of q_6 ] {$q_{301}$};
+  \node[state] (q_8) [right = 1.5 of q_7 ] {$q_{311}$};
+  \node[state] (q_9) [right = 1.5 of q_8 ] {$q_{321}$};
+ \node[state,accepting] (q_10) [right= 1.5cm of q_9 ] {$q_{421}$};
+ \draw[]        
+        (q_0) edge[above] node{$PR \ll a$} (q_1)
+        (q_1) edge[above] node{$int_r$} (q_2)
+		(q_2) edge[above] node{$PR \gg a$} (q_3)
+        (q_3) edge[above] node{$SP \ll b$} (q_4) 
+        (q_4) edge[right] node{$SP \gg b$} (q_9)
+        (q_0) edge[left] node{$SP \ll b$} (q_5)
+        (q_5) edge[below] node{$SP \gg b$} (q_6)
+        (q_6) edge[below] node{$PR \ll a$} (q_7)
+        (q_7) edge[below] node{$int_r$} (q_8)
+        (q_8) edge[below] node{$PR \gg a$} (q_9)
+        (q_9) edge[below] node{$int_p$} (q_10)
+        ;
+\end{tikzpicture}
+\caption{Composición parcial de los AFCAs de la Fig.~\ref{a_i}.}
+\label{A-parcial}
+\end{figure}
+
 
 
 \section{Aspectos comunicacionales de los AFCA}
@@ -434,44 +467,90 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{enumerate}
 \end{definition}
 
-\begin{ejemplo}[Interfaz de comunicación de un AFCA] \label{def:interfazcom}
-Consiere el siguiente autómata finito de comunicación asincrónica:
-\begin{center}
-        \begin{tikzpicture}[->, thick]
-            \node[state,initial] (q_0)   {$q_0$}; 
-            \node[state] (q_1) [right= 1.8cm of q_0 ] {$q_1$};
-            \node[state, accepting] (q_3) [right= 1.5cm of q_1 ] {$q_3$};
-            \node[state] (q_5) [right= 1.8cm of q_3 ] {$q_5$};
-            \node[state] (q_2) [below= 1.5cm of q_0 ] {$q_2$};
-            \node[state] (q_4) [right= 1.8cm of q_2 ] {$q_4$};
-    
-            \draw[]        
-            (q_0) edge[above] node{$out(pr_1,a)$} (q_1)
-            (q_1) edge[above] node{$in(rp_2,d)$} (q_3)
-            (q_0) edge[left] node{$in(rp_1,b)$} (q_2) 
-            (q_2) edge[below] node{$out(pr_2,c)$} (q_4)
-            (q_4) edge[left] node{$intr$} (q_3)
-            (q_3) edge[bend right,below] node{$b_1 \ll m_1$} (q_5)
-            (q_5) edge[bend right,above] node{$b_1 \gg m_1$} (q_3)
-        ;
-        \end{tikzpicture}
-        \end{center}
-A continuación, presentamos su interfaz de comunicación formalizada como una multichannel communicating finite state machine:
-\begin{center}
-    \begin{tikzpicture}[->, thick]
-            \node[state,initial] (q_0)   {$[q_0]$}; 
-            \node[state] (q_1) [right= 1.5cm of q_0 ] {$[q_1]$};
-            \node[state] (q_2) [below= 1.5cm of q_0 ] {$[q_2]$};
-            \node[state] (q_3) [right= 1.5cm of q_2 ] {$[q_3]$};
+\begin{ejemplo}[Interfaz de comunicación de un AFCA] 
+\label{def:interfazcom}
+%%%%%%%%%%
+% Ejemplo viejo
+%%%%%%%%%%
+%
+%Consiere el siguiente autómata finito de comunicación asincrónica:
+%\begin{center}
+%        \begin{tikzpicture}[->, thick]
+%            \node[state,initial] (q_0)   {$q_0$}; 
+%            \node[state] (q_1) [right= 1.8cm of q_0 ] {$q_1$};
+%            \node[state, accepting] (q_3) [right= 1.5cm of q_1 ] {$q_3$};
+%            \node[state] (q_5) [right= 1.8cm of q_3 ] {$q_5$};
+%            \node[state] (q_2) [below= 1.5cm of q_0 ] {$q_2$};
+%            \node[state] (q_4) [right= 1.8cm of q_2 ] {$q_4$};
+%    
+%            \draw[]        
+%            (q_0) edge[above] node{$out(pr_1,a)$} (q_1)
+%            (q_1) edge[above] node{$in(rp_2,d)$} (q_3)
+%            (q_0) edge[left] node{$in(rp_1,b)$} (q_2) 
+%            (q_2) edge[below] node{$out(pr_2,c)$} (q_4)
+%            (q_4) edge[left] node{$intr$} (q_3)
+%            (q_3) edge[bend right,below] node{$b_1 \ll m_1$} (q_5)
+%            (q_5) edge[bend right,above] node{$b_1 \gg m_1$} (q_3)
+%        ;
+%        \end{tikzpicture}
+%        \end{center}
+%A continuación, presentamos su interfaz de comunicación formalizada como una multichannel communicating finite state machine:
+%\begin{center}
+%    \begin{tikzpicture}[->, thick]
+%            \node[state,initial] (q_0)   {$[q_0]$}; 
+%            \node[state] (q_1) [right= 1.5cm of q_0 ] {$[q_1]$};
+%            \node[state] (q_2) [below= 1.5cm of q_0 ] {$[q_2]$};
+%            \node[state] (q_3) [right= 1.5cm of q_2 ] {$[q_3]$};
+%
+%            \draw[]        
+%            (q_0) edge[above] node{$pr_1!a$} (q_1)
+%            (q_0) edge[right] node{$rp_1?b$} (q_2)
+%            (q_1) edge[right] node{$rp_2?d$} (q_3)
+%            (q_2) edge[above] node{$pr_2!c$} (q_3)
+%        ; 
+%        \end{tikzpicture}     
+%\end{center}
+%
+%%%%%%%%%%
 
-            \draw[]        
-            (q_0) edge[above] node{$pr_1!a$} (q_1)
-            (q_0) edge[right] node{$rp_1?b$} (q_2)
-            (q_1) edge[right] node{$rp_2?d$} (q_3)
-            (q_2) edge[above] node{$pr_2!c$} (q_3)
+\cnote{Explicar el ejemplo referenciando la Fig.~\ref{m_i}.}
+
+\begin{figure}[H]
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= of q_0 ] {$q_1$};
+  \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= of q_2 ] {$q_3$};
+
+ \draw[]        
+        (q_0) edge[above] node{pr!a} (q_1)
+        (q_0) edge[right] node{sp?b} (q_2)
+        (q_1) edge[right] node{sp?b} (q_3)
+        (q_2) edge[above] node{pr!a} (q_3)
         ; 
-        \end{tikzpicture}     
-\end{center}
+\end{tikzpicture} 
+\
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_2$};
+
+ \draw[]        
+        (q_0) edge[right] node{pr?a} (q_1)
+        ;
+\end{tikzpicture} 
+\ 
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+ 
+ \draw[]        
+        (q_0) edge[right] node{sp!b} (q_1)
+        ;
+\end{tikzpicture} 
+\caption{mCFSM $M_1$, $M_2$ y $M_3$, correspondientes a los AFCAs del Subfig.~\ref{a_i}.}
+\label{m_i}
+\end{figure}
+
 \end{ejemplo}
 
 

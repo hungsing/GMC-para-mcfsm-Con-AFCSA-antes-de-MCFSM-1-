@@ -150,7 +150,7 @@ El comportamiento de un AFCA es el conjunto de todas las trazas posibles.
 
 \begin{ejemplo}[Ejemplo de un Autómata Finito de Comunicación Asincrónica]
 \label{ex:AFCA}
-Considere el AFCA $S= \langle \{q_0,..,q_5\},[b_0],\{sr_1,sr_2,rs_1\}, \Sigma_A, \delta_A, q_0, \{q_4\} \rangle$. Donde $\Sigma =\{wait, b_0 \ll m_1,b_0 \gg m_1, Out(sr_1,a),Out(sr_2,c), In(rs_1,b),In(rs_2,d) \}$
+Considere el AFCA $S= \langle \{q_0,..,q_5\},\{b_0\},\{sr_1,sr_2,rs_1\}, \Sigma_A, \delta_A, q_0, \{q_4\} \rangle$. Donde $\Sigma =\{wait, b_0 \ll m_1,b_0 \gg m_1, Out(sr_1,a),Out(sr_2,c), In(rs_1,b),In(rs_2,d) \}$
 \begin{center}
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
@@ -309,7 +309,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 %
 %%%%%%%%%%
 
-\cnote{Explicar cómo los autómatas ejemplifican la comunicación referenciando la Fig.~\ref{a_i}.}
+En las siguiente figuras vemos un ejemplo de tres comunicación de tres AFCA y como funciona el mecanismo de composición. En la Fig.~\ref{a_i} tenemos $P = \langle \{q_0,\ldots,q_4\}, \emptyset, \{PR,SP\}, \\ \{out(PR,a),in(SP,b),in(SP,b),out(PR,a),int_p\}, \delta_P,q_0. \{q_4\} \rangle$, $R = \langle \{q_0,\ldots,q_2\}, \emptyset, \{PR\}, \\ \{int_r,in(PR,a)\}, \delta_R,q_0. \{q_2\} \rangle$ y $S = \langle \{q_0,q_1\}, \emptyset, \{SP\}, \{out(SP,b)\}, \delta_P,q_0. \{q_1\} \rangle$. Estos autómatas solo poseen comunicación externa y, en el caso de $P$ y $R$, transiciones internas. La comunicación puede comenzar con $P$ envíando el mensaje $a$ a $R$ o con $S$ enviando a $P$ el mensjae $b$. En ambos casos el autómata destino recibe la comunicación cuando está habilitado. En el caso de $P$, puede recibir $b$ desde el inicio de su ejecución o una vez enviado $a$, mientras que $R$ primero tiene que pasar por la transición interna $int_r$ para poder recibir $a$ y terminar. Por último $P$ termina su ejecución con la transición interna $int_p$. En la Fig.~\ref{A} podemos ver la composición total de los tres componentes en $\mathcal{A}= \langle \{q_{000},\ldots,q_{121}\}, \emptyset, \{PR,SP\}, \Sigma_{\mathcal{A}}, \delta_{\mathcal{A}}, \{q_{000}\}, \{q_{421}\}$ donde la comunicación que antes era externa ahora está internalizada. Los canales se convierten en buffers por donde se van mensajes. De esta forma se mantiene el orden original de la comunicación pero representada en su totalidad un único autómata.
 
 \begin{figure}[H]
 \begin{center}
@@ -321,10 +321,10 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
  \node[state, accepting] (q_4) [below= of q_3 ] {$q_4$};
 	
  \draw[]        
-        (q_0) edge[above] node{out(pr,a)} (q_1)
-        (q_0) edge[left] node{in(sp,b)} (q_2)
-        (q_1) edge[right] node{in(sp,b)} (q_3)
-        (q_2) edge[above] node{out(pr,a)} (q_3)
+        (q_0) edge[above] node{out(PR,a)} (q_1)
+        (q_0) edge[left] node{in(SP,b)} (q_2)
+        (q_1) edge[right] node{in(SP,b)} (q_3)
+        (q_2) edge[above] node{out(PR,a)} (q_3)
         (q_3) edge[right] node{$int_p$} (q_4)
         ; 
 \end{tikzpicture} 
@@ -351,7 +351,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
         ;
 \end{tikzpicture} 
 \end{center}
-\caption{Autómatas finitos de comunicación asincrónica $\mathcal{A}_1$, $\mathcal{A}_2$, $\mathcal{A}_3$.}
+\caption{Autómatas finitos de comunicación asincrónica $P$, $R$, $S$.}
 \label{a_i}
 \end{figure}
 
@@ -399,34 +399,44 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 \cnote{Componer $\mathcal{A}_1$ y $\mathcal{A}_2$ y dejar $\mathcal{A}_3$ como está.}
 
 \begin{figure}[H]
-\begin{center}
 \begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_{000}$}; 
- \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{100}$};
- \node[state] (q_2) [right = 1.5 of q_1 ] {$q_{110}$};
- \node[state] (q_3) [right = 1.5 of q_2 ] {$q_{120}$};
-  \node[state] (q_4) [right = 1.5 of q_3 ] {$q_{121}$};
-  \node[state] (q_5) [below=  of q_0] {$q_{001}$};
-  \node[state] (q_6) [right = 1.5cm of q_5] {$q_{201}$};
-  \node[state] (q_7) [right = 1.5 of q_6 ] {$q_{301}$};
-  \node[state] (q_8) [right = 1.5 of q_7 ] {$q_{311}$};
-  \node[state] (q_9) [right = 1.5 of q_8 ] {$q_{321}$};
- \node[state,accepting] (q_10) [right= 1.5cm of q_9 ] {$q_{421}$};
+ \node[state,initial] (q_0)   {$q_{00}$}; 
+ \node[state] (q_1) [right= 1.5cm of q_0 ] {$q_{01}$};
+ \node[state] (q_2) [right = 2 of q_1 ] {$q_{11}$};
+ \node[state] (q_3) [below = 1.5 of q_2 ] {$q_{12}$};
+  \node[state] (q_4) [below = of q_3 ] {$q_{32}$};
+  \node[state] (q_5) [below=  of q_1] {$q_{10}$};
+  \node[state] (q_6) [below = 1.5cm of q_5] {$q_{30}$};
+  \node[state] (q_7) [below = 1.5 of q_6 ] {$q_{31}$};
+  \node[state] (q_8) [below = of q_0 ] {$q_{20}$};
+  \node[state] (q_9) [below = of q_8 ] {$q_{21}$};
+ \node[state,accepting] (q_10) [below= 1.5cm of q_4 ] {$q_{42}$};
  \draw[]        
-        (q_0) edge[above] node{$PR \ll a$} (q_1)
-        (q_1) edge[above] node{$int_r$} (q_2)
-		(q_2) edge[above] node{$PR \gg a$} (q_3)
-        (q_3) edge[above] node{$SP \ll b$} (q_4) 
-        (q_4) edge[right] node{$SP \gg b$} (q_9)
-        (q_0) edge[left] node{$SP \ll b$} (q_5)
-        (q_5) edge[below] node{$SP \gg b$} (q_6)
-        (q_6) edge[below] node{$PR \ll a$} (q_7)
-        (q_7) edge[below] node{$int_r$} (q_8)
-        (q_8) edge[below] node{$PR \gg a$} (q_9)
-        (q_9) edge[below] node{$int_p$} (q_10)
+        (q_0) edge[above] node{$int_r$} (q_1)
+        (q_1) edge[above] node{$PR \ll a$} (q_2)
+		(q_2) edge[right] node{$PR \gg a$} (q_3)
+        (q_3) edge[right] node{$in(SP,b)$} (q_4) 
+        (q_0) edge[right] node{$PR \ll a$} (q_5)
+        (q_5) edge[right] node{$in(SP,b)$} (q_6)
+        (q_6) edge[left] node{$int_r$} (q_7)
+        (q_7) edge[right] node{$PR \gg a$} (q_4)
+        (q_0) edge[left] node{$in(SP,b)$} (q_8)
+        (q_8) edge[left] node{$int_r$} (q_9)
+        (q_9) edge[left] node{$PR \ll a$} (q_7)
+        (q_4) edge[right] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
-\end{center}
+\ 
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{out(sp,b)} (q_1)
+        
+        ;
+\end{tikzpicture}
 \caption{Composición parcial de los AFCAs de la Fig.~\ref{a_i}.}
 \label{A-parcial}
 \end{figure}
@@ -516,15 +526,14 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 %
 %%%%%%%%%%
 
-\cnote{Explicar el ejemplo referenciando la Fig.~\ref{m_i}.}
-
+Las siguientes mCFSMs son el resultado de proyectar la interfaz de comunicación (Def.~\ref{def:interfazcom}) de los AFCAs de la Fig.~\ref{a_i}, donde $M_1, M_2$ y $M_3$ representan las interfaces de comunicación externa de $\mathcal{A}_1, \mathcal{A}_1$ y $\mathcal{A}_3$, respectivamente.
 \begin{figure}[H]
 \begin{center}
 \begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [right= of q_0 ] {$q_1$};
-  \node[state] (q_2) [below= of q_0 ] {$q_2$};
- \node[state] (q_3) [right= of q_2 ] {$q_3$};
+ \node[state,initial] (q_0)   {$[q_0]$}; 
+ \node[state] (q_1) [right= of q_0 ] {$[q_1]$};
+  \node[state] (q_2) [below= of q_0 ] {$[q_2$]};
+ \node[state] (q_3) [right= of q_2 ] {$[q_3]$};
 
  \draw[]        
         (q_0) edge[above] node{pr!a} (q_1)
@@ -535,8 +544,8 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{tikzpicture} 
 \
 \begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below= of q_0 ] {$q_2$};
+ \node[state,initial] (q_0)   {$[q_0]$}; 
+ \node[state] (q_1) [below= of q_0 ] {$[q_2]$};
 
  \draw[]        
         (q_0) edge[right] node{pr?a} (q_1)
@@ -544,8 +553,8 @@ Multichannel CFSMs  con un único canal para cada par ordenado de participantes 
 \end{tikzpicture} 
 \ 
 \begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below= of q_0 ] {$q_1$};
+ \node[state,initial] (q_0)   {$[q_0]$}; 
+ \node[state] (q_1) [below= of q_0 ] {$[q_1]$};
  
  \draw[]        
         (q_0) edge[right] node{sp!b} (q_1)

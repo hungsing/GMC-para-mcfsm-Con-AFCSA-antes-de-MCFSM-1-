@@ -394,9 +394,7 @@ En las siguiente figuras vemos un ejemplo de tres comunicación de tres AFCA y c
 
 \subsection{AFCAs y composición parcial}
 \label{afca-compo-parcial}
-\cnote{Escribir cómo los AFCAs posibilitan composición parcial y explicar referenciando la Fig.~\ref{A-parcial}.}
-
-\cnote{Componer $\mathcal{A}_1$ y $\mathcal{A}_2$ y dejar $\mathcal{A}_3$ como está.}
+El objetivo principal de esta clase de autómatas es posibilitar la composición parcial de componentes de un sistema, como idea de que sirva de reconfiguración dinámica del mismo. Esto debiera visibilizarse a partir de poder, dado un conjunto de AFCAs, tomar un subcjto y componerlo, y que el resultado siga siendo un conjunto de AFCAs que puede ser compuesto a su vez. En la Fig.~\ref{a_i} vemos un conjunto de tres AFCA compatibles para la composición. Tomando este mismo conjunto podemos elegir componer solo dos y nos seguiría quedando un conjunto de AFCAs compatibles, como podemos ver en la Fig.~\ref{A-parcial} con el autómata compuesto $\mathcal{A}_{PR}$ y el autómata $S$.
 
 \begin{figure}[H]
 \begin{tikzpicture}[->, thick]
@@ -426,7 +424,7 @@ En las siguiente figuras vemos un ejemplo de tres comunicación de tres AFCA y c
         (q_4) edge[right] node{$int_p$} (q_10)
         ;
 \end{tikzpicture}
-\ 
+\
 \begin{tikzpicture}[->, thick]
  \node[state,initial] (q_0)   {$q_0$}; 
  \node[state] (q_1) [below= of q_0 ] {$q_1$};

@@ -111,7 +111,7 @@ El conjunto de configuraciones alcanzables de S es $RS(S) = \{q \in Q_S | \langl
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
 
-\begin{definition}[Deadlock]Sea $S$ un CS, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
+\begin{definition}[Deadlock]Sea $S$ un CS, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $\langle q_r,sr?a,q'_r \rangle \in \delta_r$, y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
 \end{definition}
 
 \begin{definition}[Recepción no especificada]Sea $S$ un CS, una transición $t$ del mismo y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de recepción no especificada} si existe $r \in \mathcal{P}$ tal que $qr$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ implica que $|\omega_sr| > 0$ y $\omega_sr \notin a\mathcal{M}*$. Una configuración de recepción no especificada corresponde a una configuración en la que la máquina está bloqueada definitivamente por su incapacidad para recibir el mensaje que se encuentra en sus canales.
@@ -162,15 +162,15 @@ Consideremos la siguiente CFSM:
 \begin{enumerate}
     \item \label{ex:cond1} $(q_0, sr!a,q1) \underline{\Diamond} (q_2,sr!a,q3)  $ %dado que está entrelazada con $sr'!b$
     \item \label{ex:cond2} $(q_0, sr!a,q1) \underline{\blacklozenge} (q_2,sr!a,q3) $ %por la misma razón que 1
-    \item \label{ex:cond3} No vale $ ((q_0, sr!a,q1) \underline{\Diamond} (q_1,sr'!b,q5))$ %porque la transición entre $q_0$ y $q_1$ pasa a través de $sr!a$. Es decir que las dos transiciones son secuenciales no concurrentes. 
+    \item \label{ex:cond3} No vale $ ((q_0, sr!a,q1) \underline{\Diamond} (q_1,sr'!a,q5))$ %porque la transición entre $q_0$ y $q_1$ pasa a través de $sr!a$. Es decir que las dos transiciones son secuenciales no concurrentes. 
     \item \label{ex:cond4} $ (q_0, sr'!b,q2) \underline{\Diamond} (q_1, sr'!b,q3)$ %la relación e 
     \item \label{ex:cond5} No vale $((q_0, sr'!b,q2) \underline{\blacklozenge} (q_1,sr'!b,q_3)) $
 \end{enumerate}
 
-Las relaciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond1}--~\ref{ex:relaciones}.\ref{ex:cond2} se sostienen dado que ambas transiciones están entrelazadas con $sr'!b$. La relacion en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} no se sostiene debido a que la transición entre el origen de una $(q_0)$ y el del otro $(q_1)$ pasa por $sr!a$. Ambas transiciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} son secuenciales, no concurrentes. La relación en Ej.~\ref{ex:relaciones}.\ref{ex:cond4} se sostiene, pero en Ej.~\ref{ex:relaciones}.\ref{ex:cond5} no porque $(q_5,sr'!b,q_6)$ está en la clase de $\Diamond$-equivalencia de $(q_0,sr'!b,q_2)$ para la cual la condición no se sostiene (debido a la transición con la etiqueta $sr!c$).
+Las relaciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond1}--~\ref{ex:relaciones}.\ref{ex:cond2} se sostienen dado que ambas transiciones están intercaladas con $sr'!b$. La relacion en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} no se sostiene debido a que la transición entre el origen de una $(q_0)$ y el del otro $(q_1)$ pasa por $sr!a$. Ambas transiciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} son secuenciales, no concurrentes. La relación en Ej.~\ref{ex:relaciones}.\ref{ex:cond4} se sostiene, pero en Ej.~\ref{ex:relaciones}.\ref{ex:cond5} no porque $(q_5,sr'!b,q_6)$ está en la clase de $\Diamond$-equivalencia de $(q_0,sr'!b,q_2)$ para la cual la condición no se sostiene (debido a la transición con la etiqueta $sr!c$).
 \end{ejemplo}
 
-\begin{definition}[Eventos] Dados un conjunto de participantes $\mathcal{P}$ y un conjunto de mensajes $\mathcal{M}$ definimos un evento $e$ como es una tupla $\langle q_s, q_r, s, r, a \rangle)$ (también escrita como $\langle q_s, q_r, s \rightarrow r:a \rangle$), tal que $s,r \in \mathcal{P}$, indicando que $s$ y $r$ pueden intercambiar el mensaje a, cuando están en el estado $q_s$ y $q_r$, respectivamente.
+\begin{definition}[Eventos] Dados un conjunto de participantes $\mathcal{P}$ y un conjunto de mensajes $\mathcal{M}$ definimos un evento $e$ como es una tupla $\langle q_s, q_r, s, r, a \rangle)$ (también escrita como $\langle q_s, q_r, s \rightarrow r:a \rangle$), tal que $s,r \in \mathcal{P}$, indicando que $s$ y $r$ pueden intercambiar el mensaje $a$, cuando están en el estado $q_s$ y $q_r$, respectivamente.
 \end{definition}
 
 Tomando en consideración la definición anterior, para distinguir el paralelsimo a nivel máquina introducimos una relación de equivalencia sobre eventos que identifica eventos cuyas transiciones son $\blacklozenge$-equivalentes.
@@ -230,7 +230,7 @@ En el sistema de arriba podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \
 
 Para el primero queremos ver que $(q_{0p}, pr!a, q_{1p}) \romboeqn (q_{2p}, pr!a, q_{3p})$
 Para esto necesitamos que valga $(q_{0p}, pr!a, q_{1p}) \romboeqb (q_{2p}, pr!a, q_{3p})$. Esto se cumple dado que $pr!a \notin act(q_{0p},q_{2p})$ y $act(q_{0p},q_{2p}) = act(q_{1p},q_{3p}) \neq \emptyset$. Ahora tenemos que ver la clase de equivalencia $[(q_{0p}, pr!a, q_{1p})]^{\Diamond}$. La misma es el conjunto unitario $ \{(q_{2p}, pr!a, q_{3p})\}$. Por último queremos ver que  $act(q_{0p}, q_{2p}) = 
-act(q_{1p}, q_{3p}) \land act(q_{2p}, q_{2p}) = act(q_{3p}, q_{3p})$. La segunda es trivial, la primera se cumple siendo el conjunto unitario $\{sp?b\}$. Con esto demostramos que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_p (q_{2p}, q_{0r}, p \rightarrow r:a)$ 
+act(q_{1p}, q_{3p})$ y $act(q_{2p}, q_{2p}) = act(q_{3p}, q_{3p})$. La segunda es trivial, la primera se cumple siendo el conjunto unitario $\{sp?b\}$. Con esto demostramos que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_p (q_{2p}, q_{0r}, p \rightarrow r:a)$ 
 
 Nos queda probar que vale $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_r (q_{2p}, q_{0r}, p \rightarrow r:a)$. Esta equivalencia es más sencilla de probar, dado que tenemos una única transición. Entonces vemos que es trivial que $(q_{0r}, pr?a, q_{1r}) \underline{\blacklozenge} (q_{0r}, pr?a, q_{1r})$. Con esto vemos que $(q_{0p}, q_{0r}, p \rightarrow r:a)$ y $(q_{2p}, q_{0r}, p \rightarrow r:a)$ son equivalentes en $\bowtie_p$ y $\bowtie_r$, por lo tanto están en $\bowtie = \bowtie_p \cap \bowtie_r$.
 \end{ejemplo} 
@@ -283,18 +283,18 @@ sp?a & \mathit{if} r=p \\
 La proyección se define sobre secuencias de eventos en el modo evidente. La proyección $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$ sobre el participante p, notada $ TS(S) \downharpoonright_p $, es el autómata $(Q, q_0, \Sigma, \delta)$ donde $Q=N, \ q_0 = n_0$, $\Sigma$ es el conjunto de etiquetas y $\delta \subseteq Q \times \Sigma \cup \{ \epsilon \} \times Q $ es el conjunto de transiciones, tal que $(n_1, e \downharpoonright_p, n_2) \in \delta \iff n_1 \overset{e}{\rightrightharpoons} n_2 $
 \end{definition}
 
-Introducimos el concepto de generalized multiparty compatibility (GMC) como una condición completa y sólida para construir CFSMs. 
+A continuación introducimos el concepto de \emph{Generalized Multiparty Compatibility} (GMC). La noción de GMC originalmente surge en \cite{lange:popl15} como una condición completa y sólida para construir Global Graphs. En este trabajo la utilizamos como método para comprobar que un conjunto de CFSMs que forman un CS puedan operar correctamente entre sí. 
 % Usé sólida como traducción de sound. En el paper habla de construir global graphs, término que acá no usamos, no se si puse bien
-A partir de este punto, fijamos un sistema $S =(M_p)_{p \in \mathcal{P}} $ con $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$. GMC depende de dos condiciones, representabilidad y propiedad de ramificación.\\
+A partir de este punto, fijamos un sistema $S =(M_p)_{p \in \mathcal{P}} $ con $TS(S)= (N, n_0, \hat{E}, \rightrightharpoons)$. GMC depende de dos condiciones, representabilidad y propiedad de ramificación.\\    
 
-La propiedad de representabilidad determina que cada máquina, traza y elección estén representadas en el sistema de transición.
+La propiedad de representabilidad determina que cada traza y elección de cada máquina estén representadas en el sistema de transición.
 
 \begin{definition}
 Para un lenguaje $\mathcal{L}$, $hd(\mathcal{L})$ devuelve las primeras acciones de $\mathcal{L}$ si las tiene: 
 \begin{center}
 $hd(\mathcal{L})= \{\ell \ | \ \exists q \in Act*: \ell \cdot q \in \mathcal{L} \}$	\ \	 $hd(\{ \epsilon \}) = \{ \epsilon \}$
 \end{center}
-Dado $n \in N$, sea $ TS(S)\langle n \rangle$ el sistema de transición TS(S) donde se reemplaza al estado inicial $n_0$ por $n$. Escribimos LT(S,n,p) para $\mathcal{L}(TS(S)\langle n \rangle)\downharpoonright_p $, es decir LT(S,n,p) es el lenguaje que se obtiene estableciendo a n como nodo inicial de TS(S) y proyectando el nuevo sistema de transición sobre p.
+Dado $n \in N$, sea $ TS(S)\langle n \rangle$ el sistema de transición TS(S) donde se reemplaza al estado inicial $n_0$ por $n$. Escribimos LT(S,n,p) para $\mathcal{L}(TS(S)\langle n \rangle)\downharpoonright_p $, es decir $LT(S,n,p)$ es el lenguaje que se obtiene estableciendo a n como nodo inicial de $TS(S)$ y proyectando el nuevo sistema de transición sobre $p$.\\
 \end{definition}
 
 \begin{definition}[Representabilidad]
@@ -302,16 +302,16 @@ Dado $n \in N$, sea $ TS(S)\langle n \rangle$ el sistema de transición TS(S) do
 Un sistema S es representable si
 \begin{enumerate}
 \item $\mathcal{L}(M_p) = LT(S,n_0,p) $ y
-\item $\forall q \in Q_p \ \exists n \in N: n[p] = q \land  \cup_{(q,\ell, q') \in \delta_p} \{ \ell \} \subseteq hd (LT(S,n,p))$
+\item $\forall q \in Q_p \ \exists n \in N: n[p] = q \land  \bigcup_{(q,\ell, q') \in \delta_p} \{ \ell \} \subseteq hd (LT(S,n,p))$
 \end{enumerate}
 para todo $p \in \mathcal{P} $ \\
 
 La primera condición asegura que cada traza de cada máquina esté en $TS(S)$, a su vez, la segunda condición es necesaria para asegurar que cada elección en cada máquina esté representada en $TS(S)$.
 \end{definition}
 
-La propiedad de ramificación estimula que cada vez que hay una decisión en un sistema $TS(S)$, una única máquina toma esa decisión y cada uno de los otros participantes es notificado de la rama que se tomó o no participa en esa elección. 
+La propiedad de ramificación asegura que cada vez que hay una decisión en un sistema $TS(S)$, una única máquina toma esa decisión y cada uno de los otros participantes es notificado de la rama que se tomó o no participa en esa elección. 
  
-\begin{definition}[Propiedad de ramificación] Un sistema S posee la propiedad de ramificación si para todo $n \in N$ y para todo $e_1 \neq e_2 \in \hat{E} \ \mathit{tq} \ n \overset{e_1}{\rightrightharpoons} n_1 \ \mathit{y} \  \ n_1 \overset{e_2}{\rightrightharpoons} n_2$ luego tenemos
+\begin{definition}[Propiedad de ramificación]\label{def:branching} Un sistema S posee la propiedad de ramificación si para todo $n \in N$ y para todo $e_1 \neq e_2 \in \hat{E} \ \mathit{tq} \ n \overset{e_1}{\rightrightharpoons} n_1 \ \mathit{y} \  \ n_1 \overset{e_2}{\rightrightharpoons} n_2$ luego tenemos
 \begin{enumerate}
 \item o bien existe $n'\in N$ tal que $n_1 \overset{e_2}{\rightrightharpoons} n' \ \mathit{y} \ n_2 \overset{e_1}{\rightrightharpoons} n'$, o 
 \item para cada $(n'_1, n'_2) \in ln(n, e_1, e_2)$ quedando 
@@ -330,15 +330,15 @@ $\Rightarrow dep (s_i \rightarrow r: a_i, e_i \cdot \pi_i, s_j \rightarrow r: a_
 \end{enumerate} 
 \end{definition}
 
-Representabilidad garantiza que TS(S) contiene suficiente información para decdir propiedades seguras de cualquier ejecución asincrónica de S. La propiedad de ramificación asegura que si una rama en TS(S) representa una elección esta está "bien formada".
+Representabilidad (Def.~\ref{def:representabilidad}) garantiza que $TS(S)$ contiene suficiente información para decidir propiedades seguras de cualquier ejecución asincrónica de $S$. La propiedad de ramificación (Def.~\ref{def:branching}) asegura que si una rama en $TS(S)$ representa una elección esta está "bien formada".
  
-Con esto definimos que toda ramificación es o bien (1) la ejecución concurrente de dos eventos; o, para cada participante p (2(a)I) si p no termina antes de n entonces las primeras dos acciones de p en dos ramas distintas son disjuntas; o (2(a)II) p no está involucrado en la elección, o sea la ramas se juntan antes de que p realice ninguna acción; (2(b)) hay un único participante s tomando la decisión; y (2(c)) para cada participante r involucrado en la elección, no puede haber race condition entre los mensajes que puede recibir r. La no race condition asegura que en ninguna ejecución (asincrónica) de S si una máquina tiene más de un buffer no vacío, entonces puede leerlos en cualquier orden (interleaving es posible). Notar que si una máquina r recibe todos sus mensajes de un mismo emisor, entonces hay una $\triangleleft$-relación entre todas sus acciones.
+Con esto definimos que toda ramificación es o bien (1) la ejecución concurrente de dos eventos; o, para cada participante $p$ (2(a)I) si $p$ no termina antes de $n$ entonces las primeras dos acciones de $p$ en dos ramas distintas son disjuntas; o (2(a)II) $p$ no está involucrado en la elección, o sea la ramas se juntan antes de que $p$ realice ninguna acción; (2(b)) hay un único participante s tomando la decisión; y (2(c)) para cada participante r involucrado en la elección, no puede haber race condition entre los mensajes que puede recibir $r$. La no race condition asegura que en ninguna ejecución (asincrónica) de $S$ si una máquina tiene más de un buffer no vacío, entonces puede leerlos en cualquier orden (interleaving es posible). Notar que si una máquina $r$ recibe todos sus mensajes de un mismo emisor, entonces hay una $\triangleleft$-relación entre todas sus acciones.
 
-\begin{definition}[Generalised Multiparty Compatibilty] Un CS S es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramifiación. 
+\begin{definition}[Generalised Multiparty Compatibilty] Un CS $S$ es generalised multiparty compatible (GMC) si es representable y posee la propiedad de ramificación. 
 \end{definition}
 
-\begin{theorem}[Solvencia]comSi S es GMC entonces es seguro (no tiene configuraciones de deadlock, recepción no especificada o mensaje huérfano)
+\begin{theorem}[Solvencia] Si $S$ es GMC entonces es seguro (no tiene configuraciones de deadlock, recepción no especificada o mensaje huérfano)
 \end{theorem}
 
-El teorema dice que ninguna ejecución asincrónica de S va a resultar en una configuración de mensaje huérfano, deadlock o recepción no especificada. Basándose en la propiedad de representabilidad (toda transición y ramificación de cada máquina está representada en TS(S)), la demostración \cite{lange:popl15} muestra que todo mensaje enviado es recibido eventualmente y que una máquina en un estado receptor eventualmente recibe el mensaje que espera, según la Def.~\ref{def:representabilidad}.
+El teorema dice que ninguna ejecución asincrónica de $S$ va a resultar en una configuración de mensaje huérfano, deadlock o recepción no especificada. Basándose en la propiedad de representabilidad (toda transición y ramificación de cada máquina está representada en $TS(S)$), la demostración \cite{lange:popl15} muestra que todo mensaje enviado es recibido eventualmente y que una máquina en un estado receptor eventualmente recibe el mensaje que espera, según la Def.~\ref{def:representabilidad}.
 

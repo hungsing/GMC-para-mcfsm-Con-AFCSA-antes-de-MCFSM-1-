@@ -1,7 +1,7 @@
 %!TEX root = ./main.tex
 \chapter{Equivalencia de comportamiento comunicacional}
 \label{resultados}
-Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak determinate sin transiciones de buffer la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
+Esta sección va a estar enfocada en la definición de composición total de autómatas y la noción de que dado un conjunto $\{ \mathcal{A}_i\}_{i \in I}$ de AFCA weak determinate sin transiciones de comunicación interna, la semántica de la composición es equivalente a la del conjunto de mCFSM proyectadas de los elementos de $\{ \mathcal{A}_i\}_{i \in I}$. 
 
 \begin{figure}[H]
 $$
@@ -119,6 +119,7 @@ A continuación vemos un ejemplo de la Proyección de Comunicación según Def.~
     \node[state,initial] (q_0) {$[q_{000}],\epsilon, \epsilon$}; 
      \node[state] (q_1) [right= 3.5cm of q_0 ] {$[q_{100}], a, \epsilon$};
      \node[state] (q_2) [right = 3.5cm of q_1 ] {$[q_{120}],\epsilon,\epsilon$};
+     \node[state] (q_8) [below= of q_1 ] {$[q_{111}], a, b$};
      \node[state] (q_3) [below= of q_2 ] {$[q_{121}],\epsilon, b$};
      \node[state] (q_4) [below=  of q_0] {$[q_{001}],\epsilon, b$};
      \node[state] (q_5) [below = of q_4] {$[q_{201}],\epsilon, \epsilon$};
@@ -127,6 +128,8 @@ A continuación vemos un ejemplo de la Proyección de Comunicación según Def.~
 \draw[]        
      (q_0) edge[above] node{$\langle q_{000}, PR \ll a, q_{100} \rangle$} (q_1)
 	 (q_1) edge[above] node{$\langle q_{110}, PR \gg a, q_{120} \rangle$} (q_2)
+	 (q_1) edge[left] node{$\langle q_{110}, SP \ll b, q_{111} \rangle$} (q_8)
+	 (q_8) edge[above] node{$\langle q_{111}, PR \gg a, q_{121} \rangle$} (q_3)
      (q_2) edge[left] node{$\langle q_{120}, SP \ll b, q_{121} \rangle$} (q_3) 
      (q_3) edge[left] node{$\langle q_{121}, SP \gg b, q_{321} \rangle$} (q_7)
      (q_0) edge[left] node{$\langle q_{000}, SP \ll b, q_{001} \rangle$} (q_4)
@@ -145,6 +148,7 @@ A continuación vemos un ejemplo de la Proyección de Comunicación según Def.~
 \begin{tikzpicture}[->, thick][scale=0.20]
  \node[state,initial] (q_0)   {$q_{000},\epsilon,\epsilon$}; 
  \node[state] (q_1) [right= 3cm of q_0 ] {$q_{100},a, \epsilon$};
+ \node[state] (q_8) [below= of q_1] {$q_{111}, a, b$};
  \node[state] (q_2) [right = 3cm of q_1 ] {$q_{120},\epsilon, \epsilon$};
  \node[state] (q_3) [below = of q_2 ] {$q_{121}, \epsilon,b$};
  \node[state,accepting] (q_4) [below=  of q_3] {$q_{321}, \epsilon,\epsilon$};
@@ -152,14 +156,16 @@ A continuación vemos un ejemplo de la Proyección de Comunicación según Def.~
  \node[state] (q_6) [below = of q_5 ] {$q_{201}, \epsilon, \epsilon$};
  \node[state] (q_7) [right= 3cm of q_6 ] {$q_{301}, a, \epsilon$};
  \draw[]        
-        (q_0) edge[above] node{$\langle q_{0p},PR!a,q_{1p} \rangle$} (q_1)
-        (q_1) edge[above] node{$\langle q_{0r},PR?a,q_{1r} \rangle$} (q_2)
-        (q_2) edge[right] node{$\langle q_{0s},SP!b,q_{1s} \rangle$} (q_3)
-        (q_3) edge[right] node{$\langle q_{1p},SP?b,q_{3p} \rangle$} (q_4)
-        (q_0) edge[left] node{$\langle q_{0s},SP!b,q_{1s} \rangle$} (q_5)
-        (q_5) edge[left] node{$\langle q_{0p},SP?b,q_{2p} \rangle$} (q_6)
-        (q_6) edge[below] node{$\langle q_{2p},PR!a,q_{3p} \rangle$} (q_7)
-        (q_7) edge[below] node{$\langle q_{0r},PR?a,q_{1r} \rangle$} (q_4)
+        (q_0) edge[above] node{$\langle [q_{0p}],PR!a,[q_{1p}] \rangle$} (q_1)
+        (q_1) edge[above] node{$\langle [q_{0r}],PR?a,[q_{1r}] \rangle$} (q_2)
+        (q_1) edge[left] node{$\langle [q_{0s}],SP!b,[q_{01s}] \rangle$} (q_8)
+	    (q_8) edge[above] node{$\langle [q_{0p}],PR?a,[q_{2p}] \rangle$} (q_3)
+        (q_2) edge[right] node{$\langle [q_{0s}],SP!b,[q_{1s}] \rangle$} (q_3)
+        (q_3) edge[right] node{$\langle [q_{1p}],SP?b,[q_{3p}] \rangle$} (q_4)
+        (q_0) edge[left] node{$\langle [q_{0s}],SP!b,[q_{1s}] \rangle$} (q_5)
+        (q_5) edge[left] node{$\langle [q_{0p}],SP?b,[q_{2p}] \rangle$} (q_6)
+        (q_6) edge[below] node{$\langle [q_{2p}],PR!a,[q_{3p}] \rangle$} (q_7)
+        (q_7) edge[below] node{$\langle [q_{0r}],[PR?a,q_{1r}] \rangle$} (q_4)
         ;
 \end{tikzpicture}
 \end{center}

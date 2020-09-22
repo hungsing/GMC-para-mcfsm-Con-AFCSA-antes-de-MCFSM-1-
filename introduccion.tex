@@ -49,5 +49,4 @@ Por otro lado, la propia definición de \emph{communicating systems} en cualquie
 
 Los GTIRs, al igual que otros formalismos anteriormente mencionados, se enfocan únicamente en el aspecto comunicacional, es decir en la interacción entre componentes, dejando de lado el comportamiento interno (i.e. los elementos computacionales) de la componente.\\
 
-\emph{Choreography automata} \cite{barbanera:coordination20}\cnote{resumen del paper y por qué es relevante}
-
+\emph{Choreography automata} \cite{barbanera:coordination20}: De la tendencia de modelar microservicios y sistemas distribuidos como coreografías, y los autómatas como modelo de especificación ya establecido y sustentado por múltiples resultados, surgen los \emph{Choreography Automata}. Estos autómatas finitos, que pueden ser sincrónicos o asincrónicos, modelan coreografías de communicating systems. La proyección de un choreography automata produce un CS del que se pueden extraer sus componentes en forma de CFSMs. Estos autómatas presentan un enfoque global, de más alto nivel y de arriba hacia abajo (top down) al ir de más abstracto a más específico. De este modo se abstrae del uso de buffers explícitos y, al sólo modelar la comunicación, no tiene en cuenta el comportamiento interno de cada componente.

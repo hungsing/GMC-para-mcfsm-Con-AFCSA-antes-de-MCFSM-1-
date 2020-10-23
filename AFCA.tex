@@ -14,7 +14,7 @@ Esta percepción parcial del \emph{binding} sobre un canal requiere la utilizaci
 \section{Autómatas finitos de comunicación asincrónica}
 Las CFSMs son un tipo de autómata que modela únicamente la comunicación externa con otros participantes del sistema. Necesitábamos un tipo de autómata que además representara otros comportamientos internos. Para esto primero recurrimos a los Input Output Automata \cite{lynch:cwiq-2_3}. 
 Un I/O automaton modela un componente de un sistema distribuido que puede interactuar con otros sistemas componentes. Es un tipo de máquina de estados en la cual las transiciones están asociadas con determinadas acciones específicas. Existen tres tipos de acciones: input, output, y acciones internas. El autómata usa sus acciones de input y output para comunicarse con el enotrno, mientras que las acciones internas son sólo visibles para el autómata. A diferencia de las acciones internas y las de output que son seleccionadas y resueltas por el autómata, las de entrada, que llegan del entorno, no están bajo control del autómata. Para componer estos autómatas se requiere que sincronicen las acciones compartidas. Es decir cuando un autómata ejecuta una transición con la etiqueta $\pi$, todo autómata que tenga esa acción $\pi$ la ejecuta en simultáneo.
-El problema es que los I/O no representan bien la comunicación asincrónica. Las operaciones de comunicación externa sincronizan a todos los participantes del sistema. Es decir que si dos autómatas componentes tienen una misma transición, se ejecutan en simultáneo. Esto va en contra de la idea de asincronsidad que buscamos.
+El problema es que los I/O no representan bien la comunicación asincrónica. Las operaciones de comunicación externa sincronizan a todos los participantes del sistema. Es decir que si dos autómatas componentes tienen una misma transición, se ejecutan en simultáneo. Esto va en contra de la idea de asincronicidad que buscamos.
 Para modelar este comportamiento asincrónico introducimos los Autómatas Finitos de Comunicación Asincrónica (AFCA) (ver Def.~\ref{def:afca}). Estos autómatas tienen tres tipos de transiciones: 
 \begin{inparaenum}[1)]
 \item internas, que sirven el propósito de representar cómputo realizado por la componente; 
@@ -25,14 +25,14 @@ Como lo que queremos es modelar sistemas distribuidos con comunicación asincró
 
 \begin{definition}[Cola]
 \label{def:cola}
-Una cola es un tipo de estructura de datos caracterizada por ser una secuencia de elementos first in-first out (FIFO) debido a que el primer elemento en entrar es el primer elemento en salir. Para manejarla se definen dos operaciones, una para agregar y otra para sacar elementos de la una cola. Para los usos de este trabajo vamos a definir colas en las cuales se depositan y de las cuales se retiran mensajes, con las operaciones:
+Una cola es un tipo de estructura de datos caracterizada por ser una secuencia de elementos first in-first out (FIFO) debido a que el primer elemento en entrar es el primer elemento en salir. Para manejarla se definen dos operaciones, una para agregar y otra para sacar elementos de la cola. Para los usos de este trabajo vamos a definir colas en las cuales se depositan y de las cuales se retiran mensajes, con las operaciones:
 
 \begin{itemize}
 \item Cola vacía: denotado $[\ ]$
 \item Encolar mensaje: denotado como $b \ll m$, si $b$ es una cola y $m$ es un mensaje.
 \item Desencolar mensaje: denotado como $b \gg m$, si $b$ es una cola y $m$ es un mensaje.
 \item Sea una cola vacía $b= [\ ]$ al aplicarle la operación $b \ll m$ queda $b= [m]$
-\item Sea una cola no vacía $b= [m_1,..,m_n]$ al aplicarle la operación $b \ll m$ queda $b= [m,m_1,..,m_n]$ del mismo modo al aplicarle $b \gg m_n$ queda $b= [m,m_1,..]$
+\item Sea una cola no vacía $b= [m_1,..,m_n]$ al aplicarle la operación $b \ll m$ queda $b= [m,m_1,..,m_n]$ del mismo modo al aplicarle $b \gg m_n$ queda $b= [m,m_1,..,m_{n-1}]$
 \end{itemize}
 \end{definition}
 
@@ -58,7 +58,7 @@ Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de me
 \begin{inparaenum}[1)]
 \item $\delta_\mathit{Int} \subseteq Q \times \Sigma_\mathit{Int} \times Q$ es la relación de transición por acciones internas de $A_\mathcal{P}$, %transiciones internas
 
-\item $\delta_\mathit{Ex} \subseteq Q \times \Sigma_\mathit{EX}  \times Q$ es la relación de transición de comunicación externa de $A_\mathcal{P}$, %comunicación externa
+\item $\delta_\mathit{Ex} \subseteq Q \times \Sigma_\mathit{Ex}  \times Q$ es la relación de transición de comunicación externa de $A_\mathcal{P}$, %comunicación externa
 
 \item $\delta_\mathit{Buff} \subseteq Q \times \Sigma_\mathit{Buff} \times Q$  es la relación de transición de comunicación interna de $A_\mathcal{P}$ %comunicación interna
 \end{inparaenum}
@@ -119,7 +119,7 @@ Sean $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$,
 % La clausura reflexoEscribimos $ s_1 \overset{t1...tm}{\rightarrow} s_{m+1}$ cuando para algún $s_2,...,s_m, s_1\overset{t}{\rightarrow} s_2...s_m\overset{t_m}{\rightarrow} s_{m+1} $ . El conjunto de configuraciones alcanzables de S es $RS(S) = \{s | s_0 \rightarrow^*S \}$
 % \end{definition}
 
-\begin{definition}[Traza de un AFCA] Llamamos traza a una secuencia posible de acciones de un autómata. Se define como una secuencia finita de etiquetas de estado y transición altenradas, que comienza y termina con un estado. Dado un autómata $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, una traza tiene las siguientes caracterísitcas
+\begin{definition}[Traza de un AFCA] Llamamos traza a una secuencia posible de acciones de un autómata. Se define como una secuencia finita de etiquetas de estado y transición alternadas, que comienza y termina con un estado. Dado un autómata $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, una traza tiene las siguientes característcas
 
 \begin{itemize}
 \item Tiene la forma $[q_0, \sigma_1, q_1,...,q_{n-1}, \sigma_n, q_n] $ donde 
@@ -296,7 +296,7 @@ Al componer autómatas la comunicación que antes era externa y ahora es de buff
 %
 %%%%%%%%%%
 
-En las siguiente figuras vemos un ejemplo de tres comunicación de tres AFCA y como funciona el mecanismo de composición. En la Fig.~\ref{a_i} tenemos $P = \langle \{q_0,\ldots,q_4\}, \emptyset, \{PR,SP\}, \\ \{out(PR,a),in(SP,b),in(SP,b),out(PR,a),int_p\}, \delta_P,q_0. \{q_4\} \rangle$, $R = \langle \{q_0,\ldots,q_2\}, \emptyset, \{PR\}, \\ \{int_r,in(PR,a)\}, \delta_R,q_0. \{q_2\} \rangle$ y $S = \langle \{q_0,q_1\}, \emptyset, \{SP\}, \{out(SP,b)\}, \delta_P,q_0. \{q_1\} \rangle$. Estos autómatas solo poseen comunicación externa y, en el caso de $P$ y $R$, transiciones internas. La comunicación puede comenzar con $P$ envíando el mensaje $a$ a $R$ o con $S$ enviando a $P$ el mensjae $b$. En ambos casos el autómata destino recibe la comunicación cuando está habilitado. En el caso de $P$, puede recibir $b$ desde el inicio de su ejecución o una vez enviado $a$, mientras que $R$ primero tiene que pasar por la transición interna $int_r$ para poder recibir $a$ y terminar. Por último $P$ termina su ejecución con la transición interna $int_p$. En la Fig.~\ref{A} podemos ver la composición total de los tres componentes en $\mathcal{A}= \langle \{q_{000},\ldots,q_{121}\}, \emptyset, \{PR,SP\}, \Sigma_{\mathcal{A}}, \delta_{\mathcal{A}}, \{q_{000}\}, \{q_{421}\} \rangle$ donde la comunicación que antes era externa ahora está internalizada. Los canales se convierten en buffers por donde se van mensajes. De esta forma se mantiene el orden original de la comunicación pero representada en su totalidad un único autómata.
+En las siguiente figuras vemos un ejemplo de comunicación entre tres AFCA y como funciona el mecanismo de composición. En la Fig.~\ref{a_i} tenemos $P = \langle \{q_0,\ldots,q_4\}, \emptyset, \{PR,SP\}, \\ \{out(PR,a),in(SP,b),in(SP,b),out(PR,a),int_p\}, \delta_P,q_0. \{q_4\} \rangle$, $R = \langle \{q_0,\ldots,q_2\}, \emptyset, \{PR\}, \\ \{int_r,in(PR,a)\}, \delta_R,q_0. \{q_2\} \rangle$ y $S = \langle \{q_0,q_1\}, \emptyset, \{SP\}, \{out(SP,b)\}, \delta_P,q_0. \{q_1\} \rangle$. Estos autómatas solo poseen comunicación externa y, en el caso de $P$ y $R$, transiciones internas. La comunicación puede comenzar con $P$ envíando el mensaje $a$ a $R$ o con $S$ enviando a $P$ el mensaje $b$. En ambos casos el autómata destino recibe la comunicación cuando está habilitado. En el caso de $P$, puede recibir $b$ desde el inicio de su ejecución o una vez enviado $a$, mientras que $R$ primero tiene que pasar por la transición interna $int_r$ para poder recibir $a$ y terminar. Por último $P$ termina su ejecución con la transición interna $int_p$. En la Fig.~\ref{A} podemos ver la composición total de los tres componentes en $\mathcal{A}= \langle \{q_{000},\ldots,q_{121}\}, \emptyset, \{PR,SP\}, \Sigma_{\mathcal{A}}, \delta_{\mathcal{A}}, \{q_{000}\}, \{q_{421}\} \rangle$ donde la comunicación que antes era externa ahora está internalizada. Los canales se convierten en buffers por donde se van mensajes. De esta forma se mantiene el orden original de la comunicación pero representada en su totalidad un único autómata.
 
 \begin{figure}[H]
 \begin{center}
@@ -443,7 +443,7 @@ El objetivo principal de esta clase de autómatas es posibilitar la composición
 \section{Aspectos comunicacionales de los AFCA}
 Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. El propósito de los AFCA es intentar reducir la distancia entre ambas naturalezas. Una de las tareas principales que queremos lograr es obtener, vía una proyección, la inferfaz de comunicación en la forma de una communicating machine. Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero como los AFCA introducen la posibilidad de que haya múltiples canales de comunicación entre dos participantes, este modelo no es suficiente. En esta sección abordamos dicha problemática introduciendo las Multichannel Communicating Finite State Machines \cite[Def.~82]{vissani:phdthesis} (mCFSM). Las mCFSM son una versión extendida de las CFSM con múltiples canales entre cada par de participantes y la interfaz de comunicación de los AFCA se proyecta como una mCFSM. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
 
-\begin{definition}[Multichannel Communicating Finite State Machine - mCFSM]\label{mCFSM} Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es una un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
+\begin{definition}[Multichannel Communicating Finite State Machine - mCFSM]\label{mCFSM} Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
 \begin{itemize}
   \item $Q$ es un conjunto finito de estados
   \item $\mathcal{C} = \{ pq_n \mid pq \in \mathcal{P}^2, n \in \mathbb{N}, p \not= q\}$ es un conjunto de canales
@@ -472,7 +472,7 @@ Las mCFSMs con un único canal para cada par ordenado de participantes son equiv
     \item $\forall q \in Q_{A'}$ llamamos $[q]$ a la clase de equivalencia tal que $[q]=\{q' \in Q_{A'}\ |\ q \xrightarrow{\epsilon^*} q'\}$. Decimos que dos clases $[q]$ y $[q']$ están relacionadas $[q] \xrightarrow{\sigma} [q'']$, con $\sigma \in \Sigma_{Ex}$, sii $\exists q^1 \in [q], q^2 \in [q'']$ tales que $q^1 \xrightarrow{\sigma} q^2 \in \delta$
     \item $[Q]= \{[q] \ | \ q, q' \in Q \land [q] \xrightarrow{\sigma} [q'] \lor [q'] \xrightarrow{\sigma} [q] \}$ es el conjunto de clases de equivalencia de $Q$ que están relacionadas. 
     \item $[q_0]=q_0$
-    \item $[\delta]= \{[q] \xrightarrow{\sigma} [q']\ |\ [q], [q'] \in [Q] \land \sigma \in \Sigma_{EX}\}$, dos estados $[q],[q'] \in [Q]$ están relacionados en $[\delta]$ si son clases de equivalencia relaicionadas. 
+    \item $[\delta]= \{[q] \xrightarrow{\sigma} [q']\ |\ [q], [q'] \in [Q] \land \sigma \in \Sigma_{EX}\}$, dos estados $[q],[q'] \in [Q]$ están relacionados en $[\delta]$ si son clases de equivalencia relacionadas. 
 \end{enumerate}
 \end{definition}
 
@@ -522,7 +522,7 @@ Las mCFSMs con un único canal para cada par ordenado de participantes son equiv
 %
 %%%%%%%%%%
 
-Las siguientes mCFSMs son el resultado de proyectar la interfaz de comunicación (Def.~\ref{def:interfazcom}) de los AFCAs de la Fig.~\ref{a_i}, donde $M_1, M_2$ y $M_3$ representan las interfaces de comunicación externa de $\mathcal{A}_1, \mathcal{A}_1$ y $\mathcal{A}_3$, respectivamente.
+Las siguientes mCFSMs son el resultado de proyectar la interfaz de comunicación (Def.~\ref{def:interfazcom}) de los AFCAs de la Fig.~\ref{a_i}, donde $M_1, M_2$ y $M_3$ representan las interfaces de comunicación externa de $\mathcal{A}_1, \mathcal{A}_2$ y $\mathcal{A}_3$, respectivamente.
 \begin{figure}[H]
 \begin{center}
 \begin{tikzpicture}[->, thick]
@@ -557,14 +557,14 @@ Las siguientes mCFSMs son el resultado de proyectar la interfaz de comunicación
         ;
 \end{tikzpicture} 
 \end{center}
-\caption{mCFSM $M_P$, $M_R$ y $M_S$, correspondientes a los AFCAs del Subfig.~\ref{a_i}.}
+\caption{mCFSM $M_P$, $M_R$ y $M_S$, correspondientes a los AFCAs de la Subfig.~\ref{a_i}.}
 \label{m_i}
 \end{figure}
 
 \end{ejemplo}
 
 
-En la sección 2.3 explicamos como funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel CS es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
+En la sección 2.3 explicamos cómo funciona la condición de Generalized Multiparty Compatibility para CFSMs. Necesitamos ver que la misma condición es aplicable a las Multichannel CFSMs, para esto la solución más práctica que se encontró es ver que podemos emular una Multichannel CFSM con una CFSM pura. Mostrando esa equivalencia vemos que si podemos aplicar GMC al emulador, la condición aplica al emulado. Dado que un multichannel CS es libre de errores de comunicación si y solo si el sistema emulado también lo es. El procedimiento consiste en generar un nuevo participante para cada canal entre otros dos participantes. Este nuevo participante es un simple repetidor de mensajes de uno de los participantes a otro. De este modo una comunicación multichannel entre un par de participantes es reemplazada por múltiples comunicaciones de un canal con un repetidor en el medio. El aspecto clave de esta emulación es que preserva el orden de los mensajes.
 
 \begin{definition}[Sistema emulado, \cite{vissani:phdthesis}, Def.~84] Dado un multichannel CS $(M_p)_{p \in \mathcal{P}}$, agrandamos el conjunto $ \mathcal{P}$ agregando un participante adicional por cada canal en el sistema original $\mathcal{P}'=\mathcal{P} \cup \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$. Cada participante nuevo $p^{sr_n} \in \bigcup_{p \in \mathcal{P}} \{p^{pq_n} \ | \ pq_n \in \mathcal{C}_p \} \cup \bigcup_{p \in \mathcal{P}} \{p^{qp_n} \ | \ qp_n \in \mathcal{C}_p \}$ se define con la siguiente mCFSM:
 \begin{itemize}
@@ -588,7 +588,7 @@ Queda claro que si bien transformamos cada canal (buffer) en dos canales nuevos,
 \begin{proof} Primero notemos que los repetidores no pueden generar errores de comunicación dado que en el estado inicial pueden recibir el rango completo de mensajes y luego de consumir un mensaje su única acción posible es reenviarlo. Recordemos también que el orden de los mensajes se preserva. Esto significa que si en el sistema original los mensajes $ m $ y $m'$ fueron enviados en ese orden sobre el canal $sr$ en el sistema emulado se envían en el mismo orden sobre el canal $sp^{sr}$ y por lo tanto son enviados en ese mismo orden a través del canal $p^{sr}r$. Entonces se puede mostrar que para cada error de configuración alcanzable en el sistema original, hay una configuración que presenta el mismo error que es alcanzable en el sistema emulado y viceversa.
 \begin{itemize}
 \item[$\Rightarrow$] Consideremos cualquier configuración de error $e$ alcanzable en el sistema original y consideremos cualquier camino que alcance $e$. Luego reemplacemos toda acción $sr!m$ con la secuencia de acciones $sp^{sr}!m, sp^{sr}?m, p^{sr}r!m$ y cada acción $sr?m$ con $p^{sr}?m$, este nuevo camino está presente en el sistema emulado y alcanza el estado donde las configuraciones de buffer y transiciones permitidas son las mismas para el conjunto de máquinas compartidas (es decir, todas las máquinas de sistema emulado menos los repetidores) y los repetidores están en su estado inicial con buffers vacíos.
-\item[$\Leftarrow$] Consideremos cualquier error de configuración $e$ alcanzable en el sistema emulado y ocnsideremos cualquier camino que alcance $e$. Ya establecimos que el error no puede ser culpa de los repetidores dado que siempre pueden progresar. Por lo tanto sin importar el estado de los buffers en $e$ hay una configuración $e'$ que presenta el mismo error de comunicación y donde el estado de los buffers de los repetidores está vacío y están en su estado inicial. Luego consideremos que cualquier camino que alcance $e'$ está formado por secuencias de la forma $sp^{sr}!m,\ldots, sp^{sr}?m, \ldots, p^{sr}r!m$ y $p^{sr}r?m$ (donde los puntos suspensivos denota la posibilidad de interleaving de otras acciones). Entonces alcanza con reemplazar cada secuencia $sp^{sr}!m,\ldots_0, sp^{sr}?m, \ldots_1, p^{sr}r!m$ con la secuencia $\ldots_0,\ldots_1, sr!m$ y cada $p^{sr}r?m$ con $sr?m$ para obtener un camino que existe en el sistma original y aclanza una configuración que tiene sus buffers en el mismo estado con las mismas transiciones permitidas.
+\item[$\Leftarrow$] Consideremos cualquier error de configuración $e$ alcanzable en el sistema emulado y consideremos cualquier camino que alcance $e$. Ya establecimos que el error no puede ser culpa de los repetidores dado que siempre pueden progresar. Por lo tanto sin importar el estado de los buffers en $e$ hay una configuración $e'$ que presenta el mismo error de comunicación y donde el estado de los buffers de los repetidores está vacío y están en su estado inicial. Luego consideremos que cualquier camino que alcance $e'$ está formado por secuencias de la forma $sp^{sr}!m,\ldots, sp^{sr}?m, \ldots, p^{sr}r!m$ y $p^{sr}r?m$ (donde los puntos suspensivos denota la posibilidad de interleaving de otras acciones). Entonces alcanza con reemplazar cada secuencia $sp^{sr}!m,\ldots_0, sp^{sr}?m, \ldots_1, p^{sr}r!m$ con la secuencia $\ldots_0,\ldots_1, sr!m$ y cada $p^{sr}r?m$ con $sr?m$ para obtener un camino que existe en el sistema original y aclanza una configuración que tiene sus buffers en el mismo estado con las mismas transiciones permitidas.
 \end{itemize}
 \end{proof}
 \end{prop}

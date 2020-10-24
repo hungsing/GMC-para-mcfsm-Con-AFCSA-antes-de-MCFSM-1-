@@ -12,7 +12,7 @@ Una estructura $S = \langle Q, \Sigma, \longrightarrow \rangle$ se dice que es u
 \item $\Sigma$ es un conjunto finito llamado \emph{conjunto de etiquetas}, y
 \item $\longrightarrow \subseteq Q \times \Sigma \times Q$.
 \end{itemize}
-Sean $q, q' \in Q$, $a \in \Sigma$, cuando $\langle q, a, q' \rangle \in \longrightarrow$ lo denotaremos como $q \xrightarrow{a} q'$. Denotaremos $\Sigma^*$ al conjunto de secuencias (finitas o infinitas) $\sigma_0, \sigma_1, \sigma_2, \ldots, \sigma_n, \ldots$ tal que para todo $i \in \nat$, $\sigma_i \in \Sigma$. A su vez, dado $q \in Q$, definiremos $\Sigma^* [q]$, llamado el lenguaje de $q$, como $\{ \sigma_0, \sigma_1, \ldots, \sigma_n, \ldots \in \Sigma^*\ |\ \text{existe } \{q_i\}_{i \in \nat} \text{ tal que } q = q_0 \text{ y para todo } i \in \nat \text{, } q_i \xrightarrow{\sigma_i} q_{i+1}\}$. Dados $q, q' \in Q$ y $\sigma \in \Sigma^*$, $q \xrightarrow{\sigma} q'$ si y solo si $\sigma = \sigma_0, \sigma_1, \ldots, \sigma_n$ y existen $\{q_i\}_{0 \leq i \leq n} \subseteq Q$ tal que:
+Sean $q, q' \in Q$, $a \in \Sigma$, cuando $\langle q, a, q' \rangle \in \longrightarrow$ lo denotaremos como $q \xrightarrow{a} q'$. Denotaremos $\Sigma^*$ al conjunto de secuencias finitas $\sigma_0, \sigma_1, \sigma_2, \ldots, \sigma_n, \ldots$ tal que para todo $i \in \nat$, $\sigma_i \in \Sigma$. A su vez, dado $q \in Q$, definiremos $\Sigma^* [q]$, llamado el lenguaje de $q$, como $\{ \sigma_0, \sigma_1, \ldots, \sigma_n, \ldots \in \Sigma^*\ |\ \text{existe } \{q_i\}_{i \in \nat} \text{ tal que } q = q_0 \text{ y para todo } i \in \nat \text{, } q_i \xrightarrow{\sigma_i} q_{i+1}\}$. Dados $q, q' \in Q$ y $\sigma \in \Sigma^*$, $q \xrightarrow{\sigma} q'$ si y solo si $\sigma = \sigma_0, \sigma_1, \ldots, \sigma_n$ y existen $\{q_i\}_{0 \leq i \leq n} \subseteq Q$ tal que:
 \begin{inparaenum}[1-]
 \item $q_0 = q$,
 \item $q_n = q'$, y
@@ -64,7 +64,7 @@ Sea $\Sigma$ un conjunto de etiquetas, $\Sigma' \subseteq \Sigma$ y $\sigma \in 
     \item $(\forall \sigma \in \Sigma \setminus \Sigma')(p \xrightarrow{\sigma} p' \implies (\exists q' \in Q)(\exists \sigma^* \in \Sigma^*)(q \xrightarrow{\sigma^*} q' \land \widehat{\sigma^*}_{\Sigma'} = \sigma \land \langle p', q' \rangle \in R))$ y, simétricamente, vale 
     \item $(\forall \sigma \in \Sigma \setminus \Sigma')(q \xrightarrow{\sigma} q' \implies (\exists p' \in Q)(\exists \sigma^* \in \Sigma^*)(p \xrightarrow{\sigma^*} p' \land \widehat{\sigma^*}_{\Sigma'} = \sigma \land \langle p', q' \rangle \in R))$
 \end{itemize}
-Dados dos estados $p, q \in Q $, $p$ es débilmente bisimilar sobre $\Sigma'$ a $q$, denotado como $p \sim_{\Sigma'} q$, si existe una bisimulación débil $R$ tal que $\langle p, q \rangle \in R$.
+Dados dos estados $p, q \in Q $, $p$ es débilmente bisimilar sobre $\Sigma'$ a $q$, denotado como $p \sim_{\Sigma'} q$, si existe una bisimulación débil $R$ sobre $\Sigma'$ tal que $\langle p, q \rangle \in R$.
 \end{definition}
 
 
@@ -73,9 +73,9 @@ Como se dijo en la primera sección, buscamos una implementación del paradigma 
 
 La naturaleza dinámica no pre programada de los sistemas SOC hace que se requiera algún mecanismo para verificar que todos los componentes puedan funcionar entre sí en forma correcta. Para esto en esta sección detallamos el concepto de \emph{Generalised multiparty compatibility} (GMC), definido originalmente en \cite{lange:popl15}. GMC se define a partir de una serie de condiciones que debe cumplir el conjunto de CFSMs participantes del sistema. Esto condiciona al sistema (o a quienes lo diseñen) a tener un conocimiento previo de los posibles sistemas que vayan a interactuar entre sí. Esto no necesariamente rompe con la idea del descubrimiento y binding en tiempo de ejecución dado que se pueden generar métodos para hacer estas comprobaciones a medida que el sistema va conectándose con los distintos participantes. %(existen ya?)%
 
-\begin{definition}[Communicating Finite State Machines] Sea $\mathcal{M}$ un conjunto finito de mensajes y $\mathcal{P}$ un conjunto finito de participantes, definimos una CFSM sobre $\mathcal{M}$ como un sistema de transición finito $\langle Q, C, q_0, \mathcal{M}, \delta \rangle$ donde
+\begin{definition}[Communicating Finite State Machines, \cite{lange:popl15}, Def.~2.1]\label{def:CFSM}] Sea $\mathcal{M}$ un conjunto finito de mensajes y $\mathcal{P}$ un conjunto finito de participantes, definimos una CFSM sobre $\mathcal{M}$ como un sistema de transición finito $\langle Q, C, q_0, \mathcal{M}, \delta \rangle$\footnote{Si bien en la definición original el conjunto de canales no aparece en forma explícita porque está determinado por el conjunto de participantes tal como aparece en esta definición optamos por hacerlo explícito pues será de utilidad cuando presentemos Multichannel Communicating Finite State Machines Def.~\ref{def:mCFSM}} donde
 \begin{itemize}
-  \item $Q$ es un conjunto finito de estados;
+  \item $Q$ es un conjunto finito de estados, 
   \item $C \subseteq \left\{ pq \in \mathcal{P}^2 \left|\right. p \not= q\right\}$ es un conjunto de canales
   \item $q_0 \in Q$ es el estado inicial;
   \item $\delta \subseteq Q \times (C \times \{!,?\} \times \mathcal{M}) \times Q$ es un conjunto finito de \emph{transiciones}.
@@ -84,14 +84,14 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
 
 A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{CS} como un conjunto de CFSMs que cumplen determinadas propiedades.
 
-\begin{definition}[Communicating System, \cite{lange:popl15}, Def.~2.2]\label{def:CS} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
+\begin{definition}[Communicating System, \cite{lange:popl15}, Def.~2.2]\label{def:CS} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \mathcal{M}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, la tupla $S=\langle M_p \rangle_{p \in \mathcal{P}}$ es un communicating system (CS).
 \end{definition}
 
 La semántica de los CSs está dada por un sistema de transición etiquetado cuyos estados y transiciones determinan las posibles ejecuciones del conjunto de procesos sobre el que está definido el sistema.
 
 \begin{definition}[Estados y configuraciones alcanzables]
-\label{def:estadosyconf} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, $S=\langle M_p \rangle_{p \in \mathcal{P}}$ un CS, y $M_S = \langle Q_S, 
-{q_0}_S, \delta_S \rangle$ el sistema de transición etiquetado que determina la semántica de $S$. Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es ${q_0}_S = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon)_{p \in \mathcal{P}}$.
+\label{def:estadosyconf} Dado un conjunto de mensajes $\mathcal{M}$, una CFSM $\textit{M}_p = \langle Q_p, \mathcal{C}_p, q_{0_p}, \mathcal{M}, \delta_p \rangle$ para cada participante $p \in \mathcal{P}$, $S=\langle M_p \rangle_{p \in \mathcal{P}}$ un CS, y $M_S = \langle Q_S, 
+{q_0}_S, \delta_S \rangle$ el sistema de transición etiquetado que determina la semántica de $S$. Una configuración de S es un par $s = \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ donde $\overrightarrow{q} = (q_p)_{p \in \mathcal{P}}$ con $q_p \in Q_p$ y donde $\overrightarrow{\omega} = (\omega_{pq})_{pq \in C}$ con $\omega_{pq} \in \mathcal{M}^*$. La componente $\overrightarrow{q}$ es el estado de control y $q_p \in Q_p$ es el estado local de la máquina $ M_p$. La configuración inicial de S es ${q_0}_S = \langle \overrightarrow{q_0} ; \overrightarrow{\epsilon} \rangle$ con $\overrightarrow{q_0} = (q_{0_p})_{p \in \mathcal{P}}$ y $\overrightarrow{\epsilon} = (\epsilon)_{p \in \mathcal{P}}$ \footnote{Esta expresión denota a la tupla que contiene a la palabra vacía para cada participante $p \in \mathcal{P}$}.
 
 Dadas $c' = \langle \overrightarrow{q'},\overrightarrow{\omega'} \rangle$, $c = \langle \overrightarrow{q},\overrightarrow{\omega} \rangle$ y $l \in \mathcal{C}_s \times \{!,?\} \times \mathcal{M}$, decimos que $c'$ es alcanzable desde $c$ a través de la etiqueta $l$, denotado como $\langle c, l, c' \rangle \in \delta_S$, si y sólo si:
     \begin{enumerate}
@@ -179,7 +179,7 @@ Tomando en consideración la definición anterior, para distinguir el paralelsim
 
 \begin{itemize}
 \item $(q_1, q_2, s \rightarrow r:a) \bowtie_s (q'_1, q'_2, s \rightarrow r:a) \iff$ \\ 
- $\forall (q_1, sr!a,q_3),(q'_1, sr!a,q'_3) \in \delta_s:(q_1, sr!a,q_3) \underline{\blacklozenge} (q'_1, sr!a,q'_3) $
+ $(\forall (q_1, sr!a,q_3),(q'_1, sr!a,q'_3) \in \delta_s)((q_1, sr!a,q_3) \underline{\blacklozenge} (q'_1, sr!a,q'_3)) $
 \item $(q_1, q_2, s \rightarrow r:a) \bowtie_r (q'_1, q'_2, s \rightarrow r:a) \iff \\ 
 \forall (q_2, sr?a,q_3),(q'_2, sr?a,q'_4) \in \delta_ r:(q_2, sr?a,q_4) \romboeqn (q'_2, sr?a,q'_4)$ \end{itemize}
 \end{definition}

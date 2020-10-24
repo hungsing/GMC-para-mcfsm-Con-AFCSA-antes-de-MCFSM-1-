@@ -42,7 +42,7 @@ Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de me
 
 \begin{itemize}
 \item $Q$ es un conjunto finito de estados,
-\item $B \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \} $ es un conjunto finito de buffers (i.e. colas, ver Def.~\ref{def:cola}),
+\item $B \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto finito de buffers (i.e. colas, ver Def.~\ref{def:cola}),
 \item $\mathcal{C} \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto de canales tales que $B \cap \mathcal{C} = \emptyset$ 
 \item $\Sigma = \{ \Sigma_\mathit{Int} \cup \Sigma_\mathit{Ex} \cup \Sigma_\mathit{Buff}\} $, $\Sigma \cap \mathcal{M} = \emptyset$ es el conjunto de etiquetas del autómata, siendo
 \begin{inparaenum}[1)]
@@ -443,7 +443,7 @@ El objetivo principal de esta clase de autómatas es posibilitar la composición
 \section{Aspectos comunicacionales de los AFCA}
 Una de las desventajas principales de utilizar CFSM como lenguaje de especificación de en Service Oriented Computing es que la naturaleza del binding en SOC choca con el método de establecer si un conjunto de participantes pueden interacturar libres de errores de comunicación. En SOC el descubrimiento y binding de servicios se realiza por demanda, eso significa que a pesar de que se necesiten muchos servicios para resolver una tarea, se obtienen uno por uno según se van necesitando. Por el otro lado las CFSM requieren el conjunto total de participantes de un protocolo para poder determinar si el protocolo puede llevarse a cabo sin errores. El propósito de los AFCA es intentar reducir la distancia entre ambas naturalezas. Una de las tareas principales que queremos lograr es obtener, vía una proyección, la inferfaz de comunicación en la forma de una communicating machine. Al principio de esta sección introdujimos los AFCA para modelar el comportamiento deseado en SOC de binding incremental. Ahora nos queremos enfocar en los aspectos puramente comunicacionales, es decir la interacción entre distintos participantes. Para hacer énfasis en estos aspectos existen las CFSMs, pero como los AFCA introducen la posibilidad de que haya múltiples canales de comunicación entre dos participantes, este modelo no es suficiente. En esta sección abordamos dicha problemática introduciendo las Multichannel Communicating Finite State Machines \cite[Def.~82]{vissani:phdthesis} (mCFSM). Las mCFSM son una versión extendida de las CFSM con múltiples canales entre cada par de participantes y la interfaz de comunicación de los AFCA se proyecta como una mCFSM. Se definen, del mismo modo que una CFSM sobre $\mathcal{M}$ de la siguiente manera.
 
-\begin{definition}[Multichannel Communicating Finite State Machine - mCFSM]\label{mCFSM} Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
+\begin{definition}[Multichannel Communicating Finite State Machine - mCFSM]\label{def:mCFSM} Una multichannel communicating finite state machine (mCFSM) sobre $\mathcal{M}$ es un sistema finito de transición $(Q, \mathcal{C}, q_0, \mathcal{M}, \delta)$ donde
 \begin{itemize}
   \item $Q$ es un conjunto finito de estados
   \item $\mathcal{C} = \{ pq_n \mid pq \in \mathcal{P}^2, n \in \mathbb{N}, p \not= q\}$ es un conjunto de canales

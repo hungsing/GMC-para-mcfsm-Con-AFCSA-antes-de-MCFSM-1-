@@ -80,6 +80,9 @@ La naturaleza dinámica no pre programada de los sistemas SOC hace que se requie
   \item $q_0 \in Q$ es el estado inicial;
   \item $\delta \subseteq Q \times (C \times \{!,?\} \times \mathcal{M}) \times Q$ es un conjunto finito de \emph{transiciones}.
   \end{itemize}
+
+Las transiciones de una CFSM se etiquetan por la acción que representan. La etiqueta $sr!a$ representa el envío del mensaje $a$ de la máquina $s$ a la $r$ mientras que $sr?a$ representa la recepción de $a$ por parte de $r$. Un estado
+$q \in Q$ sin transiciones salientes se considera un estado final, $q$ se considera un estado emisor si todas sus transiciones salientes son envíos y receptor en caso de que sean recepciones. 
 \end{definition} 
 
 A partir de la introducción de las CFSMs, la siguiente definición introduce el concepto de \emph{CS} como un conjunto de CFSMs que cumplen determinadas propiedades.
@@ -108,6 +111,51 @@ Dadas $c' = \langle \overrightarrow{q'},\overrightarrow{\omega'} \rangle$, $c = 
 	\end{enumerate}
 El conjunto de configuraciones alcanzables de S es $RS(S) = \{q \in Q_S | \langle {q_0}_S,l_0 \ldots l_n,q \rangle \in \delta_S^* \}$ donde $\delta_S^*$ es la clausura reflexo-transitiva de $\delta_S$
 \end{definition}
+
+\begin{ejemplo}
+\label{ej:CS}
+Considere el CS compuesto por p, r y s:
+\begin{center}
+\begin{tabular}{ccc}
+p & r & s\\
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= of q_0 ] {$q_1$};
+  \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= of q_2 ] {$q_3$};
+% \node (p) [below= 0.1 of q_2] {$p$};
+ \draw[]        
+        (q_0) edge[above] node{pr!a} (q_1)
+        (q_0) edge[right] node{sp?b} (q_2)
+        (q_1) edge[right] node{sp?b} (q_3)
+        (q_2) edge[above] node{pr!a} (q_3)
+        ; 
+\end{tikzpicture} 
+&
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{pr?a} (q_1)
+        
+        ;
+\end{tikzpicture} 
+&
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [below= of q_0 ] {$q_1$};
+
+ \draw[]        
+        
+        (q_0) edge[right] node{sp!b} (q_1)
+        
+        ;
+\end{tikzpicture} 
+\end{tabular}
+\end{center}
+\end{ejemplo}
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
 
@@ -178,59 +226,19 @@ Tomando en consideración la definición anterior, para distinguir el paralelsim
 \begin{definition}[Equivalencia entre eventos] Definimos la equivalencia entre eventos como $\bowtie = \bowtie_s \cap \bowtie_r \subseteq \mathcal{E} \times \mathcal{E}$ donde $\mathcal{E}$ es el conjunto de eventos del sistema y se cumplen las siguientes condiciones:
 
 \begin{itemize}
-\item $(q_1, q_2, s \rightarrow r:a) \bowtie_s (q'_1, q'_2, s \rightarrow r:a) \iff$ \\ 
- $(\forall (q_1, sr!a,q_3),(q'_1, sr!a,q'_3) \in \delta_s)((q_1, sr!a,q_3) \underline{\blacklozenge} (q'_1, sr!a,q'_3)) $
-\item $(q_1, q_2, s \rightarrow r:a) \bowtie_r (q'_1, q'_2, s \rightarrow r:a) \iff \\ 
-\forall (q_2, sr?a,q_3),(q'_2, sr?a,q'_4) \in \delta_ r:(q_2, sr?a,q_4) \romboeqn (q'_2, sr?a,q'_4)$ \end{itemize}
+\item $(q_{1s}, q_{1r}, s \rightarrow r:a) \bowtie_s (q'_{1s}, q'_{1r}, s \rightarrow r:a) \iff$ \\ 
+ $(\forall (q_{1s}, sr!a,q_{2s}),(q'_{1s}, sr!a,q'_{1s}) \in \delta_s)((q_{1s}, sr!a,q_{2s}) \underline{\blacklozenge} (q'_{1s}, sr!a,q'_{2s})) $
+\item $(q_{1s}, q_{1r}, s \rightarrow r:a) \bowtie_r (q'_{1s}, q'_{1r}, s \rightarrow r:a) \iff \\ 
+\forall (q_{1r}, sr?a,q_{2r}),(q'_{1r}, sr?a,q'_{2r}) \in \delta_ r:(q_{1r}, sr?a,q_{2r}) \romboeqn (q'_{1r}, sr?a,q'_{2r})$ \end{itemize}
 \end{definition}
 
 \begin{ejemplo}[Equivalencia entre eventos]
 \label{ex:equiveventos}
-Considere el CS compuesto por p, r y s:
-\begin{center}
-\begin{tabular}{ccc}
-p & r & s\\
-\begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [right= of q_0 ] {$q_1$};
-  \node[state] (q_2) [below= of q_0 ] {$q_2$};
- \node[state] (q_3) [right= of q_2 ] {$q_3$};
-% \node (p) [below= 0.1 of q_2] {$p$};
- \draw[]        
-        (q_0) edge[above] node{pr!a} (q_1)
-        (q_0) edge[right] node{sp?b} (q_2)
-        (q_1) edge[right] node{sp?b} (q_3)
-        (q_2) edge[above] node{pr!a} (q_3)
-        ; 
-\end{tikzpicture} 
-&
-\begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below= of q_0 ] {$q_1$};
 
- \draw[]        
-        
-        (q_0) edge[right] node{pr?a} (q_1)
-        
-        ;
-\end{tikzpicture} 
-&
-\begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [below= of q_0 ] {$q_1$};
-
- \draw[]        
-        
-        (q_0) edge[right] node{sp!b} (q_1)
-        
-        ;
-\end{tikzpicture} 
-\end{tabular}
-\end{center}
-En el sistema de arriba podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:b)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. 
+Consideremos el CS del Ej.\ref{ej:CS}. En dicho sistema podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:b)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. 
 
 Para el primero queremos ver que $(q_{0p}, pr!a, q_{1p}) \romboeqn (q_{2p}, pr!a, q_{3p})$
-Para esto necesitamos que valga $(q_{0p}, pr!a, q_{1p}) \romboeqb (q_{2p}, pr!a, q_{3p})$. Esto se cumple dado que $pr!a \notin act(q_{0p},q_{2p})$ y $act(q_{0p},q_{2p}) = act(q_{1p},q_{3p}) \neq \emptyset$. Ahora tenemos que ver la clase de equivalencia $[(q_{0p}, pr!a, q_{1p})]^{\Diamond}$. La misma es el conjunto unitario $ \{(q_{2p}, pr!a, q_{3p})\}$. Por último queremos ver que  $act(q_{0p}, q_{2p}) = 
+Para esto necesitamos que valga $(q_{0p}, pr!a, q_{1p}) \romboeqb (q_{2p}, pr!a, q_{3p})$. Esto se cumple dado que $pr!a \notin act(q_{0p},q_{2p})$ y $act(q_{0p},q_{2p}) = act(q_{1p},q_{3p}) \neq \emptyset$. Ahora tenemos que ver la clase de equivalencia $[(q_{0p}, pr!a, q_{1p})]^{\Diamond}$. La misma es el conjunto $ \{(q_{0p}, pr!a, q_{1p}), (q_{2p}, pr!a, q_{3p})\}$.  Por último queremos ver que  $act(q_{0p}, q_{2p}) = 
 act(q_{1p}, q_{3p})$ y $act(q_{2p}, q_{2p}) = act(q_{3p}, q_{3p})$. La segunda es trivial, la primera se cumple siendo el conjunto unitario $\{sp?b\}$. Con esto demostramos que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_p (q_{2p}, q_{0r}, p \rightarrow r:a)$ 
 
 Nos queda probar que vale $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie_r (q_{2p}, q_{0r}, p \rightarrow r:a)$. Esta equivalencia es más sencilla de probar, dado que tenemos una única transición. Entonces vemos que es trivial que $(q_{0r}, pr?a, q_{1r}) \underline{\blacklozenge} (q_{0r}, pr?a, q_{1r})$. Con esto vemos que $(q_{0p}, q_{0r}, p \rightarrow r:a)$ y $(q_{2p}, q_{0r}, p \rightarrow r:a)$ son equivalentes en $\bowtie_p$ y $\bowtie_r$, por lo tanto están en $\bowtie = \bowtie_p \cap \bowtie_r$.
@@ -240,7 +248,7 @@ A continuación definimos la noción de Sistema de Transición Sincrónico, para
 
 \begin{definition}[Sistema de transición sincrónico] Dados un $S = (M_P)_{p \in \mathcal{P}}$ un CS, sea $\langle N,\hat{\delta}, E \rangle$, donde: 
 \begin{itemize}
-    \item[] $N = \{\overrightarrow{q} \ | \ (\overrightarrow{q}; \overrightarrow{\epsilon}) \in RS_1(S) \}$,
+    \item[] $N = \{\overrightarrow{q} \ | \ (\overrightarrow{q}; \overrightarrow{\epsilon}) \in RS(S) \}$,
     \item[] $\hat{\delta}= \{(n, e, n') \ | \ (n;\overrightarrow{\epsilon}) s_1 \overset{sr!a}{\longrightarrow}\overset{sr?a}{\longrightarrow} (n';\overrightarrow{\epsilon})	\land e= n[s], n[r], s \rightarrow r:a \}$, y
     \item[] $ E = \{ \exists n, n' \in N : (n,e,n') \in \hat{\delta}\} \subseteq \mathcal{E}$,
 \end{itemize}
@@ -275,8 +283,8 @@ Tenemos $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightar
 \begin{definition}[Proyecciones] La proyección de un evento e sobre un participante p, denotado por $e \downharpoonright_p$ se define de la siguiente manera:
 \begin{equation}
 (q_s,q_r,s \rightarrow r:a) \downharpoonright_p = \begin{cases} 
-pr!a & \mathit{if} s=p \\
-sp?a & \mathit{if} r=p \\
+pr!a & \mathit{si} s=p \\
+sp?a & \mathit{si} r=p \\
 \epsilon & \mathit{en \ otro \ caso} \\
 \end{cases} 
 \end{equation}

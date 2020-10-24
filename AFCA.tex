@@ -32,7 +32,7 @@ Una cola es un tipo de estructura de datos caracterizada por ser una secuencia d
 \item Encolar mensaje: denotado como $b \ll m$, si $b$ es una cola y $m$ es un mensaje.
 \item Desencolar mensaje: denotado como $b \gg m$, si $b$ es una cola y $m$ es un mensaje.
 \item Sea una cola vacía $b= [\ ]$ al aplicarle la operación $b \ll m$ queda $b= [m]$
-\item Sea una cola no vacía $b= [m_1,..,m_n]$ al aplicarle la operación $b \ll m$ queda $b= [m,m_1,..,m_n]$ del mismo modo al aplicarle $b \gg m_n$ queda $b= [m,m_1,..,m_{n-1}]$
+\item Sea una cola no vacía $b= [m_1,m_2,\ldots,m_n]$ al aplicarle la operación $b \ll m$ queda $b= [m_1, m_2,\ldots,m_n,m]$ del mismo modo al aplicarle $b \gg m_1$ queda $b= [m_2,\ldots,m_n,m]$
 \end{itemize}
 \end{definition}
 
@@ -42,8 +42,8 @@ Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de me
 
 \begin{itemize}
 \item $Q$ es un conjunto finito de estados,
-\item $B \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto finito de buffers (i.e. colas, ver Def.~\ref{def:cola}),
-\item $\mathcal{C} \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto de canales tales que $B \cap \mathcal{C} = \emptyset$ 
+\item $B \subseteq \{b_{{pq}_n} \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto finito de buffers (i.e. colas, ver Def.~\ref{def:cola}),
+\item $\mathcal{C} \subseteq \{pq_n \ | \ pq \in \mathcal{P}^2, n \in \mathbb{N}, p \neq q \}$ es un conjunto de canales tales que $B \cap \mathcal{C} = \emptyset$, y hay al menos un canal en cada sentido entre cada par de participantes, 
 \item $\Sigma = \{ \Sigma_\mathit{Int} \cup \Sigma_\mathit{Ex} \cup \Sigma_\mathit{Buff}\} $, $\Sigma \cap \mathcal{M} = \emptyset$ es el conjunto de etiquetas del autómata, siendo
 \begin{inparaenum}[1)]
 
@@ -66,28 +66,29 @@ Sea $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de me
 \item $F \subseteq Q$ es el conjunto de estados finales. 
 \end{itemize}
 
-Se denota $P(A)$, al conjunto de participantes que integran el autómata A, y se define como $P(A) = \left(p \in \mathcal{P} \ | \left(\exists\ \langle p1,p2,c\rangle \in \Sigma_\mathit{Ex}\right)\left(p1=p \lor p2=p\right) \right) $ 
 \end{definition}
+La intuicion detrás de las componentes de un AFCA es la siguiente:
 
-$\Sigma$ es el conjunto de todas las etiquetas del autómata y lo dividimos en tres subconjuntos disjuntos de la forma $\Sigma_{\mathit{Int}}$, $\Sigma_{\mathit{Ex}}$ y $\Sigma_{\mathit{Buff}}$ que corresponden a las acciones de procesamiento interno, las de comunicación externa con otros participantes y las de comunicación interna vía buffers.
+\begin{itemize}
+    \item $\Sigma$ es el conjunto de todas las etiquetas del autómata y lo dividimos en tres subconjuntos disjuntos de la forma $\Sigma_{\mathit{Int}}$, $\Sigma_{\mathit{Ex}}$ y $\Sigma_{\mathit{Buff}}$ que corresponden a las acciones de procesamiento interno, las de comunicación externa con otros participantes y las de comunicación interna vía buffers.
+    
+    \item $\Sigma_{Ex}$ es el conjunto de etiquetas correspondientes a la comunicación externa del autómata. Como la comunicación es dirigida punto a punto, cada etiqueta incluye a dos participantes $p_1, p_2 \in \mathcal{P}$ (emisor y receptor) y un canal $c \in \mathcal{C}$. Necesariamente en todas las etiquetas vale que $p_1$ y $p_2$ son distintos y entre cada par de participantes hay al menos un canal en cada sentido de la comunicación.
+    
+    \item $\Sigma_{Buff}$ es el conjunto de etiquetas de acciones de comunicación interna vía buffers. Se especifican las acciones de encolar y desencolar como $b \ll m$, $b \gg m$, respectivamente, donde $b \in B$ y $m$ es el mensaje que se inserta/extrae del mismo.
+    
+    \item $\delta$ es el conjunto de transciciones que se compone de $\delta_{Int}$, las acciones internas, $\delta_{Ex}$ las transiciones de comunicación con otros agentes y $\delta_{Buf}$ las acciones de buffer.
 
-$\Sigma_{Ex}$ es el conjunto de etiquetas correspondientes a la comunicación externa del autómata. Como la comunicación es dirigida punto a punto, cada etiqueta incluye a dos participantes $p_1, p_2 \in \mathcal{P}$ (emisor y receptor) y un canal $c \in \mathcal{C}$. Necesariamente en todas las etiquetas vale que $p_1$ y $p_2$ son distintos y entre cada par de participantes hay al menos un canal en cada sentido de la comunicación.
+    \item $\delta_{Ex}$ se compone de dos tipos de acciones que representan el intercambio de mensajes $m \in \mathcal{M}$ entre dos autómatas a través de un canal de comunicación $c \in \mathcal{C}$. Las acciones de entrada o input representan la recepción de un mensaje de algún proceso externo al correspondiente al autómata, denotadas \textit{In(c,m)}. Las acciones de output o salida que representan el envío de un mensaje y se denotan \textit{Out(c,m)}. Estas acciones son la parte externa de la comunicaión asincrónica. Como los canales son unidireccionales decimos que para todo par de participantes existen una cantidad finita de pares de canales.
 
-$\Sigma_{Buff}$ es el conjunto de etiquetas de acciones de comunicación interna vía buffers. Se especifican las acciones de encolar y desencolar como $b \ll m$, $b \gg m$, respectivamente, donde $b \in B$ y $m$ es el mensaje que se inserta/extrae del mismo.
-
-$\delta$ es el conjunto de transciciones que se compone de $\delta_{Int}$, las acciones internas, $\delta_{Ex}$ las transiciones de comunicación con otros agentes y $\delta_{Buf}$ las acciones de buffer.
-
-$\delta_{Ex}$ se compone de dos tipos de acciones que representan el intercambio de mensajes $m \in \mathcal{M}$ entre dos autómatas a través de un canal de comunicación $c \in \mathcal{C}$. Las acciones de entrada o input representan la recepción de un mensaje de algún proceso externo al correspondiente al autómata, denotadas \textit{In(c,m)}. Las acciones de output o salida que representan el envío de un mensaje y se denotan \textit{Out(c,m)}. Estas acciones son la parte externa de la comunicaión asincrónica. Como los canales son unidireccionales decimos que para todo par de participantes existen una cantidad finita de pares de canales.
-
-$\delta_{Buff}$ es la relación de transición de comunicación interna mediante buffers.\\
-
-Formalmente, F $\subseteq$ Q. Es el conjunto de estados finales, los posibles estados a los que una ejecución llega y es aceptada como válida. Para los autómatas asincrónicos pedimos también que al llegar a este estado final los buffers se encuentren vacíos. Para esto definimos lo siguiente:
+    \item $\delta_{Buff}$ es la relación de transición de comunicación interna mediante buffers.
+    
+    \item Formalmente, F $\subseteq$ Q. Es el conjunto de estados finales, los posibles estados a los que una ejecución llega y es aceptada como válida. Para los autómatas asincrónicos pedimos también que al llegar a este estado final los buffers se encuentren vacíos. Para esto definimos lo siguiente:
+\end{itemize}
 
 \begin{definition}[Configuración instantánea]
 Dados $\mathcal{P}$ un conjunto de participantes y $\mathcal{M}$ un conjunto de mensajes. A un autómata con comunicación asincrónica $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$, definimos:
 
-Una configuración instantánea del autómata como $\langle q, \Omega \rangle \in Q \times \{ [m_b]_{b \in B} | m_b \in \mathcal{M}^* \}$ donde $\mathcal{M}^* = \{ [s_o, \ldots, s_n] \  | \ \forall i \in [0, \ldots, n], s_i \in \mathcal{M} \}$ y $[m_b]_{b \in B} $
-
+Una configuración instantánea del autómata como $\langle q, \Omega \rangle \in Q \times \{ (m_b)_{b \in B} | m_b \in \mathcal{M}^* \}$ donde:
 \begin{itemize}
 \item  q es es el estado actual
 \item $\Omega$ es el conjunto de buffers (con sus respectivos contenidos hasta el momento). Decimos que $\Omega$ es de la forma ${ \omega_{b_1}, \omega_{b_2},..., \omega_{b_n} }$ con $b_i \in B$. 
@@ -177,7 +178,7 @@ Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de m
 Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $A_\mathcal{P} = \{A_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica $A_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$ compatible. Luego, definimos la composición $A_\mathcal{P} = ||_{1..n} A_{p_i}$ como sigue:
 \begin{itemize}
     \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
-    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{there exists } p_i, p_j \in \mathcal{P} \mbox{ such that } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí),    
+    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{ existen } p_i, p_j \in \mathcal{P} \mbox{ tales que } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí),    
     \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \ \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
     \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup  \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
     \begin{inparaenum}[1)]

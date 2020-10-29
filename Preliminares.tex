@@ -149,7 +149,7 @@ El conjunto de configuraciones alcanzables de S es $RS(S) = \{q \in Q_S | \langl
 \end{tikzpicture}
 \end{tabular}
 \end{center}
-En este ejemplo $Dl$ es un sistema que se conecta a un respositorio para bajar comics y $Rp$ el repositorio. Vemos que $Dl$ consulta si hay disponibles ($DlRp!HayComics$) y $Rp$ luego de recibir el mensaje ($DlRp?HayComics$) puede responder por sí o por no. En caso de que no haya termina ahí la comunicación por el momento. En caso de que sí $Dl$ solicita el paquete a $Rp$ ($DlRp!GetComics$). $Rp$ recibe el mensaje y hace el correspondiente envío. Finalmente $Dl$ recibe el paquete y termina la comunicación.
+En este ejemplo tenemos $\mathcal{P}= \{Dl, Rp\}$ y el CS $S=\langle M_{Dl}, M_{Rp} \rangle$, donde $Dl$ es un sistema que se conecta a un respositorio para bajar comics y $Rp$ el repositorio. Vemos que $Dl$ consulta si hay disponibles ($DlRp!HayComics$) y $Rp$ luego de recibir el mensaje ($DlRp?HayComics$) puede responder por sí o por no. En caso de que no haya termina ahí la comunicación por el momento. En caso de que sí $Dl$ solicita el paquete a $Rp$ ($DlRp!GetComics$). $Rp$ recibe el mensaje y hace el correspondiente envío. Finalmente $Dl$ recibe el paquete y termina la comunicación.
 \end{ejemplo}
 
 En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.

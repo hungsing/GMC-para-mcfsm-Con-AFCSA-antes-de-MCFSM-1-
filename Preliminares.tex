@@ -73,10 +73,10 @@ Como se dijo en la primera sección, buscamos una implementación del paradigma 
 
 La naturaleza dinámica no pre programada de los sistemas SOC hace que se requiera algún mecanismo para verificar que todos los componentes puedan funcionar entre sí en forma correcta. Para esto en esta sección detallamos el concepto de \emph{Generalised multiparty compatibility} (GMC), definido originalmente en \cite{lange:popl15}. GMC se define a partir de una serie de condiciones que debe cumplir el conjunto de CFSMs participantes del sistema. Esto condiciona al sistema (o a quienes lo diseñen) a tener un conocimiento previo de los posibles sistemas que vayan a interactuar entre sí. Esto no necesariamente rompe con la idea del descubrimiento y binding en tiempo de ejecución dado que se pueden generar métodos para hacer estas comprobaciones a medida que el sistema va conectándose con los distintos participantes. %(existen ya?)%
 
-\begin{definition}[Communicating Finite State Machines, \cite{lange:popl15}, Def.~2.1]\label{def:CFSM}] Sea $\mathcal{M}$ un conjunto finito de mensajes y $\mathcal{P}$ un conjunto finito de participantes, definimos una CFSM sobre $\mathcal{M}$ como un sistema de transición finito $\langle Q, C, q_0, \mathcal{M}, \delta \rangle$\footnote{Si bien en la definición original el conjunto de canales no aparece en forma explícita porque está determinado por el conjunto de participantes tal como aparece en esta definición optamos por hacerlo explícito pues será de utilidad cuando presentemos Multichannel Communicating Finite State Machines Def.~\ref{def:mCFSM}} donde
+\begin{definition}[Communicating Finite State Machines, \cite{lange:popl15}, Def.~2.1]\label{def:CFSM}] Sea $\mathcal{M}$ un conjunto finito de mensajes y $\mathcal{P}$ un conjunto finito de participantes, definimos una CFSM sobre $\mathcal{M}$ como un sistema de transición finito $\langle Q, \mathcal{C}, q_0, \mathcal{M}, \delta \rangle$\footnote{Si bien en la definición original el conjunto de canales no aparece en forma explícita porque está determinado por el conjunto de participantes tal como aparece en esta definición optamos por hacerlo explícito pues será de utilidad cuando presentemos Multichannel Communicating Finite State Machines Def.~\ref{def:mCFSM}} donde
 \begin{itemize}
   \item $Q$ es un conjunto finito de estados, 
-  \item $C \subseteq \left\{ pq \in \mathcal{P}^2 \left|\right. p \not= q\right\}$ es un conjunto de canales
+  \item $\mathcal{C} \subseteq \left\{ pq \in \mathcal{P}^2 \left|\right. p \not= q\right\}$ es un conjunto de canales
   \item $q_0 \in Q$ es el estado inicial;
   \item $\delta \subseteq Q \times (C \times \{!,?\} \times \mathcal{M}) \times Q$ es un conjunto finito de \emph{transiciones}.
   \end{itemize}
@@ -112,8 +112,123 @@ Dadas $c' = \langle \overrightarrow{q'},\overrightarrow{\omega'} \rangle$, $c = 
 El conjunto de configuraciones alcanzables de S es $RS(S) = \{q \in Q_S | \langle {q_0}_S,l_0 \ldots l_n,q \rangle \in \delta_S^* \}$ donde $\delta_S^*$ es la clausura reflexo-transitiva de $\delta_S$
 \end{definition}
 
-\begin{ejemplo}
+\begin{ejemplo}{Communicating System compuesto por dos CFSMs}
 \label{ej:CS}
+\begin{center}
+\begin{tabular}{cc}
+\begin{tikzpicture}[->, thick]
+    \node[state,initial] (q_0)   {$q_0$}; 
+    \node[state] (q_1) [below= of q_0 ] {$q_1$};
+    \node[state] (q_2) [below= of q_1 ] {$q_2$};
+    \node[state] (q_3) [below= of q_2 ] {$q_3$};
+    \node[state] (q_4) [below= of q_3 ] {$q_4$};
+    \node[state] (q_5) [left= 2.5cm of q_1 ] {$q_5$};
+\draw[]
+    (q_0) edge[right] node{DlRp!HayComics} (q_1)
+    (q_1) edge[right] node{RpDl?SíHay} (q_2)
+    (q_1) edge[above] node{RpDl?NoHay} (q_5)
+    (q_2) edge[right] node{DlRp!GetComics} (q_3)
+    (q_3) edge[right] node{RpDl?Comics} (q_4)
+    ;
+\end{tikzpicture}
+& 
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+    \node[state] (q_1) [below= of q_0 ] {$q_1$};
+    \node[state] (q_2) [below= of q_1 ] {$q_2$};
+    \node[state] (q_3) [below= of q_2 ] {$q_3$};
+    \node[state] (q_4) [below= of q_3 ] {$q_4$};
+    \node[state] (q_5) [right= 2.5cm of q_1 ] {$q_5$};
+\draw[]
+    (q_0) edge[right] node{DlRp?HayComics} (q_1)
+    (q_1) edge[right] node{RpDl!SíHay} (q_2)
+    (q_1) edge[above] node{RpDl!NoHay} (q_5)
+    (q_2) edge[right] node{DlRp?GetComics} (q_3)
+    (q_3) edge[right] node{RpDl!Comics} (q_4)
+    ;
+\end{tikzpicture}
+\end{tabular}
+\end{center}
+En este ejemplo $Dl$ es un sistema que se conecta a un respositorio para bajar comics y $Rp$ el repositorio. Vemos que $Dl$ consulta si hay disponibles ($DlRp!HayComics$) y $Rp$ luego de recibir el mensaje ($DlRp?HayComics$) puede responder por sí o por no. En caso de que no haya termina ahí la comunicación por el momento. En caso de que sí $Dl$ solicita el paquete a $Rp$ ($DlRp!GetComics$). $Rp$ recibe el mensaje y hace el correspondiente envío. Finalmente $Dl$ recibe el paquete y termina la comunicación.
+\end{ejemplo}
+
+En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
+
+\begin{definition}[Deadlock]Sea $S$ un CS y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $\langle q_r,sr?a,q'_r \rangle \in \delta_r$, y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
+\end{definition}
+
+\begin{definition}[Recepción no especificada]Sea $S$ un CS y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de recepción no especificada} si existe $r \in \mathcal{P}$ tal que $q_r$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ implica que $|\omega_{sr}| > 0$ y $\omega_{sr} \notin \mathcal{M}^*$. Una configuración de recepción no especificada corresponde a una configuración en la que la máquina está bloqueada definitivamente por su incapacidad para recibir el mensaje que se encuentra en sus canales.
+\end{definition}
+
+\begin{definition}[Mensaje Huérfano] Sea $S$ un CS y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de mensaje huérfano} si todos los $q_p \in \overrightarrow{q}$ son finales pero $\overrightarrow{\omega} \neq \overrightarrow{\epsilon}$. Es decir quedó un mensaje en algún canal pero no hay ninguna transición que lo reciba.
+\end{definition}
+
+\begin{definition}[CS seguro] \label{def:safeCS} Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
+\begin{enumerate}
+\item $s$ no es una configuración de deadlock 
+\item $s$ no posee recepciones no especificadas, y
+\item $s$ no posee mensajes huérfanos  
+\end{enumerate} 
+
+Para poder expresar esta condición de seguridad es necesario identificar conjuntos de acciones que pueden ser llevadas a cabo concurrentemente. Para esto definimos las siguientes relaciones sobre el conjunto de transiciones de una CFSM. Dados $q, q' \in Q$, se define $\mathit{act}(q,q') = \left\{\ell \ \left|\right. \ (q,\ell,q') \in \delta \right\}$ y $\Diamond, \blacklozenge \subseteq \delta \times \delta$ como las relaciones de equivalencia más pequeñas que contienen $\romboeqb$ y $\underline{\blacklozenge}$ donde:
+\begin{itemize}
+\item $(q_1, \ell, q_2) \underline{\Diamond} (q'_1, \ell, q'_2)$ sii $ \ell \notin \mathit{act}(q_1, q'_1) \land \mathit{act}(q_1, q'_1) = \mathit{act}(q_2, q'_2) \land \mathit{act}(q_2, q'_2) \neq \emptyset $
+\item  $(q_1, \ell, q_2) \underline{\blacklozenge} (q'_1, \ell, q'_2)$ sii $ (q_1, \ell, q_2) \romboeqb (q'_1, \ell, q'_2) $ y $\forall(q,\ell,q') \in [(q_1, \ell, q_2) ]^{\Diamond}, \ \mathit{act}(q_1,q) = \mathit{act}(q_2,q') \land \mathit{act}(q'_1,q) = \mathit{act}(q'_2,q')$  
+\end{itemize}
+donde $[(q_1, \ell, q_2) ]^{\Diamond}$ es la clase de equivalencia de $(q, \ell, q')$ respecto de la relación $\Diamond$ (resp. $\blacklozenge$). Intuitivamente dos transiciones están $\blacklozenge$-relacionadas si se refieren a la misma acción aún teniendo en cuenta el interleaving.
+\end{definition} 
+
+\begin{ejemplo}[Relaciones $\underline{\Diamond}$ y $\underline{\blacklozenge}$]
+\label{ex:relaciones}
+Consideremos la siguiente CFSM:
+\begin{center}
+\begin{tikzpicture}[->, thick]
+ \node[state,initial] (q_0)   {$q_0$}; 
+ \node[state] (q_1) [right= of q_0 ] {$q_1$};
+ \node[state] (q_5) [right= of q_1 ] {$q_5$};
+ \node[state] (q_2) [below= of q_0 ] {$q_2$};
+ \node[state] (q_3) [right= of q_2 ] {$q_3$};
+ \node[state] (q_6) [right= of q_3 ] {$q_6$};
+ \draw[]        
+        (q_0) edge[above] node{sr!a} (q_1)
+        (q_0) edge[right] node{sr'!b} (q_2)
+        (q_1) edge[right] node{sr'!b} (q_3)
+        (q_1) edge[above] node{sr!a} (q_5)
+        (q_2) edge[above] node{sr!a} (q_3)
+        (q_2) edge[bend right, below] node{sr!c} (q_6)
+        (q_3) edge[above] node{sr!a} (q_6)
+        (q_5) edge[right] node{sr'!b} (q_6)
+        ;
+\end{tikzpicture} 
+\end{center}
+
+\begin{enumerate}
+    \item \label{ex:cond1} $(q_0, sr!a,q_1) \underline{\Diamond} (q_2,sr!a,q_3)  $ %dado que está entrelazada con $sr'!b$
+    \item \label{ex:cond2} $(q_0, sr!a,q_1) \underline{\blacklozenge} (q_2,sr!a,q_3) $ %por la misma razón que 1
+    \item \label{ex:cond3} No vale $ ((q_0, sr!a,q_1) \underline{\Diamond} (q_1,sr'!a,q_5))$ %porque la transición entre $q_0$ y $q_1$ pasa a través de $sr!a$. Es decir que las dos transiciones son secuenciales no concurrentes. 
+    \item \label{ex:cond4} $ (q_0, sr'!b,q_2) \underline{\Diamond} (q_1, sr'!b,q_3)$ %la relación e 
+    \item \label{ex:cond5} No vale $((q_0, sr'!b,q_2) \underline{\blacklozenge} (q_1,sr'!b,q_3)) $
+\end{enumerate}
+
+Las relaciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond1}--~\ref{ex:relaciones}.\ref{ex:cond2} se sostienen dado que ambas transiciones están intercaladas con $sr'!b$. La relacion en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} no se sostiene debido a que la transición entre el origen de una $(q_0)$ y el del otro $(q_1)$ pasa por $sr!a$. Ambas transiciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} son secuenciales, no concurrentes. La relación en Ej.~\ref{ex:relaciones}.\ref{ex:cond4} se sostiene, pero en Ej.~\ref{ex:relaciones}.\ref{ex:cond5} no porque $(q_5,sr'!b,q_6)$ está en la clase de $\Diamond$-equivalencia de $(q_0,sr'!b,q_2)$ para la cual la condición no se sostiene (debido a la transición con la etiqueta $sr!c$).
+\end{ejemplo}
+
+\begin{definition}[Eventos] Dados un conjunto de participantes $\mathcal{P}$ y un conjunto de mensajes $\mathcal{M}$ definimos un evento $e$ como una tupla $\langle q_s, q_r, s, r, a \rangle)$ (también escrita como $\langle q_s, q_r, s \rightarrow r:a \rangle$), tal que $s,r \in \mathcal{P}$, indicando que $s$ y $r$ pueden intercambiar el mensaje $a$, cuando están en el estado $q_s$ y $q_r$, respectivamente.
+\end{definition}
+
+Tomando en consideración la definición anterior, para distinguir el paralelsimo a nivel máquina introducimos una relación de equivalencia sobre eventos que identifica eventos cuyas transiciones son $\blacklozenge$-equivalentes.
+
+\begin{definition}[Equivalencia entre eventos] Definimos la equivalencia entre eventos como $\bowtie = \bowtie_s \cap \bowtie_r \subseteq \mathcal{E} \times \mathcal{E}$ donde $\mathcal{E}$ es el conjunto de eventos del sistema y se cumplen las siguientes condiciones:
+
+\begin{itemize}
+\item $(q_{1s}, q_{1r}, s \rightarrow r:a) \bowtie_s (q'_{1s}, q'_{1r}, s \rightarrow r:a) \iff$ \\ 
+ $(\forall (q_{1s}, sr!a,q_{2s}),(q'_{1s}, sr!a,q'_{1s}) \in \delta_s)((q_{1s}, sr!a,q_{2s}) \underline{\blacklozenge} (q'_{1s}, sr!a,q'_{2s})) $
+\item $(q_{1s}, q_{1r}, s \rightarrow r:a) \bowtie_r (q'_{1s}, q'_{1r}, s \rightarrow r:a) \iff \\ 
+\forall (q_{1r}, sr?a,q_{2r}),(q'_{1r}, sr?a,q'_{2r}) \in \delta_ r:(q_{1r}, sr?a,q_{2r}) \romboeqn (q'_{1r}, sr?a,q'_{2r})$ \end{itemize}
+\end{definition}
+
+\begin{ejemplo}[Equivalencia entre eventos]
+\label{ex:equiveventos}
 Considere el CS compuesto por p, r y s:
 \begin{center}
 \begin{tabular}{ccc}
@@ -155,87 +270,9 @@ p & r & s\\
 \end{tikzpicture} 
 \end{tabular}
 \end{center}
-\end{ejemplo}
 
-En adelante presentaremos definiciones y resultados que permiten expresar propiedades de los CSs introducidos en la definición anterior.
 
-\begin{definition}[Deadlock]Sea $S$ un CS y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de deadlock} si $\overrightarrow{\omega} = \overrightarrow{\epsilon}$, existe $r \in \mathcal{P}$ tal que $\langle q_r,sr?a,q'_r \rangle \in \delta_r$, y para todo $p \in \mathcal{P}$, $q_p$ es un estado receptor o final. Es decir todos los canales están vacíos, hay al menos una máquina esperando un mensaje y todas las otras máquinas están en un estado final o receptor.
-\end{definition}
-
-\begin{definition}[Recepción no especificada]Sea $S$ un CS y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de recepción no especificada} si existe $r \in \mathcal{P}$ tal que $q_r$ es un estado receptor y $\langle q_r,sr?a,q'_r \rangle \in \delta_r$ implica que $|\omega_{sr}| > 0$ y $\omega_{sr} \notin \mathcal{M}^*$. Una configuración de recepción no especificada corresponde a una configuración en la que la máquina está bloqueada definitivamente por su incapacidad para recibir el mensaje que se encuentra en sus canales.
-\end{definition}
-
-\begin{definition}[Mensaje Huérfano] Sea $S$ un CS y $s= \langle \overrightarrow{q} ; \overrightarrow{\omega} \rangle$ con $\overrightarrow{q}= \langle q_1, \ldots, q_n \rangle$ y sea $\overrightarrow{\omega}= \langle \omega_1, \ldots, \omega_n \rangle$ una de sus configuraciones. Decimos que $s$ es una \textit{configuración de mensaje huérfano} si todos los $q_p \in \overrightarrow{q}$ son finales pero $\overrightarrow{\omega} \neq \overrightarrow{\epsilon}$. Es decir quedó un mensaje en algún canal pero no hay ninguna transición que lo reciba.
-\end{definition}
-
-\begin{definition}[CS seguro] \label{def:safeCS} Sea $S$ un CS; se dice que $S$ es \emph{seguro} si para cada $s \in RS(S)$:
-\begin{enumerate}
-\item $s$ no es una configuración de deadlock 
-\item $s$ no posee recepciones no especificadas, y
-\item $s$ no posee mensajes huérfanos  
-\end{enumerate} 
-
-Para poder expresar esta condición de seguridad es necesario identificar conjuntos de acciones que pueden ser llevadas a cabo concurrentemente. Para esto definimos las siguientes relaciones sobre el conjunto de transiciones de una CFSM. Dados $q, q' \in Q$, se define $\mathit{act}(q,q') = \left\{\ell \ \left|\right. \ (q,\ell,q') \in \delta \right\}$ y $\Diamond, \blacklozenge \subseteq \delta \times \delta$ como las relaciones de equivalencia más pequeñas que contienen $\romboeqb$ y $\underline{\blacklozenge}$ donde:
-\begin{itemize}
-\item $(q_1, \ell, q_2) \underline{\Diamond} (q'_1, \ell, q'_2)$ sii $ \ell \notin \mathit{act}(q_1, q'_1) \land \mathit{act}(q_1, q'_1) = \mathit{act}(q_2, q'_2) \land \mathit{act}(q_2, q'_2) \neq \emptyset $
-\item  $(q_1, \ell, q_2) \underline{\blacklozenge} (q'_1, \ell, q'_2)$ sii $ (q_1, \ell, q_2) \romboeqb (q'_1, \ell, q'_2) $ y $\forall(q,\ell,q') \in [(q_1, \ell, q_2) ]^{\Diamond}, \ \mathit{act}(q_1,q) = \mathit{act}(q_2,q') \land \mathit{act}(q'_1,q) = \mathit{act}(q'_2,q')$  
-\end{itemize}
-donde $[(q_1, \ell, q_2) ]^{\Diamond}$ es la clase de equivalencia de $(q, \ell, q')$ respecto de la relación $\Diamond$ (resp. $\blacklozenge$). Intuitivamente dos transiciones están $\blacklozenge$-relacionadas si se refieren a la misma acción aún teniendo en cuenta el interleaving.
-\end{definition}
-
-\begin{ejemplo}[Relaciones $\underline{\Diamond}$ y $\underline{\blacklozenge}$]
-\label{ex:relaciones}
-Consideremos la siguiente CFSM:
-\begin{center}
-\begin{tikzpicture}[->, thick]
- \node[state,initial] (q_0)   {$q_0$}; 
- \node[state] (q_1) [right= of q_0 ] {$q_1$};
- \node[state] (q_5) [right= of q_1 ] {$q_5$};
- \node[state] (q_2) [below= of q_0 ] {$q_2$};
- \node[state] (q_3) [right= of q_2 ] {$q_3$};
- \node[state,accepting] (q_6) [right= of q_3 ] {$q_6$};
- \draw[]        
-        (q_0) edge[above] node{sr!a} (q_1)
-        (q_0) edge[right] node{sr'!b} (q_2)
-        (q_1) edge[right] node{sr'!b} (q_3)
-        (q_1) edge[above] node{sr!a} (q_5)
-        (q_2) edge[above] node{sr!a} (q_3)
-        (q_2) edge[bend right, below] node{sr!c} (q_6)
-        (q_3) edge[above] node{sr!a} (q_6)
-        (q_5) edge[right] node{sr'!b} (q_6)
-        ;
-\end{tikzpicture} 
-\end{center}
-
-\begin{enumerate}
-    \item \label{ex:cond1} $(q_0, sr!a,q_1) \underline{\Diamond} (q_2,sr!a,q_3)  $ %dado que está entrelazada con $sr'!b$
-    \item \label{ex:cond2} $(q_0, sr!a,q_1) \underline{\blacklozenge} (q_2,sr!a,q_3) $ %por la misma razón que 1
-    \item \label{ex:cond3} No vale $ ((q_0, sr!a,q_1) \underline{\Diamond} (q_1,sr'!a,q_5))$ %porque la transición entre $q_0$ y $q_1$ pasa a través de $sr!a$. Es decir que las dos transiciones son secuenciales no concurrentes. 
-    \item \label{ex:cond4} $ (q_0, sr'!b,q_2) \underline{\Diamond} (q_1, sr'!b,q_3)$ %la relación e 
-    \item \label{ex:cond5} No vale $((q_0, sr'!b,q_2) \underline{\blacklozenge} (q_1,sr'!b,q_3)) $
-\end{enumerate}
-
-Las relaciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond1}--~\ref{ex:relaciones}.\ref{ex:cond2} se sostienen dado que ambas transiciones están intercaladas con $sr'!b$. La relacion en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} no se sostiene debido a que la transición entre el origen de una $(q_0)$ y el del otro $(q_1)$ pasa por $sr!a$. Ambas transiciones en Ej.~\ref{ex:relaciones}.\ref{ex:cond3} son secuenciales, no concurrentes. La relación en Ej.~\ref{ex:relaciones}.\ref{ex:cond4} se sostiene, pero en Ej.~\ref{ex:relaciones}.\ref{ex:cond5} no porque $(q_5,sr'!b,q_6)$ está en la clase de $\Diamond$-equivalencia de $(q_0,sr'!b,q_2)$ para la cual la condición no se sostiene (debido a la transición con la etiqueta $sr!c$).
-\end{ejemplo}
-
-\begin{definition}[Eventos] Dados un conjunto de participantes $\mathcal{P}$ y un conjunto de mensajes $\mathcal{M}$ definimos un evento $e$ como una tupla $\langle q_s, q_r, s, r, a \rangle)$ (también escrita como $\langle q_s, q_r, s \rightarrow r:a \rangle$), tal que $s,r \in \mathcal{P}$, indicando que $s$ y $r$ pueden intercambiar el mensaje $a$, cuando están en el estado $q_s$ y $q_r$, respectivamente.
-\end{definition}
-
-Tomando en consideración la definición anterior, para distinguir el paralelsimo a nivel máquina introducimos una relación de equivalencia sobre eventos que identifica eventos cuyas transiciones son $\blacklozenge$-equivalentes.
-
-\begin{definition}[Equivalencia entre eventos] Definimos la equivalencia entre eventos como $\bowtie = \bowtie_s \cap \bowtie_r \subseteq \mathcal{E} \times \mathcal{E}$ donde $\mathcal{E}$ es el conjunto de eventos del sistema y se cumplen las siguientes condiciones:
-
-\begin{itemize}
-\item $(q_{1s}, q_{1r}, s \rightarrow r:a) \bowtie_s (q'_{1s}, q'_{1r}, s \rightarrow r:a) \iff$ \\ 
- $(\forall (q_{1s}, sr!a,q_{2s}),(q'_{1s}, sr!a,q'_{1s}) \in \delta_s)((q_{1s}, sr!a,q_{2s}) \underline{\blacklozenge} (q'_{1s}, sr!a,q'_{2s})) $
-\item $(q_{1s}, q_{1r}, s \rightarrow r:a) \bowtie_r (q'_{1s}, q'_{1r}, s \rightarrow r:a) \iff \\ 
-\forall (q_{1r}, sr?a,q_{2r}),(q'_{1r}, sr?a,q'_{2r}) \in \delta_ r:(q_{1r}, sr?a,q_{2r}) \romboeqn (q'_{1r}, sr?a,q'_{2r})$ \end{itemize}
-\end{definition}
-
-\begin{ejemplo}[Equivalencia entre eventos]
-\label{ex:equiveventos}
-
-Consideremos el CS del Ej.\ref{ej:CS}. En dicho sistema podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:b)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. 
+En dicho sistema podemos ver los siguientes eventos $(q_{0p}, q_{0r}, p \rightarrow r:a)$, $(q_{2p}, q_{0r}, p \rightarrow r:a)$, $(q_{0s}, q_{0p}, s \rightarrow p:b)$ y $(q_{0s}, q_{3p}, s \rightarrow p:b)$. Queremos ver si se cumple que $(q_{0p}, q_{0r}, p \rightarrow r:a) \bowtie (q_{2p}, q_{0r}, p \rightarrow r:a)$, es decir que son eqivalentes tanto bajo $\bowtie_p$ como en $\bowtie_r$. 
 
 Para el primero queremos ver que $(q_{0p}, pr!a, q_{1p}) \romboeqn (q_{2p}, pr!a, q_{3p})$
 Para esto necesitamos que valga $(q_{0p}, pr!a, q_{1p}) \romboeqb (q_{2p}, pr!a, q_{3p})$. Esto se cumple dado que $pr!a \notin act(q_{0p},q_{2p})$ y $act(q_{0p},q_{2p}) = act(q_{1p},q_{3p}) \neq \emptyset$. Ahora tenemos que ver la clase de equivalencia $[(q_{0p}, pr!a, q_{1p})]^{\Diamond}$. La misma es el conjunto $ \{(q_{0p}, pr!a, q_{1p}), (q_{2p}, pr!a, q_{3p})\}$.  Por último queremos ver que  $act(q_{0p}, q_{2p}) = 

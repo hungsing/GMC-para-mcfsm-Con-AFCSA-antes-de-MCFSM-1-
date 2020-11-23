@@ -82,8 +82,7 @@ Para prevenir este tipo de problemas surge la noción de determinismo débil o \
 Sea $A= \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ un AFCA y $\Sigma' \subseteq \Sigma$ un conjunto de etiquetas a silenciar. Se dice que $A$ es \emph{weak determinate sobre $\Sigma'$} si para todo $q, q', q'' \in Q$ y para todo $s, s' \in \Sigma^*$ tal que $\widehat{s}_{\Sigma'} = \widehat{s'}_{\Sigma'}$, $q \xrightarrow{s} q'$ y $q \xrightarrow{s'} q''$, $q' \sim_{\Sigma'} q''$.
 \end{definition}
 
-\begin{prop}
-Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ weak determinate tal que $\Sigma_\mathit{Int} \subseteq \Sigma$ denota el conjunto de transiciones internas, entonces dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$,  $q \sim_{\Sigma_\mathit{Int}} q'$.
+\begin{prop} Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ weak determinate tal que $\Sigma_\mathit{Int} \subseteq \Sigma$ denota el conjunto de transiciones internas, entonces dados dos estados $q, q' \in Q$ tales que $q \xrightarrow{\sigma} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$,  $q \sim_{\Sigma_\mathit{Int}} q'$.
 \end{prop}
 \begin{proof}
 Supongamos que $A$ es weak determinate sobre $\Sigma_\mathit{Int}$ y existen $q, q' \in Q$ tales que $q \xrightarrow{\sigma} q'$ con $\sigma \in \Sigma_{\mathit{Int}}^*$ y no vale que $q \sim_{\Sigma_\mathit{Int}} q'$. Si $q \sim_{\Sigma_\mathit{Int}} q'$ no vale, entonces no existen $q'' \in Q$,  $s, s' \in \Sigma^*$ tal que $\widehat{s}_{\Sigma'} = \widehat{s'}_{\Sigma'}$, $q \xrightarrow{s} q'$ y $q \xrightarrow{s'} q''$, lo que es absurdo pues se puede tomar $q'' = q$, $s = \epsilon$ y $s' = s\sigma$ satisfaciendo que $\widehat{s}_{\Sigma_\mathit{Int}} = \widehat{s'}_{\Sigma_\mathit{Int}}$
@@ -97,7 +96,7 @@ Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$ wea
 
 Intuitivamente, la clase de equivalencia por comunicación interna de un estado $q$, $[q]_m$ son aquellos estados $q'$ relacionados en cero o más pasos de transiciones internas con $q$.
 
-Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, $\Sigma = \Sigma_\mathit{Int} \cup \Sigma_\mathit{Buff}$ y $q \in Q$, . Decimos que dos clases de equivalencia están relacionadas $[q]_m \xrightarrow{\sigma} [q']_m$ sii $\exists q_i \in [q]_m, q'_i \in [q']_m$ tales que $q_i \xrightarrow{\sigma} q'_i \in \delta_{\text{Buff}}$.
+Dado un AFCA $A = \langle Q, \mathcal{C}, B, \Sigma, \delta, q_0, F \rangle$, $\Sigma = \Sigma_\mathit{Int} \cup \Sigma_\mathit{Buff}$ y $q \in Q$. Decimos que dos clases de equivalencia están relacionadas $[q]_m \xrightarrow{\sigma} [q']_m$ sii $\exists q_i \in [q]_m, q'_i \in [q']_m$ tales que $q_i \xrightarrow{\sigma} q'_i \in \delta_{\text{Buff}}$.
 
 \begin{definition}[Proyección de la comunicación de un AFCA]\label{def:pci}\ \\
 Dado un AFCA weak determinate $\mathcal{A} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F \rangle$, tal que su interfaz de comunicación externa es la mCFSM vacía, es decir $\Pi(\mathcal{A}) = \emptyset$, definimos $\Tau(\mathcal{A})$ como la proyección de la semántica de comunicación de $\mathcal{A}$. Llamamos $\widehat{\mathcal{A}}$ al sistema de transición etiquetado resultante y decimos que $\Tau (\langle Q, B, \mathcal{C}, \Sigma, q_0, \delta, F \rangle)= \langle \widehat{Q}, B, \widehat{q_0}, \widehat{\Delta} \rangle$ tal que:

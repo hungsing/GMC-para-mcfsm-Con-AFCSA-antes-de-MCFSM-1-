@@ -103,7 +103,7 @@ Sean $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$,
 \begin{enumerate}
 \item $\langle q_1, \Omega \rangle \vdash \langle q_2, \Omega \rangle \iff \langle q_1,r, q_2 \rangle \in \delta \land r \in \Sigma \setminus \Sigma_\mathit{Buff}$
 
-\item $\langle q_1 ,\{\omega_{b_1},\ldots,\omega_{b_i},\ldots,\omega_{b_n}\} \rangle \vdash \langle q_2,\{\omega_{b_1},\ldots,m : \omega_{b_i},\ldots,b_n\}\rangle \iff \langle q_1, b_i \ll m, q_2 \rangle  \in \delta $ 
+\item $\langle q_1 ,\{\omega_{b_1},\ldots,\omega_{b_i},\ldots,\omega_{b_n}\} \rangle \vdash \langle q_2,\{\omega_{b_1},\ldots,m : \omega_{b_i},\ldots,\omega_{b_n}\}\rangle \iff \langle q_1, b_i \ll m, q_2 \rangle  \in \delta $ 
 
 \item $\langle q_1, \{\omega_{b_1},\ldots,\omega_{b_i} : m,\ldots,\omega_{b_n}\} \rangle \vdash \langle q_2, \{\omega_{b_1},\ldots,\omega_{b_i},\ldots,\omega_{b_n} \}\rangle \iff \langle q_1, b_i \gg m, q_2 \rangle \in \delta$
 \end{enumerate}
@@ -133,7 +133,9 @@ Sean $A_\mathcal{P} = \langle Q, B, \mathcal{C}, \Sigma, \delta, q_0, F\rangle$,
 El comportamiento de un AFCA es el conjunto de todas las trazas posibles.
 \end{definition}
 
-\begin{definition}[Ejecución de un AFCA]. Una ejecución es un $ \tau = \tau_0, \ldots,\tau_n $ donde $\tau_0$ es la configuración inicial, $\langle \tau_i, \tau_{i+1} \rangle \in \vdash$, $\tau_n$ es una configuración final y $ \forall i \in [1, \ldots, n], \tau_i$ es una configuración válida. Una ejecución es una configuración que no entra en deadlock, mensajes huérfanos ni receptor no especificado.
+\begin{definition}[Ejecución de un AFCA] Una ejecución es una secuencia $\langle q, \Omega \rangle \vdash \langle q_1, \Omega_1 \rangle \vdash \ldots \vdash \langle q_n, \Omega_n \rangle$ donde $\langle q, \Omega \rangle$ es la configuración inicial, $
+\langle q_n, \Omega_n \rangle$ es una configuración final y $ \forall i \in [1, \ldots, n], 
+\langle q_i, \Omega_i \rangle$ es una configuración válida (una configuración que no es de deadlock, mensajes huérfanos ni recepción no especificada).
 \end{definition}
 
 \begin{ejemplo}[Ejemplo de un Autómata Finito de Comunicación Asincrónica]
@@ -175,18 +177,20 @@ Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de m
 
 \begin{definition}[Composición]
 \label{def:composicion}
-Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $A_\mathcal{P} = \{A_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica $A_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$ compatible. Luego, definimos la composición $A_\mathcal{P} = ||_{1..n} A_{p_i}$ como sigue:
+Dados $\mathcal{P}$ un conjunto de participantes, $\mathcal{M}$ un conjunto de mensajes y $A_\mathcal{P} = \{A_{p} \ | p \in \mathcal{P}\}$ un conjunto finito de autómatas finitos de comunicación asincrónica compatibles $A_{p_i}= \langle Q_{p_i}, B_{p_i}, \mathcal{C}_{p_i}. \Sigma_{p_i}, \delta_{p_i}, q_{0{p_i}}, F_{p_i} \rangle$.
+% Para cada par de participantes distintos $p_i,p_j \in \mathcal{P}$ llamamos  al conjunto de canales que comparten para intercambiar mensajes y $\Sigma_{p_i \rightarrow p_j}$ al conjunto de etiquetas de comunicación entre ambos.
+Luego, definimos la composición $A_\mathcal{P} = ||_{1..n} A_{p_i}$ como $A= \langle Q, B, \mathcal{C}, \Sigma, \delta, q_{0}, F \rangle$ tal que:
 \begin{itemize}
     \item $Q_\mathcal{P}= \Pi_{p_i \in \mathcal{P}} Q_{p_i}$ (i.e. el conjunto de estados de la composición es el producto cartesiano de los estados de los autómatas componentes),    
-    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ \mbox{ existen } p_i, p_j \in \mathcal{P} \mbox{ tales que } c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí),    
-    \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \{ c_k \ | \ \mbox{for all } p_i, p_j \in \mathcal{P}, c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$,    
+    \item $B_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} B_{p_i} \cup \{ \omega_c \ | \ c \in  \mathcal{C}_{p_i \rightarrow p_j}\}$, dónde $\mathcal{C}_{p_i \rightarrow p_j}= \{c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j} \}$ (i.e. el conjunto de nombres de buffers del autómata resultante se compone de los buffers de cada autómata participante en la composición, junto con uno nuevo por cada canal compartido entre cada par de autómatas, dichos canales son aquellos mediante los cuales los autómatas a componer intercambian mensajes entre sí),    
+    \item $\mathcal{C}_\mathcal{P} = \bigcup_{p_i \in \mathcal{P}} \mathcal{C}_{p_i} \setminus \mathcal{C}_{p_i \rightarrow p_j}$,    
     \item $\Sigma_\mathcal{P} = \Sigma_{\mathcal{P}\mathit{Int}} \cup  \Sigma_{\mathcal{P}\mathit{Ex}} \cup \Sigma_{\mathcal{P}\mathit{Buff}}$ tal que:    
-    \begin{inparaenum}[1)]
+    \begin{enumerate}[1)]
         \item $\Sigma_{\mathcal{P}\mathit{Int}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Int}}$,
         \item $\Sigma_{\mathcal{P}\mathit{Ex}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Ex}} \setminus \Sigma_{p_i \mapsto p_j}$ y 
         \item $\Sigma_{\mathcal{P}\mathit{Buff}} = \bigcup_{p_i \in \mathcal{P}} \Sigma_{p_i\mathit{Buff}} \cup \Sigma_{p_i \mapsto p_j}$,
-    \end{inparaenum}
-donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i} \cap \mathcal{C}_{p_j}\}$
+        \end{enumerate}
+donde $\Sigma_\mathit{p_i \mapsto p_j} =\{ \langle p_i,p_j,c \rangle \ | \ p_i, p_j \in \mathcal{P}, \  c \in \mathcal{C}_{p_i \rightarrow p_j}\}$
 \item $\delta_{\mathcal{P}} = \delta_{\mathcal{P}\mathit{Int}} \cup \delta_{\mathcal{P}\mathit{Ex}} \cup \delta_{\mathcal{P}\mathit{Buff}}$ tal que:
 \begin{enumerate}
 \item $\delta_{\mathcal{P}\mathit{Int}} \subseteq Q_{\mathcal{P}} \times \Sigma_{\mathcal{P} Int} \times Q_{\mathcal{P}}$  es la relación de transición interna, tal que que se satisface la siguiente fórmula:

@@ -12,7 +12,7 @@ Una estructura $S = \langle Q, \Sigma, \longrightarrow \rangle$ se dice que es u
 \item $\Sigma$ es un conjunto finito llamado \emph{conjunto de etiquetas}, y
 \item $\longrightarrow \subseteq Q \times \Sigma \times Q$.
 \end{itemize}
-Sean $q, q' \in Q$, $a \in \Sigma$, cuando $\langle q, a, q' \rangle \in \longrightarrow$ lo denotaremos como $q \xrightarrow{a} q'$. Denotaremos $\Sigma^*$ al conjunto de secuencias finitas $\sigma_0, \sigma_1, \sigma_2, \ldots, \sigma_n, \ldots$ tal que para todo $i \in \nat$, $\sigma_i \in \Sigma$. A su vez, dado $q \in Q$, definiremos $\Sigma^* [q]$, llamado el lenguaje de $q$, como $\{ \sigma_0, \sigma_1, \ldots, \sigma_n, \ldots \in \Sigma^*\ |\ \text{existe } \{q_i\}_{i \in \nat} \text{ tal que } q = q_0 \text{ y para todo } i \in \nat \text{, } q_i \xrightarrow{\sigma_i} q_{i+1}\}$. Dados $q, q' \in Q$ y $\sigma \in \Sigma^*$, $q \xrightarrow{\sigma} q'$ si y solo si $\sigma = \sigma_0, \sigma_1, \ldots, \sigma_n$ y existen $\{q_i\}_{0 \leq i \leq n} \subseteq Q$ tal que:
+Sean $q, q' \in Q$, $\sigma \in \Sigma$, cuando $\langle q, \sigma, q' \rangle \in \longrightarrow$ lo denotaremos como $q \xrightarrow{\sigma} q'$. Denotaremos $\Sigma^*$ al conjunto de secuencias finitas $\sigma_0, \sigma_1, \sigma_2, \ldots, \sigma_n, \ldots$ tal que para todo $i \in \nat$, $\sigma_i \in \Sigma^*$. A su vez, dado $q \in Q$, definiremos $\Sigma^* [q]$, llamado el lenguaje de $q$, como las secuencias $\{ \sigma_0, \sigma_1, \ldots, \sigma_n, \ldots \in \Sigma^*\ |\ \text{existe } \{q_i\}_{i \in \nat} \text{ tal que } q = q_0 \text{ y para todo } i \in \nat \text{, } q_i \xrightarrow{\sigma_i} q_{i+1}\}$. Dados $q, q' \in Q$ y $\sigma^* \in \Sigma^*$, $q \xrightarrow{\sigma^*} q'$ si y solo si $\sigma^* = \sigma_0, \sigma_1, \ldots, \sigma_n$ y existen $\{q_i\}_{0 \leq i \leq n} \subseteq Q$ tal que:
 \begin{inparaenum}[1-]
 \item $q_0 = q$,
 \item $q_n = q'$, y
@@ -38,7 +38,7 @@ $S$ se dice que es la \emph{clausura reflexiva y transitiva} si $S = R^0 \cup R^
 
 \begin{definition}[Clases de equivalencia y cociente]
 Sea $Q$ un conjunto y $R \subseteq Q \times Q$ una relación de equivalencia:
-$Q|_R = \{s \in \wp(Q)\ |\ \text{para todo } q, q' \in s \text{, } \langle q, q' \rangle \in R \text{ y no existe } q'' \in \overline{s} \text{ tal que } \langle q, q'' \rangle \in R\}$. Dado $q \in Q$, denotaremos $[q] \in Q|_R$ al conjunto $s \in Q|_R$ tal que $q \in s$. 
+$Q|_R = \{s \in \wp(Q)\ |\ \text{para todo } q, q' \in s \text{, } \langle q, q' \rangle \in R \text{ y no existe } q'' \in \overline{s}$\footnote{Llamamos $\overline{s}$ al complemento de s, es decir todos los elementos $t \in Q$ tales que $t \notin s$} $\text{ tal que } \langle q, q'' \rangle \in R\}$. Dado $q \in Q$, denotaremos $[q] \in Q|_R$ al conjunto $s \in Q|_R$ tal que $q \in s$. 
 \end{definition}
 
 En lo subsiguiente introduciremos la noción de equivalencia entre estados que usaremos a lo largo del presente trabajo. Intuitivamente, solo deseamos que dos estados sean distinguibles si tienen la capacidad ser diferenciados por alguna continuación a partir de ellos. A continuación daremos una primera aproximación a esta noción de equivalencia.
